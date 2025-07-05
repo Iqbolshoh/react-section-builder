@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Edit3, Download, Share2, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Edit3, Share2, ExternalLink } from 'lucide-react';
 import { useProject } from '../contexts/ProjectContext';
 import SectionRenderer from '../components/SectionRenderer';
 

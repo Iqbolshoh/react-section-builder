@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { motion } from 'framer-motion';
 import { Edit3, Trash2, Copy, GripVertical } from 'lucide-react';
 import { useProject } from '../contexts/ProjectContext';
 import HeroSection from './sections/HeroSection';
