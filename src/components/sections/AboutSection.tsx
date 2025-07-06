@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Users, Target, Award } from 'lucide-react';
+import ImageUpload from '../ImageUpload';
 
 interface AboutSectionProps {
   content: {
@@ -41,20 +42,12 @@ const AboutSection: React.FC<AboutSectionProps> = ({
               viewport={{ once: true }}
             >
               {isEditing ? (
-                <div className="relative">
-                  <img
-                    src={content.image}
-                    alt="About"
-                    className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-2xl shadow-lg"
-                  />
-                  <input
-                    type="url"
-                    value={content.image}
-                    onChange={(e) => handleChange('image', e.target.value)}
-                    className="absolute bottom-4 left-4 right-4 px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm"
-                    placeholder="Image URL"
-                  />
-                </div>
+                <ImageUpload
+                  value={content.image}
+                  onChange={(url) => handleChange('image', url)}
+                  placeholder="Add about image"
+                  className="w-full h-64 sm:h-80 lg:h-96"
+                />
               ) : (
                 <img
                   src={content.image}
@@ -64,8 +57,12 @@ const AboutSection: React.FC<AboutSectionProps> = ({
               )}
               
               {/* Decorative elements */}
-              <div className="absolute -top-4 -left-4 sm:-top-6 sm:-left-6 w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full opacity-20"></div>
-              <div className="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full opacity-30"></div>
+              {!isEditing && (
+                <>
+                  <div className="absolute -top-4 -left-4 sm:-top-6 sm:-left-6 w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full opacity-20"></div>
+                  <div className="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full opacity-30"></div>
+                </>
+              )}
             </motion.div>
           </div>
 

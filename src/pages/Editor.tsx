@@ -179,6 +179,27 @@ const Editor: React.FC = () => {
             alert('Thank you for your message! We will get back to you soon.');
             event.target.reset();
         }
+        
+        // Newsletter submission
+        function handleNewsletterSubmit(event) {
+            event.preventDefault();
+            alert('Thank you for subscribing!');
+            event.target.reset();
+        }
+        
+        // FAQ toggle
+        function toggleFAQ(index) {
+            const content = document.getElementById('faq-content-' + index);
+            const icon = document.getElementById('faq-icon-' + index);
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                content.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
     </script>
 </body>
 </html>`;
@@ -289,6 +310,68 @@ const Editor: React.FC = () => {
                         </form>
                     </div>
                 </div>
+            </div>
+        </section>`;
+        
+      case 'faq-accordion':
+        return `
+        <section class="py-20 bg-white">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4" style="color: ${theme.primaryColor}">${content.title}</h2>
+                    ${content.subtitle ? `<p class="text-xl text-gray-600">${content.subtitle}</p>` : ''}
+                </div>
+                <div class="space-y-4">
+                    ${content.faqs.map((faq: any, index: number) => `
+                        <div class="bg-gray-50 rounded-xl overflow-hidden">
+                            <button onclick="toggleFAQ(${index})" class="w-full px-6 py-6 text-left flex items-center justify-between hover:bg-gray-100 transition-colors">
+                                <h3 class="text-lg font-semibold text-gray-900">${faq.question}</h3>
+                                <svg class="w-5 h-5 text-gray-500 transform transition-transform" id="faq-icon-${index}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div id="faq-content-${index}" class="hidden px-6 pb-6">
+                                <p class="text-gray-600 leading-relaxed">${faq.answer}</p>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        </section>`;
+        
+      case 'stats-grid':
+        return `
+        <section class="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4" style="color: ${theme.primaryColor}">${content.title}</h2>
+                    ${content.subtitle ? `<p class="text-xl text-gray-600">${content.subtitle}</p>` : ''}
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    ${content.stats.map((stat: any) => `
+                        <div class="text-center p-6 bg-white rounded-xl shadow-lg">
+                            <div class="text-4xl font-bold mb-2" style="color: ${theme.primaryColor}">
+                                ${stat.number}${stat.suffix || ''}
+                            </div>
+                            <div class="text-gray-600 font-medium">${stat.label}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        </section>`;
+        
+      case 'newsletter-centered':
+        return `
+        <section class="py-20 bg-gradient-to-br from-blue-600 to-purple-700">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-4xl font-bold text-white mb-4">${content.title}</h2>
+                <p class="text-xl text-white/90 mb-8">${content.subtitle}</p>
+                <form onsubmit="handleNewsletterSubmit(event)" class="max-w-md mx-auto">
+                    <div class="flex gap-3">
+                        <input type="email" required placeholder="${content.placeholder}" class="flex-1 px-6 py-4 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50">
+                        <button type="submit" class="px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold hover:bg-gray-100 transition-colors">${content.buttonText}</button>
+                    </div>
+                </form>
             </div>
         </section>`;
         
