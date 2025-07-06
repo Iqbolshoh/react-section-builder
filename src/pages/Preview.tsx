@@ -62,13 +62,13 @@ const Preview: React.FC = () => {
             >
               <ArrowLeft className="w-5 h-5 text-gray-600" />
             </button>
-            
+
             <div>
               <h1 className="text-lg font-semibold text-gray-900">{currentProject.name}</h1>
               <p className="text-sm text-gray-500">Live Preview</p>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <button
               onClick={() => navigate(`/editor/${currentProject.id}`)}
@@ -77,7 +77,7 @@ const Preview: React.FC = () => {
               <Edit3 className="w-4 h-4" />
               Edit
             </button>
-            
+
             <button
               onClick={handlePublish}
               className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
@@ -85,7 +85,7 @@ const Preview: React.FC = () => {
               <ExternalLink className="w-4 h-4" />
               Publish
             </button>
-            
+
             <button
               onClick={() => {
                 navigator.share?.({
@@ -130,7 +130,7 @@ const Preview: React.FC = () => {
                 key={section.id}
                 section={section}
                 isSelected={false}
-                onSelect={() => {}}
+                onSelect={() => { }}
                 isPreview={true}
               />
             ))

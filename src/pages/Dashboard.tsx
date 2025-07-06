@@ -18,7 +18,7 @@ const Dashboard: React.FC = () => {
   const handleCreateProject = () => {
     setIsCreating(true);
     const newProject = createProject(`Website ${projects.length + 1}`);
-    
+
     setTimeout(() => {
       setIsCreating(false);
       navigate(`/editor/${newProject.id}`);
@@ -44,7 +44,7 @@ const Dashboard: React.FC = () => {
               </div>
               <h1 className="text-xl font-bold text-gray-900">templates.uz</h1>
             </div>
-            
+
             <div className="flex items-center gap-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -56,21 +56,19 @@ const Dashboard: React.FC = () => {
                   className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64"
                 />
               </div>
-              
+
               <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-md transition-colors ${
-                    viewMode === 'grid' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
-                  }`}
+                  className={`p-2 rounded-md transition-colors ${viewMode === 'grid' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
+                    }`}
                 >
                   <Grid className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`p-2 rounded-md transition-colors ${
-                    viewMode === 'list' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
-                  }`}
+                  className={`p-2 rounded-md transition-colors ${viewMode === 'list' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
+                    }`}
                 >
                   <List className="w-4 h-4" />
                 </button>
@@ -113,31 +111,28 @@ const Dashboard: React.FC = () => {
 
         {/* Projects List */}
         {filteredProjects.length > 0 ? (
-          <div className={`grid gap-6 ${
-            viewMode === 'grid' 
-              ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' 
+          <div className={`grid gap-6 ${viewMode === 'grid'
+              ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
               : 'grid-cols-1'
-          }`}>
+            }`}>
             {filteredProjects.map((project, index) => (
               <motion.div
                 key={project.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer ${
-                  viewMode === 'list' ? 'flex' : ''
-                }`}
+                className={`bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer ${viewMode === 'list' ? 'flex' : ''
+                  }`}
                 onClick={() => navigate(`/editor/${project.id}`)}
               >
                 {/* Project Preview */}
-                <div className={`bg-gradient-to-br from-blue-100 to-purple-100 ${
-                  viewMode === 'list' ? 'w-32 h-24' : 'h-48'
-                } flex items-center justify-center`}>
+                <div className={`bg-gradient-to-br from-blue-100 to-purple-100 ${viewMode === 'list' ? 'w-32 h-24' : 'h-48'
+                  } flex items-center justify-center`}>
                   <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-md">
                     <Palette className="w-6 h-6 text-blue-600" />
                   </div>
                 </div>
-                
+
                 {/* Project Info */}
                 <div className={`p-6 ${viewMode === 'list' ? 'flex-1' : ''}`}>
                   <div className="flex items-start justify-between mb-4">
@@ -150,7 +145,7 @@ const Dashboard: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                  
+
                   {/* Action Buttons */}
                   <div className="flex items-center gap-2">
                     <button
@@ -163,7 +158,7 @@ const Dashboard: React.FC = () => {
                       <Edit3 className="w-4 h-4" />
                       Edit
                     </button>
-                    
+
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -174,7 +169,7 @@ const Dashboard: React.FC = () => {
                       <Eye className="w-4 h-4" />
                       Preview
                     </button>
-                    
+
                     <button
                       onClick={(e) => handleDeleteProject(project.id, e)}
                       className="flex items-center gap-1 px-3 py-1.5 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"

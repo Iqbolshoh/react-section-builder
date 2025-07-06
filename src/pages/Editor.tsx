@@ -3,12 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
-import { 
-  ArrowLeft, 
-  Plus, 
-  Settings, 
-  Eye, 
-  Download, 
+import {
+  ArrowLeft,
+  Plus,
+  Settings,
+  Eye,
+  Download,
   Palette,
   Smartphone,
   Tablet,
@@ -49,26 +49,26 @@ const Editor: React.FC = () => {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    
+
     if (!over || !currentProject) return;
-    
+
     const activeId = active.id;
     const overId = over.id;
-    
+
     if (activeId !== overId) {
       const sections = [...currentProject.sections];
       const activeIndex = sections.findIndex(section => section.id === activeId);
       const overIndex = sections.findIndex(section => section.id === overId);
-      
+
       if (activeIndex !== -1 && overIndex !== -1) {
         const [removed] = sections.splice(activeIndex, 1);
         sections.splice(overIndex, 0, removed);
-        
+
         const updatedSections = sections.map((section, index) => ({
           ...section,
           order: index
         }));
-        
+
         reorderSections(updatedSections);
       }
     }
@@ -86,7 +86,7 @@ const Editor: React.FC = () => {
   const handleExport = () => {
     if (currentProject) {
       const htmlContent = generateHTMLExport(currentProject, theme);
-      
+
       const blob = new Blob([htmlContent], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -207,7 +207,7 @@ const Editor: React.FC = () => {
 
   const generateSectionHTML = (section: any, theme: any) => {
     const { content, type } = section;
-    
+
     switch (type) {
       case 'hero-split':
         return `
@@ -227,7 +227,7 @@ const Editor: React.FC = () => {
                 </div>
             </div>
         </section>`;
-        
+
       case 'header-classic':
         return `
         <header class="bg-white shadow-sm border-b border-gray-200">
@@ -255,7 +255,7 @@ const Editor: React.FC = () => {
                 </div>
             </div>
         </header>`;
-        
+
       case 'contact-form':
         return `
         <section class="py-20 bg-white">
@@ -312,7 +312,7 @@ const Editor: React.FC = () => {
                 </div>
             </div>
         </section>`;
-        
+
       case 'faq-accordion':
         return `
         <section class="py-20 bg-white">
@@ -338,7 +338,7 @@ const Editor: React.FC = () => {
                 </div>
             </div>
         </section>`;
-        
+
       case 'stats-grid':
         return `
         <section class="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
@@ -359,7 +359,7 @@ const Editor: React.FC = () => {
                 </div>
             </div>
         </section>`;
-        
+
       case 'newsletter-centered':
         return `
         <section class="py-20 bg-gradient-to-br from-blue-600 to-purple-700">
@@ -374,7 +374,7 @@ const Editor: React.FC = () => {
                 </form>
             </div>
         </section>`;
-        
+
       default:
         return `<div class="py-20 text-center">
             <h2 class="text-2xl font-bold text-gray-900">${type} Section</h2>
@@ -411,7 +411,7 @@ const Editor: React.FC = () => {
               <p className="text-xs text-gray-500">{currentProject.sections.length} sections</p>
             </div>
           </div>
-          
+
           <button
             onClick={() => setShowMobileMenu(!showMobileMenu)}
             className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
@@ -433,25 +433,22 @@ const Editor: React.FC = () => {
               <div className="flex items-center gap-1 bg-gray-100 rounded-xl p-1">
                 <button
                   onClick={() => setDevicePreview('mobile')}
-                  className={`flex-1 p-2 rounded-lg transition-colors text-xs ${
-                    devicePreview === 'mobile' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600'
-                  }`}
+                  className={`flex-1 p-2 rounded-lg transition-colors text-xs ${devicePreview === 'mobile' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600'
+                    }`}
                 >
                   <Smartphone className="w-4 h-4 mx-auto" />
                 </button>
                 <button
                   onClick={() => setDevicePreview('tablet')}
-                  className={`flex-1 p-2 rounded-lg transition-colors text-xs ${
-                    devicePreview === 'tablet' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600'
-                  }`}
+                  className={`flex-1 p-2 rounded-lg transition-colors text-xs ${devicePreview === 'tablet' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600'
+                    }`}
                 >
                   <Tablet className="w-4 h-4 mx-auto" />
                 </button>
                 <button
                   onClick={() => setDevicePreview('desktop')}
-                  className={`flex-1 p-2 rounded-lg transition-colors text-xs ${
-                    devicePreview === 'desktop' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600'
-                  }`}
+                  className={`flex-1 p-2 rounded-lg transition-colors text-xs ${devicePreview === 'desktop' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600'
+                    }`}
                 >
                   <Monitor className="w-4 h-4 mx-auto" />
                 </button>
@@ -469,7 +466,7 @@ const Editor: React.FC = () => {
                   <Plus className="w-4 h-4" />
                   Add Section
                 </button>
-                
+
                 <button
                   onClick={() => {
                     setShowThemeCustomizer(true);
@@ -480,7 +477,7 @@ const Editor: React.FC = () => {
                   <Settings className="w-4 h-4" />
                   Theme
                 </button>
-                
+
                 <button
                   onClick={() => navigate(`/preview/${currentProject.id}`)}
                   className="flex items-center justify-center gap-2 px-3 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-xl hover:from-blue-600 hover:to-cyan-700 transition-all text-sm font-semibold"
@@ -527,7 +524,7 @@ const Editor: React.FC = () => {
             >
               <ArrowLeft className="w-5 h-5 text-gray-600" />
             </button>
-            
+
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center">
                 <Palette className="w-6 h-6 text-white" />
@@ -538,31 +535,28 @@ const Editor: React.FC = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-3">
             {/* Device Preview Toggle */}
             <div className="flex items-center gap-1 bg-gray-100 rounded-xl p-1">
               <button
                 onClick={() => setDevicePreview('mobile')}
-                className={`p-3 rounded-lg transition-colors ${
-                  devicePreview === 'mobile' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
-                }`}
+                className={`p-3 rounded-lg transition-colors ${devicePreview === 'mobile' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
+                  }`}
               >
                 <Smartphone className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setDevicePreview('tablet')}
-                className={`p-3 rounded-lg transition-colors ${
-                  devicePreview === 'tablet' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
-                }`}
+                className={`p-3 rounded-lg transition-colors ${devicePreview === 'tablet' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
+                  }`}
               >
                 <Tablet className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setDevicePreview('desktop')}
-                className={`p-3 rounded-lg transition-colors ${
-                  devicePreview === 'desktop' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
-                }`}
+                className={`p-3 rounded-lg transition-colors ${devicePreview === 'desktop' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
+                  }`}
               >
                 <Monitor className="w-4 h-4" />
               </button>
@@ -576,7 +570,7 @@ const Editor: React.FC = () => {
               <Plus className="w-4 h-4" />
               Add Section
             </button>
-            
+
             <button
               onClick={() => setShowThemeCustomizer(true)}
               className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl hover:from-purple-600 hover:to-indigo-700 transition-all font-semibold shadow-lg"
@@ -584,7 +578,7 @@ const Editor: React.FC = () => {
               <Settings className="w-4 h-4" />
               Theme
             </button>
-            
+
             <button
               onClick={() => navigate(`/preview/${currentProject.id}`)}
               className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-xl hover:from-blue-600 hover:to-cyan-700 transition-all font-semibold shadow-lg"
@@ -607,7 +601,7 @@ const Editor: React.FC = () => {
               )}
               {isSaving ? 'Saving...' : editingSection ? 'Done Editing' : 'Save'}
             </button>
-            
+
             <button
               onClick={handleExport}
               className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-xl hover:from-orange-600 hover:to-red-700 transition-all font-semibold shadow-lg"
@@ -685,7 +679,7 @@ const Editor: React.FC = () => {
           onSelect={() => setShowSectionSelector(false)}
         />
       )}
-      
+
       {showThemeCustomizer && (
         <ThemeCustomizer
           onClose={() => setShowThemeCustomizer(false)}
