@@ -21,12 +21,22 @@ import NewsletterSection from './sections/NewsletterSection';
 import CTASection from './sections/CTASection';
 import GallerySection from './sections/GallerySection';
 
+interface ThemeConfig {
+  fonts: {
+    primary: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+  };
+}
+
 interface SectionRendererProps {
   section: any;
   isSelected: boolean;
   onSelect: () => void;
   isPreview?: boolean;
-  theme?: any;
+  theme?: ThemeConfig;
   isEditing?: boolean;
   onEdit: (editing: boolean) => void;
 }

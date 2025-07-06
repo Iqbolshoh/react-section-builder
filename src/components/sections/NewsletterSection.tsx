@@ -2,6 +2,16 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Send, Check } from 'lucide-react';
 
+interface ThemeConfig {
+  fonts: {
+    primary: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+  };
+}
+
 interface NewsletterSectionProps {
   content: {
     title: string;
@@ -11,7 +21,7 @@ interface NewsletterSectionProps {
   };
   isEditing: boolean;
   onChange: (content: any) => void;
-  theme?: any;
+  theme?: ThemeConfig;
   variant?: string;
 }
 
@@ -41,7 +51,7 @@ const NewsletterSection: React.FC<NewsletterSectionProps> = ({
   };
 
   return (
-    <section className="py-12 sm:py-20 bg-gradient-to-br from-blue-600 to-purple-700" style={{ fontFamily: theme?.fontFamily }}>
+    <section className="py-12 sm:py-20 bg-gradient-to-br from-blue-600 to-purple-700" style={{ fontFamily: theme?.fonts?.primary }}>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

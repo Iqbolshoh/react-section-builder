@@ -2,6 +2,16 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import ImageUpload from '../ImageUpload';
 
+interface ThemeConfig {
+  fonts: {
+    primary: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+  };
+}
+
 interface HeroSectionProps {
   content: {
     title: string;
@@ -12,7 +22,7 @@ interface HeroSectionProps {
   };
   isEditing: boolean;
   onChange: (content: any) => void;
-  theme?: any;
+  theme?: ThemeConfig;
   variant?: string;
 }
 
@@ -28,7 +38,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   };
 
   const renderSplitHero = () => (
-    <section className="relative min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center overflow-hidden" style={{ fontFamily: theme?.fontFamily }}>
+    <section className="relative min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center overflow-hidden" style={{ fontFamily: theme?.fonts?.primary }}>
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-purple-100/20"></div>
       <div className="absolute top-20 left-20 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl"></div>
@@ -52,7 +62,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                   placeholder="Enter hero title"
                 />
               ) : (
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 lg:mb-6 leading-tight" style={{ color: theme?.primaryColor }}>
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 lg:mb-6 leading-tight" style={{ color: theme?.colors?.primary }}>
                   {content.title}
                 </h1>
               )}
@@ -103,7 +113,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 <a
                   href={content.buttonLink}
                   className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold text-base sm:text-lg hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
-                  style={{ backgroundColor: theme?.primaryColor }}
+                  style={{ backgroundColor: theme?.colors?.primary }}
                 >
                   {content.buttonText}
                 </a>
@@ -153,7 +163,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       className="relative min-h-screen flex items-center justify-center text-center bg-cover bg-center bg-no-repeat"
       style={{ 
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${content.image})`,
-        fontFamily: theme?.fontFamily 
+        fontFamily: theme?.fonts?.primary 
       }}
     >
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
@@ -189,7 +199,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                   type="text"
                   value={content.buttonText}
                   onChange={(e) => handleChange('buttonText', e.target.value)}
-                  className="px-8 py-4 bg-white text-gray-900 rounded-full font-semibold text-lg border-2 border-dashed border-white/50"
+                  className="px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold text-lg border-2 border-dashed border-white/50"
                   placeholder="Button text"
                 />
                 <input
@@ -211,7 +221,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               </p>
               <a
                 href={content.buttonLink}
-                className="inline-block px-8 py-4 bg-white text-gray-900 rounded-full font-semibold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="inline-block px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 {content.buttonText}
               </a>
@@ -223,7 +233,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   );
 
   const renderVideoHero = () => (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ fontFamily: theme?.fontFamily }}>
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ fontFamily: theme?.fonts?.primary }}>
       {/* Video Background Placeholder */}
       <div className="absolute inset-0">
         <img
@@ -266,7 +276,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 type="text"
                 value={content.buttonText}
                 onChange={(e) => handleChange('buttonText', e.target.value)}
-                className="px-8 py-4 bg-white text-gray-900 rounded-full font-semibold text-lg border-2 border-dashed border-white/50"
+                className="px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold text-lg border-2 border-dashed border-white/50"
                 placeholder="Button text"
               />
             </>
@@ -280,7 +290,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               </p>
               <a
                 href={content.buttonLink}
-                className="inline-block px-8 py-4 bg-white text-gray-900 rounded-full font-semibold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="inline-block px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 {content.buttonText}
               </a>

@@ -10,6 +10,16 @@ interface Project {
   url?: string;
 }
 
+interface ThemeConfig {
+  fonts: {
+    primary: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+  };
+}
+
 interface PortfolioSectionProps {
   content: {
     title: string;
@@ -19,7 +29,7 @@ interface PortfolioSectionProps {
   };
   isEditing: boolean;
   onChange: (content: any) => void;
-  theme?: any;
+  theme?: ThemeConfig;
   variant?: string;
 }
 
@@ -65,7 +75,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
   const allCategories = ['All', ...content.categories];
 
   const renderGridPortfolio = () => (
-    <section className="py-12 sm:py-20 bg-gray-50" style={{ fontFamily: theme?.fontFamily }}>
+    <section className="py-12 sm:py-20 bg-gray-50" style={{ fontFamily: theme?.fonts?.primary }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-16">
           {isEditing ? (
@@ -87,7 +97,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
             </>
           ) : (
             <>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.primaryColor }}>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.colors?.primary }}>
                 {content.title}
               </h2>
               {content.subtitle && (
@@ -238,7 +248,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
   );
 
   const renderMasonryPortfolio = () => (
-    <section className="py-12 sm:py-20 bg-white" style={{ fontFamily: theme?.fontFamily }}>
+    <section className="py-12 sm:py-20 bg-white" style={{ fontFamily: theme?.fonts?.primary }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-16">
           {isEditing ? (
@@ -250,7 +260,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
               placeholder="Enter section title"
             />
           ) : (
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.primaryColor }}>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.colors?.primary }}>
               {content.title}
             </h2>
           )}

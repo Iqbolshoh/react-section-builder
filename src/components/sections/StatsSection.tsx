@@ -8,6 +8,16 @@ interface Stat {
   suffix?: string;
 }
 
+interface ThemeConfig {
+  fonts: {
+    primary: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+  };
+}
+
 interface StatsSectionProps {
   content: {
     title: string;
@@ -16,7 +26,7 @@ interface StatsSectionProps {
   };
   isEditing: boolean;
   onChange: (content: any) => void;
-  theme?: any;
+  theme?: ThemeConfig;
   variant?: string;
 }
 
@@ -75,7 +85,7 @@ const StatsSection: React.FC<StatsSectionProps> = ({
   }, [content.stats, isEditing]);
 
   return (
-    <section className="py-12 sm:py-20 bg-gradient-to-br from-blue-50 to-purple-50" style={{ fontFamily: theme?.fontFamily }}>
+    <section className="py-12 sm:py-20 bg-gradient-to-br from-blue-50 to-purple-50" style={{ fontFamily: theme?.fonts?.primary }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-16">
           {isEditing ? (
@@ -97,7 +107,7 @@ const StatsSection: React.FC<StatsSectionProps> = ({
             </>
           ) : (
             <>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.primaryColor }}>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.colors?.primary }}>
                 {content.title}
               </h2>
               {content.subtitle && (
@@ -160,7 +170,7 @@ const StatsSection: React.FC<StatsSectionProps> = ({
                 </>
               ) : (
                 <>
-                  <div className="text-3xl sm:text-4xl font-bold mb-2" style={{ color: theme?.primaryColor }}>
+                  <div className="text-3xl sm:text-4xl font-bold mb-2" style={{ color: theme?.colors?.primary }}>
                     {animatedNumbers[index] || stat.number}{stat.suffix}
                   </div>
                   <div className="text-gray-600 font-medium">

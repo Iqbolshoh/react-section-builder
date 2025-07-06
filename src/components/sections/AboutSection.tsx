@@ -3,6 +3,16 @@ import { motion } from 'framer-motion';
 import { Users, Target, Award } from 'lucide-react';
 import ImageUpload from '../ImageUpload';
 
+interface ThemeConfig {
+  fonts: {
+    primary: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+  };
+}
+
 interface AboutSectionProps {
   content: {
     title: string;
@@ -14,7 +24,7 @@ interface AboutSectionProps {
   };
   isEditing: boolean;
   onChange: (content: any) => void;
-  theme?: any;
+  theme?: ThemeConfig;
   variant?: string;
 }
 
@@ -30,7 +40,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({
   };
 
   const renderStoryAbout = () => (
-    <section className="py-12 sm:py-20 bg-white" style={{ fontFamily: theme?.fontFamily }}>
+    <section className="py-12 sm:py-20 bg-white" style={{ fontFamily: theme?.fonts?.primary }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Image */}
@@ -83,7 +93,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({
                   placeholder="Enter section title"
                 />
               ) : (
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 lg:mb-6" style={{ color: theme?.primaryColor }}>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 lg:mb-6" style={{ color: theme?.colors?.primary }}>
                   {content.title}
                 </h2>
               )}
@@ -147,7 +157,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({
                       </>
                     ) : (
                       <>
-                        <div className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: theme?.primaryColor }}>
+                        <div className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: theme?.colors?.primary }}>
                           {stat.value}
                         </div>
                         <div className="text-gray-600 text-sm sm:text-base">{stat.label}</div>
@@ -164,7 +174,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({
   );
 
   const renderTeamAbout = () => (
-    <section className="py-12 sm:py-20 bg-gray-50" style={{ fontFamily: theme?.fontFamily }}>
+    <section className="py-12 sm:py-20 bg-gray-50" style={{ fontFamily: theme?.fonts?.primary }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-16">
           {isEditing ? (
@@ -176,7 +186,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({
               placeholder="Enter section title"
             />
           ) : (
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.primaryColor }}>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.colors?.primary }}>
               {content.title}
             </h2>
           )}
@@ -247,7 +257,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({
   );
 
   const renderValuesAbout = () => (
-    <section className="py-12 sm:py-20 bg-white" style={{ fontFamily: theme?.fontFamily }}>
+    <section className="py-12 sm:py-20 bg-white" style={{ fontFamily: theme?.fonts?.primary }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-16">
           {isEditing ? (
@@ -259,7 +269,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({
               placeholder="Enter section title"
             />
           ) : (
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.primaryColor }}>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.colors?.primary }}>
               {content.title}
             </h2>
           )}

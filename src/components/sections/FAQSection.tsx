@@ -7,6 +7,16 @@ interface FAQ {
   answer: string;
 }
 
+interface ThemeConfig {
+  fonts: {
+    primary: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+  };
+}
+
 interface FAQSectionProps {
   content: {
     title: string;
@@ -15,7 +25,7 @@ interface FAQSectionProps {
   };
   isEditing: boolean;
   onChange: (content: any) => void;
-  theme?: any;
+  theme?: ThemeConfig;
   variant?: string;
 }
 
@@ -55,7 +65,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
   };
 
   return (
-    <section className="py-12 sm:py-20 bg-white" style={{ fontFamily: theme?.fontFamily }}>
+    <section className="py-12 sm:py-20 bg-white" style={{ fontFamily: theme?.fonts?.primary }}>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-16">
           {isEditing ? (
@@ -77,7 +87,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
             </>
           ) : (
             <>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.primaryColor }}>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.colors?.primary }}>
                 {content.title}
               </h2>
               {content.subtitle && (

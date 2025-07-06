@@ -3,12 +3,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Edit3, Share2, ExternalLink } from 'lucide-react';
 import { useProject } from '../contexts/ProjectContext';
+import { useTheme } from '../contexts/ThemeContext';
 import SectionRenderer from '../components/SectionRenderer';
 
 const Preview: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { projects, currentProject, setCurrentProject } = useProject();
+  const { currentTheme } = useTheme();
   const [showHeader, setShowHeader] = useState(true);
 
   useEffect(() => {
@@ -132,6 +134,7 @@ const Preview: React.FC = () => {
                 isSelected={false}
                 onSelect={() => { }}
                 isPreview={true}
+                theme={currentTheme}
               />
             ))
         )}

@@ -2,6 +2,16 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
+interface ThemeConfig {
+  fonts: {
+    primary: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+  };
+}
+
 interface CTASectionProps {
   content: {
     title: string;
@@ -12,7 +22,7 @@ interface CTASectionProps {
   };
   isEditing: boolean;
   onChange: (content: any) => void;
-  theme?: any;
+  theme?: ThemeConfig;
   variant?: string;
 }
 
@@ -28,7 +38,7 @@ const CTASection: React.FC<CTASectionProps> = ({
   };
 
   const renderGradientCTA = () => (
-    <section className="py-12 sm:py-20 bg-gradient-to-br from-blue-600 to-purple-700" style={{ fontFamily: theme?.fontFamily }}>
+    <section className="py-12 sm:py-20 bg-gradient-to-br from-blue-600 to-purple-700" style={{ fontFamily: theme?.fonts?.primary }}>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -101,7 +111,7 @@ const CTASection: React.FC<CTASectionProps> = ({
       className="py-12 sm:py-20 bg-cover bg-center bg-no-repeat relative"
       style={{ 
         backgroundImage: content.backgroundImage ? `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${content.backgroundImage})` : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        fontFamily: theme?.fontFamily 
+        fontFamily: theme?.fonts?.primary 
       }}
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">

@@ -2,6 +2,16 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X, Globe, Facebook, Twitter, Instagram } from 'lucide-react';
 
+interface ThemeConfig {
+  fonts: {
+    primary: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+  };
+}
+
 interface HeaderSectionProps {
   content: {
     logo: string;
@@ -13,7 +23,7 @@ interface HeaderSectionProps {
   };
   isEditing: boolean;
   onChange: (content: any) => void;
-  theme?: any;
+  theme?: ThemeConfig;
   variant?: string;
 }
 
@@ -46,7 +56,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
   };
 
   const renderClassicHeader = () => (
-    <header className="bg-white shadow-sm border-b border-gray-200" style={{ fontFamily: theme?.fontFamily }}>
+    <header className="bg-white shadow-sm border-b border-gray-200" style={{ fontFamily: theme?.fonts?.primary }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
@@ -73,7 +83,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                 {content.logo && (
                   <img src={content.logo} alt="Logo" className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
                 )}
-                <span className="text-lg sm:text-xl font-bold" style={{ color: theme?.primaryColor }}>
+                <span className="text-lg sm:text-xl font-bold" style={{ color: theme?.colors?.primary }}>
                   {content.companyName}
                 </span>
               </>
@@ -198,7 +208,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
   );
 
   const renderCenteredHeader = () => (
-    <header className="bg-white shadow-sm border-b border-gray-200" style={{ fontFamily: theme?.fontFamily }}>
+    <header className="bg-white shadow-sm border-b border-gray-200" style={{ fontFamily: theme?.fonts?.primary }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="text-center">
           {/* Logo */}
@@ -225,7 +235,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                 {content.logo && (
                   <img src={content.logo} alt="Logo" className="w-12 h-12 sm:w-16 sm:h-16 object-contain" />
                 )}
-                <h1 className="text-xl sm:text-2xl font-bold" style={{ color: theme?.primaryColor }}>
+                <h1 className="text-xl sm:text-2xl font-bold" style={{ color: theme?.colors?.primary }}>
                   {content.companyName}
                 </h1>
               </>
@@ -277,7 +287,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
   );
 
   const renderMinimalHeader = () => (
-    <header className="bg-white" style={{ fontFamily: theme?.fontFamily }}>
+    <header className="bg-white" style={{ fontFamily: theme?.fonts?.primary }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -293,7 +303,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                 />
               </>
             ) : (
-              <span className="text-lg font-bold" style={{ color: theme?.primaryColor }}>
+              <span className="text-lg font-bold" style={{ color: theme?.colors?.primary }}>
                 {content.companyName}
               </span>
             )}

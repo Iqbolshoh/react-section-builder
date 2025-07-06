@@ -25,11 +25,22 @@ import SectionRenderer from '../components/SectionRenderer';
 import ThemeCustomizer from '../components/ThemeCustomizer';
 import DevicePreview from '../components/DevicePreview';
 
+interface ThemeConfig {
+  fonts: {
+    primary: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+  };
+  buttonStyle?: string;
+}
+
 const Editor: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { projects, currentProject, setCurrentProject, reorderSections } = useProject();
-  const { theme } = useTheme();
+  const { currentTheme } = useTheme();
   const [showSectionSelector, setShowSectionSelector] = useState(false);
   const [showThemeCustomizer, setShowThemeCustomizer] = useState(false);
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
@@ -84,8 +95,8 @@ const Editor: React.FC = () => {
   };
 
   const handleExport = () => {
-    if (currentProject) {
-      const htmlContent = generateHTMLExport(currentProject, theme);
+    if (currentProject && currentTheme) {
+      const htmlContent = generateHTMLExport(currentProject, currentTheme);
 
       const blob = new Blob([htmlContent], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
@@ -99,7 +110,7 @@ const Editor: React.FC = () => {
     }
   };
 
-  const generateHTMLExport = (project: any, theme: any) => {
+  const generateHTMLExport = (project: any, theme: ThemeConfig) => {
     const sectionsHTML = project.sections
       .sort((a: any, b: any) => a.order - b.order)
       .map((section: any) => generateSectionHTML(section, theme))
@@ -112,18 +123,18 @@ const Editor: React.FC = () => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${project.name}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=${theme.fontFamily.replace(' ', '+')}:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=${theme.fonts.primary.replace(' ', '+')}:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { 
-            font-family: '${theme.fontFamily}', sans-serif; 
+            font-family: '${theme.fonts.primary}', sans-serif; 
             margin: 0;
             padding: 0;
         }
-        .primary-color { color: ${theme.primaryColor}; }
-        .secondary-color { color: ${theme.secondaryColor}; }
-        .primary-bg { background-color: ${theme.primaryColor}; }
-        .secondary-bg { background-color: ${theme.secondaryColor}; }
-        .gradient-bg { background: linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor}); }
+        .primary-color { color: ${theme.colors.primary}; }
+        .secondary-color { color: ${theme.colors.secondary}; }
+        .primary-bg { background-color: ${theme.colors.primary}; }
+        .secondary-bg { background-color: ${theme.colors.secondary}; }
+        .gradient-bg { background: linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary}); }
         
         /* Responsive utilities */
         @media (max-width: 640px) {
@@ -135,7 +146,7 @@ const Editor: React.FC = () => {
         
         /* Button styles */
         .btn-primary {
-            background: linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor});
+            background: linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary});
             color: white;
             padding: 12px 24px;
             border-radius: ${theme.buttonStyle === 'rounded' ? '9999px' : '8px'};
@@ -205,7 +216,7 @@ const Editor: React.FC = () => {
 </html>`;
   };
 
-  const generateSectionHTML = (section: any, theme: any) => {
+  const generateSectionHTML = (section: any, theme: ThemeConfig) => {
     const { content, type } = section;
 
     switch (type) {
@@ -215,7 +226,7 @@ const Editor: React.FC = () => {
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     <div class="text-center lg:text-left">
-                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6" style="color: ${theme.primaryColor}">
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6" style="color: ${theme.colors.primary}">
                             ${content.title}
                         </h1>
                         <p class="text-xl text-gray-600 mb-8">${content.subtitle}</p>
@@ -235,7 +246,7 @@ const Editor: React.FC = () => {
                 <div class="flex items-center justify-between h-16">
                     <div class="flex items-center gap-3">
                         ${content.logo ? `<img src="${content.logo}" alt="Logo" class="w-10 h-10 object-contain">` : ''}
-                        <span class="text-xl font-bold" style="color: ${theme.primaryColor}">${content.companyName}</span>
+                        <span class="text-xl font-bold" style="color: ${theme.colors.primary}">${content.companyName}</span>
                     </div>
                     <nav class="hidden lg:flex items-center space-x-8">
                         ${content.menuItems.map((item: any) => `
@@ -261,7 +272,7 @@ const Editor: React.FC = () => {
         <section class="py-20 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold text-gray-900 mb-4" style="color: ${theme.primaryColor}">${content.title}</h2>
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4" style="color: ${theme.colors.primary}">${content.title}</h2>
                     <p class="text-xl text-gray-600">${content.subtitle}</p>
                 </div>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -318,7 +329,7 @@ const Editor: React.FC = () => {
         <section class="py-20 bg-white">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold text-gray-900 mb-4" style="color: ${theme.primaryColor}">${content.title}</h2>
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4" style="color: ${theme.colors.primary}">${content.title}</h2>
                     ${content.subtitle ? `<p class="text-xl text-gray-600">${content.subtitle}</p>` : ''}
                 </div>
                 <div class="space-y-4">
@@ -344,13 +355,13 @@ const Editor: React.FC = () => {
         <section class="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold text-gray-900 mb-4" style="color: ${theme.primaryColor}">${content.title}</h2>
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4" style="color: ${theme.colors.primary}">${content.title}</h2>
                     ${content.subtitle ? `<p class="text-xl text-gray-600">${content.subtitle}</p>` : ''}
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     ${content.stats.map((stat: any) => `
                         <div class="text-center p-6 bg-white rounded-xl shadow-lg">
-                            <div class="text-4xl font-bold mb-2" style="color: ${theme.primaryColor}">
+                            <div class="text-4xl font-bold mb-2" style="color: ${theme.colors.primary}">
                                 ${stat.number}${stat.suffix || ''}
                             </div>
                             <div class="text-gray-600 font-medium">${stat.label}</div>
@@ -623,7 +634,7 @@ const Editor: React.FC = () => {
                 items={currentProject.sections.map(s => s.id)}
                 strategy={verticalListSortingStrategy}
               >
-                <div className="min-h-full" style={{ fontFamily: theme.fontFamily }}>
+                <div className="min-h-full" style={{ fontFamily: currentTheme?.fonts?.primary }}>
                   {currentProject.sections.length === 0 ? (
                     <div className="h-full flex items-center justify-center p-8">
                       <div className="text-center">
@@ -653,7 +664,7 @@ const Editor: React.FC = () => {
                           section={section}
                           isSelected={selectedSection === section.id}
                           onSelect={() => setSelectedSection(section.id)}
-                          theme={theme}
+                          theme={currentTheme}
                           isEditing={editingSection === section.id}
                           onEdit={(editing) => {
                             if (editing) {

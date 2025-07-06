@@ -1,3 +1,213 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* CSS Variables for theming */
+:root {
+  /* Default theme colors */
+  --color-primary: #0ea5e9;
+  --color-secondary: #06b6d4;
+  --color-accent: #f59e0b;
+  --color-background: #f8fafc;
+  --color-surface: #ffffff;
+  --color-text: #0f172a;
+  --color-text-secondary: #64748b;
+  --color-border: #e2e8f0;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  
+  /* Color variants */
+  --color-primary-100: #e0f2fe;
+  --color-primary-200: #bae6fd;
+  --color-primary-300: #7dd3fc;
+  --color-secondary-100: #cffafe;
+  --color-secondary-200: #a5f3fc;
+  --color-accent-100: #fef3c7;
+  --color-accent-200: #fde68a;
+  
+  /* Fonts */
+  --font-primary: 'Inter', sans-serif;
+  --font-secondary: 'Poppins', sans-serif;
+  --font-accent: 'Merriweather', serif;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+}
+
+/* Global theme classes */
+.theme-text {
+  color: var(--color-text);
+}
+
+.theme-text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.theme-bg {
+  background-color: var(--color-background);
+}
+
+.theme-surface {
+  background-color: var(--color-surface);
+}
+
+.theme-primary {
+  color: var(--color-primary);
+}
+
+.theme-primary-bg {
+  background-color: var(--color-primary);
+}
+
+.theme-secondary {
+  color: var(--color-secondary);
+}
+
+.theme-secondary-bg {
+  background-color: var(--color-secondary);
+}
+
+.theme-accent {
+  color: var(--color-accent);
+}
+
+.theme-accent-bg {
+  background-color: var(--color-accent);
+}
+
+.theme-border {
+  border-color: var(--color-border);
+}
+
+.theme-shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.theme-shadow-md {
+  box-shadow: var(--shadow-md);
+}
+
+.theme-shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+.theme-shadow-xl {
+  box-shadow: var(--shadow-xl);
+}
+
+.theme-font-primary {
+  font-family: var(--font-primary);
+}
+
+.theme-font-secondary {
+  font-family: var(--font-secondary);
+}
+
+.theme-font-accent {
+  font-family: var(--font-accent);
+}
+
+/* Gradient backgrounds using CSS variables */
+.theme-gradient-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+}
+
+.theme-gradient-accent {
+  background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+}
+
+/* Button styles using theme variables */
+.theme-btn-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.theme-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.theme-btn-secondary {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  transition: all 0.3s ease;
+}
+
+.theme-btn-secondary:hover {
+  background: var(--color-primary);
+  color: white;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
+
+/* Smooth transitions for theme changes */
+* {
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Ensure text remains readable during theme transitions */
+.theme-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Loading states */
+.theme-loading {
+  background: linear-gradient(90deg, var(--color-border) 25%, transparent 50%, var(--color-border) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Focus states using theme colors */
+.theme-focus:focus {
+  outline: none;
+  ring: 2px solid var(--color-primary);
+  ring-opacity: 50%;
+}
+
+/* Selection colors */
+::selection {
+  background: var(--color-primary-100);
+  color: var(--color-text);
+}
+
+/* Print styles */
+@media print {
+  :root {
+    --color-primary: #000000;
+    --color-secondary: #666666;
+    --color-text: #000000;
+    --color-background: #ffffff;
+  }
+}

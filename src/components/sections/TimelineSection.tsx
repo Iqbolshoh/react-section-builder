@@ -8,6 +8,16 @@ interface TimelineItem {
   description: string;
 }
 
+interface ThemeConfig {
+  fonts: {
+    primary: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+  };
+}
+
 interface TimelineSectionProps {
   content: {
     title: string;
@@ -16,7 +26,7 @@ interface TimelineSectionProps {
   };
   isEditing: boolean;
   onChange: (content: any) => void;
-  theme?: any;
+  theme?: ThemeConfig;
   variant?: string;
 }
 
@@ -52,7 +62,7 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({
   };
 
   return (
-    <section className="py-12 sm:py-20 bg-gray-50" style={{ fontFamily: theme?.fontFamily }}>
+    <section className="py-12 sm:py-20 bg-gray-50" style={{ fontFamily: theme?.fonts?.primary }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-16">
           {isEditing ? (
@@ -74,7 +84,7 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({
             </>
           ) : (
             <>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.primaryColor }}>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.colors?.primary }}>
                 {content.title}
               </h2>
               {content.subtitle && (
@@ -103,7 +113,7 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({
                 } flex-col md:flex-row`}
               >
                 {/* Timeline Dot */}
-                <div className="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 w-4 h-4 bg-white border-4 border-blue-500 rounded-full z-10" style={{ borderColor: theme?.primaryColor }}></div>
+                <div className="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 w-4 h-4 bg-white border-4 border-blue-500 rounded-full z-10" style={{ borderColor: theme?.colors?.primary }}></div>
 
                 {/* Content */}
                 <div className={`w-full md:w-5/12 ${index % 2 === 0 ? 'md:pr-8' : 'md:pl-8'} ml-12 md:ml-0`}>
@@ -133,7 +143,7 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({
                           placeholder="Year"
                         />
                       ) : (
-                        <span className="text-lg font-bold" style={{ color: theme?.primaryColor }}>
+                        <span className="text-lg font-bold" style={{ color: theme?.colors?.primary }}>
                           {item.year}
                         </span>
                       )}

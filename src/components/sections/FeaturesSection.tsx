@@ -8,6 +8,16 @@ interface Feature {
   description: string;
 }
 
+interface ThemeConfig {
+  fonts: {
+    primary: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+  };
+}
+
 interface FeaturesSectionProps {
   content: {
     title: string;
@@ -16,7 +26,7 @@ interface FeaturesSectionProps {
   };
   isEditing: boolean;
   onChange: (content: any) => void;
-  theme?: any;
+  theme?: ThemeConfig;
   variant?: string;
 }
 
@@ -57,7 +67,7 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
   };
 
   const renderGridFeatures = () => (
-    <section className="py-12 sm:py-20 bg-white" style={{ fontFamily: theme?.fontFamily }}>
+    <section className="py-12 sm:py-20 bg-white" style={{ fontFamily: theme?.fonts?.primary }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-16">
           {isEditing ? (
@@ -79,7 +89,7 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
             </>
           ) : (
             <>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.primaryColor }}>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.colors?.primary }}>
                 {content.title}
               </h2>
               {content.subtitle && (
@@ -172,7 +182,7 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
   );
 
   const renderComparisonFeatures = () => (
-    <section className="py-12 sm:py-20 bg-gray-50" style={{ fontFamily: theme?.fontFamily }}>
+    <section className="py-12 sm:py-20 bg-gray-50" style={{ fontFamily: theme?.fonts?.primary }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-16">
           {isEditing ? (
@@ -184,7 +194,7 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
               placeholder="Enter section title"
             />
           ) : (
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.primaryColor }}>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.colors?.primary }}>
               {content.title}
             </h2>
           )}
