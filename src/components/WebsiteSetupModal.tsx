@@ -1,6 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Globe, Upload, Image as ImageIcon, Check, AlertCircle } from 'lucide-react';
+import { X, Globe, Image as ImageIcon, Check, AlertCircle } from 'lucide-react';
+import {
+  Briefcase,
+  Palette,
+  ShoppingCart,
+  BookOpen,
+  Utensils,
+  HeartPulse,
+  GraduationCap,
+  HandHeart,
+  Cpu,
+  User
+} from 'lucide-react';
 import { useProject } from '../contexts/ProjectContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,8 +24,7 @@ interface WebsiteSetupModalProps {
 interface WebsiteInfo {
   name: string;
   url: string;
-  title: string;
-  description: string;
+  seoKeywords: string;
   logo: string;
   favicon: string;
   category: string;
@@ -27,12 +38,12 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
   const [isCreating, setIsCreating] = useState(false);
   const [urlAvailable, setUrlAvailable] = useState<boolean | null>(null);
   const [checkingUrl, setCheckingUrl] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [websiteInfo, setWebsiteInfo] = useState<WebsiteInfo>({
     name: '',
     url: '',
-    title: '',
-    description: '',
+    seoKeywords: '',
     logo: '',
     favicon: '',
     category: 'business',
@@ -40,32 +51,85 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
   });
 
   const categories = [
-    { id: 'business', name: 'Business & Corporate', icon: '🏢' },
-    { id: 'portfolio', name: 'Portfolio & Creative', icon: '🎨' },
-    { id: 'ecommerce', name: 'E-commerce & Shop', icon: '🛒' },
-    { id: 'blog', name: 'Blog & News', icon: '📝' },
-    { id: 'restaurant', name: 'Restaurant & Food', icon: '🍽️' },
-    { id: 'health', name: 'Health & Medical', icon: '🏥' },
-    { id: 'education', name: 'Education & Learning', icon: '🎓' },
-    { id: 'nonprofit', name: 'Non-profit & Charity', icon: '❤️' },
-    { id: 'technology', name: 'Technology & SaaS', icon: '💻' },
-    { id: 'personal', name: 'Personal & Lifestyle', icon: '👤' }
+    { id: 'business', name: 'Business & Corporate', icon: Briefcase },
+    { id: 'portfolio', name: 'Portfolio & Creative', icon: Palette },
+    { id: 'ecommerce', name: 'E-commerce & Shop', icon: ShoppingCart },
+    { id: 'blog', name: 'Blog & News', icon: BookOpen },
+    { id: 'restaurant', name: 'Restaurant & Food', icon: Utensils },
+    { id: 'health', name: 'Health & Medical', icon: HeartPulse },
+    { id: 'education', name: 'Education & Learning', icon: GraduationCap },
+    { id: 'nonprofit', name: 'Non-profit & Charity', icon: HandHeart },
+    { id: 'technology', name: 'Technology & SaaS', icon: Cpu },
+    { id: 'personal', name: 'Personal & Lifestyle', icon: User }
   ];
 
   const languages = [
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'uz', name: 'O\'zbekcha', flag: '🇺🇿' },
-    { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-    { code: 'es', name: 'Español', flag: '🇪🇸' },
-    { code: 'fr', name: 'Français', flag: '🇫🇷' },
-    { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-    { code: 'it', name: 'Italiano', flag: '🇮🇹' },
-    { code: 'pt', name: 'Português', flag: '🇵🇹' }
+    { code: 'en', name: 'English' },
+    { code: 'uz', name: 'O\'zbekcha' },
+    { code: 'ru', name: 'Русский' },
+    { code: 'es', name: 'Español' },
+    { code: 'fr', name: 'Français' },
+    { code: 'de', name: 'Deutsch' },
+    { code: 'it', name: 'Italiano' },
+    { code: 'pt', name: 'Português' }
   ];
+
+  // Reserved subdomains that can't be used
+  const reservedSubdomains = [
+    'www', 'admin', 'api', 'test', 'demo', 'example',
+    'mail', 'ftp', 'webmail', 'blog', 'shop', 'app'
+  ];
+
+  useEffect(() => {
+    if (!isOpen) {
+      // Reset form when modal is closed
+      setStep(1);
+      setWebsiteInfo({
+        name: '',
+        url: '',
+        seoKeywords: '',
+        logo: '',
+        favicon: '',
+        category: 'business',
+        language: 'en'
+      });
+      setUrlAvailable(null);
+      setErrors({});
+    }
+  }, [isOpen]);
+
+  const validateStep = (stepNumber: number): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    if (stepNumber === 1) {
+      if (!websiteInfo.name || websiteInfo.name.length < 2) {
+        newErrors.name = 'Website name must be at least 2 characters';
+      }
+
+      if (!websiteInfo.url || websiteInfo.url.length < 3) {
+        newErrors.url = 'Subdomain must be at least 3 characters';
+      } else if (!/^[a-z0-9-]+$/.test(websiteInfo.url)) {
+        newErrors.url = 'Subdomain can only contain lowercase letters, numbers, and hyphens';
+      } else if (reservedSubdomains.includes(websiteInfo.url)) {
+        newErrors.url = 'This subdomain is reserved and cannot be used';
+      } else if (urlAvailable === false) {
+        newErrors.url = 'This subdomain is already taken';
+      }
+    }
+
+    if (stepNumber === 2) {
+      if (!websiteInfo.seoKeywords || websiteInfo.seoKeywords.length < 3) {
+        newErrors.seoKeywords = 'Please enter at least 3 characters for SEO keywords';
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleInputChange = (field: keyof WebsiteInfo, value: string) => {
     setWebsiteInfo(prev => ({ ...prev, [field]: value }));
-    
+
     // Auto-generate URL from name
     if (field === 'name' && !websiteInfo.url) {
       const urlSlug = value.toLowerCase()
@@ -79,62 +143,90 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
 
   const checkUrlAvailability = async (url: string) => {
     if (!url) return;
-    
+
     setCheckingUrl(true);
-    
+
     // Simulate API call to check URL availability
-    setTimeout(() => {
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       // For demo purposes, make some URLs unavailable
       const unavailableUrls = ['test', 'demo', 'example', 'admin', 'api', 'www'];
-      setUrlAvailable(!unavailableUrls.includes(url.toLowerCase()));
+      const isAvailable = !unavailableUrls.includes(url.toLowerCase()) &&
+        !reservedSubdomains.includes(url.toLowerCase());
+
+      setUrlAvailable(isAvailable);
+    } catch (error) {
+      console.error('Error checking URL availability:', error);
+      setUrlAvailable(null);
+    } finally {
       setCheckingUrl(false);
-    }, 1000);
+    }
   };
 
   const handleUrlChange = (value: string) => {
     const cleanUrl = value.toLowerCase()
       .replace(/[^a-z0-9-]/g, '')
       .replace(/-+/g, '-');
-    
+
     setWebsiteInfo(prev => ({ ...prev, url: cleanUrl }));
     setUrlAvailable(null);
-    
+
     if (cleanUrl.length >= 3) {
       checkUrlAvailability(cleanUrl);
     }
   };
 
   const handleImageUpload = (field: 'logo' | 'favicon', file: File) => {
-    // In a real app, this would upload to a server
+    if (!file.type.match('image.*')) {
+      setErrors(prev => ({ ...prev, [field]: 'Please upload a valid image file' }));
+      return;
+    }
+
+    if (field === 'logo' && file.size > 2 * 1024 * 1024) {
+      setErrors(prev => ({ ...prev, logo: 'Logo image must be less than 2MB' }));
+      return;
+    }
+
+    if (field === 'favicon' && file.size > 500 * 1024) {
+      setErrors(prev => ({ ...prev, favicon: 'Favicon must be less than 500KB' }));
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = (e) => {
       setWebsiteInfo(prev => ({ ...prev, [field]: e.target?.result as string }));
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
     };
     reader.readAsDataURL(file);
   };
 
-  const handleCreateWebsite = async () => {
-    setIsCreating(true);
-    
-    // Simulate website creation
-    setTimeout(() => {
-      const newProject = createProject(websiteInfo.name);
-      setIsCreating(false);
-      onClose();
-      navigate(`/editor/${newProject.id}`);
-    }, 2000);
+  const handleNextStep = () => {
+    if (validateStep(step)) {
+      setStep(prev => prev + 1);
+    }
   };
 
-  const isStepValid = () => {
-    switch (step) {
-      case 1:
-        return websiteInfo.name.length >= 2 && websiteInfo.url.length >= 3 && urlAvailable;
-      case 2:
-        return websiteInfo.title.length >= 2 && websiteInfo.description.length >= 10;
-      case 3:
-        return true; // Optional step
-      default:
-        return false;
+  const handleCreateWebsite = async () => {
+    if (!validateStep(4)) return;
+
+    setIsCreating(true);
+
+    try {
+      // Simulate website creation
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      const newProject = createProject(websiteInfo.name);
+      onClose();
+      navigate(`/editor/${newProject.id}`);
+    } catch (error) {
+      console.error('Error creating website:', error);
+      setErrors(prev => ({ ...prev, form: 'Failed to create website. Please try again.' }));
+    } finally {
+      setIsCreating(false);
     }
   };
 
@@ -166,11 +258,12 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
               <button
                 onClick={onClose}
                 className="p-2 hover:bg-white/20 rounded-xl transition-colors"
+                disabled={isCreating}
               >
                 <X className="w-6 h-6" />
               </button>
             </div>
-            
+
             {/* Progress Bar */}
             <div className="mt-6 bg-white/20 rounded-full h-2">
               <motion.div
@@ -204,8 +297,11 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                     value={websiteInfo.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
                     placeholder="My Awesome Website"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className={`w-full px-4 py-3 border ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
                   />
+                  {errors.name && (
+                    <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+                  )}
                 </div>
 
                 <div>
@@ -220,34 +316,45 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                       type="text"
                       value={websiteInfo.url}
                       onChange={(e) => handleUrlChange(e.target.value)}
-                      placeholder="my-website"
-                      className="flex-1 px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      placeholder="subdomain"
+                      className={`flex-1 px-4 py-3 border ${errors.url ? 'border-red-500' : 'border-gray-300'} rounded-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
                     />
                     <span className="bg-gray-100 px-4 py-3 rounded-r-xl border border-l-0 border-gray-300 text-gray-600">
-                      .templates.uz
+                      .iqbolshoh.com
                     </span>
                   </div>
-                  
-                  {websiteInfo.url.length >= 3 && (
+
+                  {checkingUrl && (
                     <div className="mt-2 flex items-center gap-2">
-                      {checkingUrl ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                          <span className="text-sm text-gray-600">Checking availability...</span>
-                        </>
-                      ) : urlAvailable === true ? (
+                      <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                      <span className="text-sm text-gray-600">Checking availability...</span>
+                    </div>
+                  )}
+
+                  {!checkingUrl && websiteInfo.url && (
+                    <div className="mt-2 flex items-center gap-2">
+                      {urlAvailable === true ? (
                         <>
                           <Check className="w-4 h-4 text-green-500" />
-                          <span className="text-sm text-green-600">URL is available!</span>
+                          <span className="text-sm text-green-600">subdomain.iqbolshoh.com is available!</span>
                         </>
                       ) : urlAvailable === false ? (
                         <>
                           <AlertCircle className="w-4 h-4 text-red-500" />
-                          <span className="text-sm text-red-600">URL is not available</span>
+                          <span className="text-sm text-red-600">This subdomain is not available</span>
                         </>
                       ) : null}
                     </div>
                   )}
+
+                  {errors.url && (
+                    <p className="mt-1 text-sm text-red-600">{errors.url}</p>
+                  )}
+
+                  <p className="text-xs text-gray-500 mt-2">
+                    Subdomain must be 3-63 characters, lowercase letters, numbers, and hyphens only.
+                    Cannot start or end with hyphen.
+                  </p>
                 </div>
 
                 <div>
@@ -259,16 +366,14 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                       <button
                         key={category.id}
                         onClick={() => handleInputChange('category', category.id)}
-                        className={`p-3 rounded-xl border-2 transition-all text-left ${
-                          websiteInfo.category === category.id
-                            ? 'border-blue-500 bg-blue-50'
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
+                        className={`p-3 rounded-xl border-2 transition-all text-left flex items-center gap-3 ${websiteInfo.category === category.id
+                          ? 'border-blue-500 bg-blue-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        type="button"
                       >
-                        <div className="flex items-center gap-3">
-                          <span className="text-2xl">{category.icon}</span>
-                          <span className="text-sm font-medium">{category.name}</span>
-                        </div>
+                        <category.icon className="w-5 h-5 text-gray-600" />
+                        <span className="text-sm font-medium">{category.name}</span>
                       </button>
                     ))}
                   </div>
@@ -283,36 +388,28 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                 className="space-y-6"
               >
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Content Details</h3>
-                  <p className="text-gray-600">Add your website's main content information</p>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">SEO Settings</h3>
+                  <p className="text-gray-600">Add SEO keywords for your website</p>
                 </div>
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Website Title *
+                    SEO Keywords *
                   </label>
                   <input
                     type="text"
-                    value={websiteInfo.title}
-                    onChange={(e) => handleInputChange('title', e.target.value)}
-                    placeholder="Welcome to My Awesome Website"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    value={websiteInfo.seoKeywords}
+                    onChange={(e) => handleInputChange('seoKeywords', e.target.value)}
+                    placeholder="website, business, services, products"
+                    className={`w-full px-4 py-3 border ${errors.seoKeywords ? 'border-red-500' : 'border-gray-300'
+                      } rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
                   />
-                  <p className="text-sm text-gray-500 mt-1">This will appear in your header and browser title</p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Website Description *
-                  </label>
-                  <textarea
-                    value={websiteInfo.description}
-                    onChange={(e) => handleInputChange('description', e.target.value)}
-                    placeholder="Describe what your website is about, what services you offer, or what makes you unique..."
-                    rows={4}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
-                  />
-                  <p className="text-sm text-gray-500 mt-1">This will be used in your footer and meta description</p>
+                  {errors.seoKeywords && (
+                    <p className="mt-1 text-sm text-red-600">{errors.seoKeywords}</p>
+                  )}
+                  <p className="text-sm text-gray-500 mt-1">
+                    Enter comma-separated keywords for search engine optimization
+                  </p>
                 </div>
 
                 <div>
@@ -324,16 +421,13 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                       <button
                         key={language.code}
                         onClick={() => handleInputChange('language', language.code)}
-                        className={`p-3 rounded-xl border-2 transition-all text-left ${
-                          websiteInfo.language === language.code
-                            ? 'border-blue-500 bg-blue-50'
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
+                        className={`p-3 rounded-xl border-2 transition-all text-left ${websiteInfo.language === language.code
+                          ? 'border-blue-500 bg-blue-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        type="button"
                       >
-                        <div className="flex items-center gap-3">
-                          <span className="text-xl">{language.flag}</span>
-                          <span className="text-sm font-medium">{language.name}</span>
-                        </div>
+                        <span className="text-sm font-medium">{language.name}</span>
                       </button>
                     ))}
                   </div>
@@ -357,13 +451,19 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Logo
                     </label>
-                    <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-gray-400 transition-colors">
+                    <div className={`border-2 ${errors.logo ? 'border-red-500' : 'border-dashed border-gray-300'
+                      } rounded-xl p-6 text-center hover:border-gray-400 transition-colors`}>
                       {websiteInfo.logo ? (
                         <div className="space-y-3">
-                          <img src={websiteInfo.logo} alt="Logo" className="w-20 h-20 object-contain mx-auto" />
+                          <img
+                            src={websiteInfo.logo}
+                            alt="Logo"
+                            className="w-20 h-20 object-contain mx-auto"
+                          />
                           <button
                             onClick={() => setWebsiteInfo(prev => ({ ...prev, logo: '' }))}
                             className="text-sm text-red-600 hover:text-red-700"
+                            type="button"
                           >
                             Remove
                           </button>
@@ -389,23 +489,35 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                             >
                               Choose File
                             </label>
+                            {errors.logo && (
+                              <p className="mt-2 text-sm text-red-600">{errors.logo}</p>
+                            )}
                           </div>
                         </div>
                       )}
                     </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Recommended size: 200x50px, PNG format
+                    </p>
                   </div>
 
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Favicon
                     </label>
-                    <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-gray-400 transition-colors">
+                    <div className={`border-2 ${errors.favicon ? 'border-red-500' : 'border-dashed border-gray-300'
+                      } rounded-xl p-6 text-center hover:border-gray-400 transition-colors`}>
                       {websiteInfo.favicon ? (
                         <div className="space-y-3">
-                          <img src={websiteInfo.favicon} alt="Favicon" className="w-8 h-8 object-contain mx-auto" />
+                          <img
+                            src={websiteInfo.favicon}
+                            alt="Favicon"
+                            className="w-8 h-8 object-contain mx-auto"
+                          />
                           <button
                             onClick={() => setWebsiteInfo(prev => ({ ...prev, favicon: '' }))}
                             className="text-sm text-red-600 hover:text-red-700"
+                            type="button"
                           >
                             Remove
                           </button>
@@ -431,10 +543,16 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                             >
                               Choose File
                             </label>
+                            {errors.favicon && (
+                              <p className="mt-2 text-sm text-red-600">{errors.favicon}</p>
+                            )}
                           </div>
                         </div>
                       )}
                     </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Square image, 16x16 or 32x32px
+                    </p>
                   </div>
                 </div>
               </motion.div>
@@ -455,49 +573,75 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <span className="text-sm font-medium text-gray-500">Website Name</span>
-                      <p className="font-semibold">{websiteInfo.name}</p>
+                      <p className="font-semibold">{websiteInfo.name || 'Not specified'}</p>
                     </div>
                     <div>
                       <span className="text-sm font-medium text-gray-500">URL</span>
-                      <p className="font-semibold">{websiteInfo.url}.templates.uz</p>
+                      <p className="font-semibold">
+                        {websiteInfo.url ? `${websiteInfo.url}.iqbolshoh.com` : 'Not specified'}
+                      </p>
                     </div>
                     <div>
                       <span className="text-sm font-medium text-gray-500">Category</span>
-                      <p className="font-semibold">{categories.find(c => c.id === websiteInfo.category)?.name}</p>
+                      <p className="font-semibold">
+                        {categories.find(c => c.id === websiteInfo.category)?.name || 'Not specified'}
+                      </p>
                     </div>
                     <div>
                       <span className="text-sm font-medium text-gray-500">Language</span>
-                      <p className="font-semibold">{languages.find(l => l.code === websiteInfo.language)?.name}</p>
+                      <p className="font-semibold">
+                        {languages.find(l => l.code === websiteInfo.language)?.name || 'Not specified'}
+                      </p>
                     </div>
-                  </div>
-                  
-                  <div>
-                    <span className="text-sm font-medium text-gray-500">Title</span>
-                    <p className="font-semibold">{websiteInfo.title}</p>
-                  </div>
-                  
-                  <div>
-                    <span className="text-sm font-medium text-gray-500">Description</span>
-                    <p className="text-sm">{websiteInfo.description}</p>
                   </div>
 
-                  {(websiteInfo.logo || websiteInfo.favicon) && (
-                    <div className="flex items-center gap-4">
-                      {websiteInfo.logo && (
-                        <div>
-                          <span className="text-sm font-medium text-gray-500 block mb-1">Logo</span>
-                          <img src={websiteInfo.logo} alt="Logo" className="w-12 h-12 object-contain" />
-                        </div>
-                      )}
-                      {websiteInfo.favicon && (
-                        <div>
-                          <span className="text-sm font-medium text-gray-500 block mb-1">Favicon</span>
-                          <img src={websiteInfo.favicon} alt="Favicon" className="w-6 h-6 object-contain" />
-                        </div>
-                      )}
+                  <div>
+                    <span className="text-sm font-medium text-gray-500">SEO Keywords</span>
+                    <p className="font-semibold">
+                      {websiteInfo.seoKeywords || 'Not specified'}
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <span className="text-sm font-medium text-gray-500">Logo</span>
+                      <div className="mt-1">
+                        {websiteInfo.logo ? (
+                          <img
+                            src={websiteInfo.logo}
+                            alt="Logo"
+                            className="w-12 h-12 object-contain"
+                          />
+                        ) : (
+                          <span className="text-gray-400">Not uploaded</span>
+                        )}
+                      </div>
                     </div>
-                  )}
+                    <div>
+                      <span className="text-sm font-medium text-gray-500">Favicon</span>
+                      <div className="mt-1">
+                        {websiteInfo.favicon ? (
+                          <img
+                            src={websiteInfo.favicon}
+                            alt="Favicon"
+                            className="w-6 h-6 object-contain"
+                          />
+                        ) : (
+                          <span className="text-gray-400">Not uploaded</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
+                {errors.form && (
+                  <div className="bg-red-50 border-l-4 border-red-500 p-4">
+                    <div className="flex items-center">
+                      <AlertCircle className="w-5 h-5 text-red-500 mr-2" />
+                      <p className="text-red-700">{errors.form}</p>
+                    </div>
+                  </div>
+                )}
 
                 {isCreating && (
                   <div className="text-center py-8">
@@ -516,6 +660,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
               <button
                 onClick={() => step > 1 ? setStep(step - 1) : onClose()}
                 className="px-6 py-3 text-gray-600 hover:text-gray-800 transition-colors font-medium"
+                type="button"
               >
                 {step > 1 ? 'Back' : 'Cancel'}
               </button>
@@ -523,9 +668,9 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
               <div className="flex items-center gap-3">
                 {step < 4 ? (
                   <button
-                    onClick={() => setStep(step + 1)}
-                    disabled={!isStepValid()}
+                    onClick={handleNextStep}
                     className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+                    type="button"
                   >
                     Continue
                   </button>
@@ -533,6 +678,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                   <button
                     onClick={handleCreateWebsite}
                     className="px-8 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all font-semibold"
+                    type="button"
                   >
                     Create Website
                   </button>

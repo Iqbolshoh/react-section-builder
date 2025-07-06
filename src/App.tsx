@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { DndProvider } from './contexts/DndContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ProjectProvider } from './contexts/ProjectContext';
@@ -15,8 +15,7 @@ function App() {
           <DndProvider>
             <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
               <Routes>
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/" element={<Dashboard />} />
                 <Route path="/editor/:id?" element={<Editor />} />
                 <Route path="/preview/:id" element={<Preview />} />
               </Routes>

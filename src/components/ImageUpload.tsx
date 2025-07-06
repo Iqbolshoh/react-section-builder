@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
 import { Upload, Link, X, Image as ImageIcon } from 'lucide-react';
 
 interface ImageUploadProps {
