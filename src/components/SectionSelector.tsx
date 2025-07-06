@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { X, Navigation, Zap, Image, User, Briefcase, Award, Star, Folder, CreditCard, Mail, Globe } from 'lucide-react';
+import { X, Navigation, Zap, Image, User, Briefcase, Award, Star, Folder, CreditCard, Mail, Globe, HelpCircle, Clock, TrendingUp, Send, Megaphone, Camera } from 'lucide-react';
 import { useProject } from '../contexts/ProjectContext';
 
 interface SectionSelectorProps {
@@ -459,6 +459,61 @@ const SectionSelector: React.FC<SectionSelectorProps> = ({ onClose, onSelect }) 
           name: 'Corporate Footer',
           description: 'Professional corporate footer',
           icon: Globe,
+          preview: '/api/placeholder/300/150'
+        }
+      ]
+    },
+    {
+      name: 'Utility Sections',
+      color: 'from-cyan-500 to-blue-600',
+      sections: [
+        {
+          type: 'faq-accordion' as const,
+          name: 'FAQ Accordion',
+          description: 'Frequently asked questions with expandable answers',
+          icon: HelpCircle,
+          preview: '/api/placeholder/300/150'
+        },
+        {
+          type: 'timeline-vertical' as const,
+          name: 'Timeline',
+          description: 'Company history and milestones timeline',
+          icon: Clock,
+          preview: '/api/placeholder/300/150'
+        },
+        {
+          type: 'stats-grid' as const,
+          name: 'Statistics',
+          description: 'Animated counters and key metrics',
+          icon: TrendingUp,
+          preview: '/api/placeholder/300/150'
+        },
+        {
+          type: 'newsletter-centered' as const,
+          name: 'Newsletter Signup',
+          description: 'Email subscription with call-to-action',
+          icon: Send,
+          preview: '/api/placeholder/300/150'
+        },
+        {
+          type: 'cta-gradient' as const,
+          name: 'Call to Action',
+          description: 'Focused call-to-action section',
+          icon: Megaphone,
+          preview: '/api/placeholder/300/150'
+        },
+        {
+          type: 'cta-image' as const,
+          name: 'CTA with Background',
+          description: 'Call-to-action with background image',
+          icon: Megaphone,
+          preview: '/api/placeholder/300/150'
+        },
+        {
+          type: 'gallery-grid' as const,
+          name: 'Image Gallery',
+          description: 'Photo gallery with lightbox and filters',
+          icon: Camera,
           preview: '/api/placeholder/300/150'
         }
       ]

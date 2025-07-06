@@ -316,6 +316,109 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
             { platform: 'Instagram', url: 'https://instagram.com' }
           ]
         };
+      case 'faq':
+        return {
+          title: 'Frequently Asked Questions',
+          subtitle: 'Find answers to common questions about our services',
+          faqs: [
+            {
+              question: 'How does the website builder work?',
+              answer: 'Our drag-and-drop website builder allows you to create professional websites without any coding knowledge. Simply choose a template, customize it with your content, and publish.'
+            },
+            {
+              question: 'Can I use my own domain name?',
+              answer: 'Yes, you can connect your own custom domain name to your website. We also provide free subdomains if you prefer.'
+            },
+            {
+              question: 'Is there a free trial available?',
+              answer: 'We offer a 14-day free trial with full access to all features. No credit card required to get started.'
+            },
+            {
+              question: 'Can I export my website?',
+              answer: 'Yes, you can export your website as HTML files and host it anywhere you like. Your content belongs to you.'
+            }
+          ]
+        };
+      case 'timeline':
+        return {
+          title: 'Our Journey',
+          subtitle: 'Key milestones in our company history',
+          items: [
+            {
+              year: '2020',
+              title: 'Company Founded',
+              description: 'Started with a vision to make website building accessible to everyone'
+            },
+            {
+              year: '2021',
+              title: 'First 1000 Users',
+              description: 'Reached our first milestone of 1000 happy customers'
+            },
+            {
+              year: '2022',
+              title: 'Mobile App Launch',
+              description: 'Launched our mobile app for building websites on the go'
+            },
+            {
+              year: '2023',
+              title: 'Global Expansion',
+              description: 'Expanded our services to serve customers worldwide'
+            }
+          ]
+        };
+      case 'stats':
+        return {
+          title: 'Our Impact in Numbers',
+          subtitle: 'See how we\'re making a difference',
+          stats: [
+            { number: '10000', label: 'Websites Created', suffix: '+' },
+            { number: '50000', label: 'Happy Users', suffix: '+' },
+            { number: '99', label: 'Uptime', suffix: '%' },
+            { number: '24', label: 'Support Hours', suffix: '/7' }
+          ]
+        };
+      case 'newsletter':
+        return {
+          title: 'Stay Updated',
+          subtitle: 'Get the latest news, tips, and exclusive offers delivered to your inbox',
+          placeholder: 'Enter your email address',
+          buttonText: 'Subscribe'
+        };
+      case 'cta':
+        return {
+          title: 'Ready to Get Started?',
+          subtitle: 'Join thousands of users who are already building amazing websites with our platform',
+          buttonText: 'Start Building Now',
+          buttonLink: '#contact'
+        };
+      case 'gallery':
+        return {
+          title: 'Our Gallery',
+          subtitle: 'Explore our collection of beautiful work',
+          items: [
+            {
+              image: 'https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=1',
+              title: 'Modern Design',
+              category: 'Web Design'
+            },
+            {
+              image: 'https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=1',
+              title: 'Mobile App',
+              category: 'Mobile'
+            },
+            {
+              image: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=1',
+              title: 'Brand Identity',
+              category: 'Branding'
+            },
+            {
+              image: 'https://images.pexels.com/photos/3184611/pexels-photo-3184611.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=1',
+              title: 'E-commerce',
+              category: 'Web Design'
+            }
+          ],
+          categories: ['Web Design', 'Mobile', 'Branding']
+        };
       default:
         return {};
     }

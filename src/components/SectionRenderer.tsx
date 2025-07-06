@@ -14,6 +14,12 @@ import HeaderSection from './sections/HeaderSection';
 import SliderSection from './sections/SliderSection';
 import FeaturesSection from './sections/FeaturesSection';
 import PortfolioSection from './sections/PortfolioSection';
+import FAQSection from './sections/FAQSection';
+import TimelineSection from './sections/TimelineSection';
+import StatsSection from './sections/StatsSection';
+import NewsletterSection from './sections/NewsletterSection';
+import CTASection from './sections/CTASection';
+import GallerySection from './sections/GallerySection';
 
 interface SectionRendererProps {
   section: any;
@@ -102,6 +108,18 @@ const SectionRenderer: React.FC<SectionRendererProps> = ({
         return <ContactSection {...commonProps} variant={section.type} />;
       case 'footer':
         return <FooterSection {...commonProps} variant={section.type} />;
+      case 'faq':
+        return <FAQSection {...commonProps} variant={section.type} />;
+      case 'timeline':
+        return <TimelineSection {...commonProps} variant={section.type} />;
+      case 'stats':
+        return <StatsSection {...commonProps} variant={section.type} />;
+      case 'newsletter':
+        return <NewsletterSection {...commonProps} variant={section.type} />;
+      case 'cta':
+        return <CTASection {...commonProps} variant={section.type} />;
+      case 'gallery':
+        return <GallerySection {...commonProps} variant={section.type} />;
       default:
         return <div>Unknown section type: {section.type}</div>;
     }
