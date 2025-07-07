@@ -907,6 +907,36 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }));
   };
 
+  // Helper function to get CSS custom properties
+  const getCSSVariables = () => {
+    return {
+      '--color-primary': currentTheme.colors.primary,
+      '--color-secondary': currentTheme.colors.secondary,
+      '--color-accent': currentTheme.colors.accent,
+      '--color-background': currentTheme.colors.background,
+      '--color-surface': currentTheme.colors.surface,
+      '--color-text': currentTheme.colors.text,
+      '--color-text-secondary': currentTheme.colors.textSecondary,
+      '--color-border': currentTheme.colors.border,
+      '--color-success': currentTheme.colors.success,
+      '--color-warning': currentTheme.colors.warning,
+      '--color-error': currentTheme.colors.error,
+      '--color-primary-100': currentTheme.colors.primary100,
+      '--color-primary-200': currentTheme.colors.primary200,
+      '--color-primary-300': currentTheme.colors.primary300,
+      '--color-secondary-100': currentTheme.colors.secondary100,
+      '--color-secondary-200': currentTheme.colors.secondary200,
+      '--color-accent-100': currentTheme.colors.accent100,
+      '--color-accent-200': currentTheme.colors.accent200,
+      '--font-primary': `'${currentTheme.fonts.primary}', sans-serif`,
+      '--font-secondary': `'${currentTheme.fonts.secondary}', sans-serif`,
+      '--font-accent': `'${currentTheme.fonts.accent}', serif`,
+      '--shadow-sm': currentTheme.shadows.sm,
+      '--shadow-md': currentTheme.shadows.md,
+      '--shadow-lg': currentTheme.shadows.lg,
+      '--shadow-xl': currentTheme.shadows.xl,
+    };
+  };
   return (
     <ThemeContext.Provider value={{
       currentTheme,
@@ -914,7 +944,8 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       availableFonts: fontCollections,
       updateTheme,
       updateFonts,
-      applyCustomColors
+      applyCustomColors,
+      getCSSVariables
     }}>
       {children}
     </ThemeContext.Provider>

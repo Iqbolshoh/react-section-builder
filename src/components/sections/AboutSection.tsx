@@ -40,7 +40,13 @@ const AboutSection: React.FC<AboutSectionProps> = ({
   };
 
   const renderStoryAbout = () => (
-    <section className="py-12 sm:py-20 bg-white" style={{ fontFamily: theme?.fonts?.primary }}>
+    <section 
+      className="py-12 sm:py-20" 
+      style={{ 
+        fontFamily: theme?.fonts?.primary,
+        backgroundColor: theme?.colors?.surface || '#ffffff'
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Image */}
@@ -69,8 +75,14 @@ const AboutSection: React.FC<AboutSectionProps> = ({
               {/* Decorative elements */}
               {!isEditing && (
                 <>
-                  <div className="absolute -top-4 -left-4 sm:-top-6 sm:-left-6 w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full opacity-20"></div>
-                  <div className="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full opacity-30"></div>
+                  <div 
+                    className="absolute -top-4 -left-4 sm:-top-6 sm:-left-6 w-16 h-16 sm:w-24 sm:h-24 rounded-full opacity-20"
+                    style={{ background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})` }}
+                  ></div>
+                  <div 
+                    className="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 w-12 h-12 sm:w-16 sm:h-16 rounded-full opacity-30"
+                    style={{ background: `linear-gradient(135deg, ${theme?.colors?.secondary}, ${theme?.colors?.accent})` }}
+                  ></div>
                 </>
               )}
             </motion.div>
@@ -89,11 +101,18 @@ const AboutSection: React.FC<AboutSectionProps> = ({
                   type="text"
                   value={content.title}
                   onChange={(e) => handleChange('title', e.target.value)}
-                  className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 lg:mb-6 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 w-full"
+                  className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 lg:mb-6 bg-transparent border-2 border-dashed rounded-lg p-2 w-full"
+                  style={{ 
+                    color: theme?.colors?.primary,
+                    borderColor: `${theme?.colors?.primary}50`
+                  }}
                   placeholder="Enter section title"
                 />
               ) : (
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 lg:mb-6" style={{ color: theme?.colors?.primary }}>
+                <h2 
+                  className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 lg:mb-6" 
+                  style={{ color: theme?.colors?.primary }}
+                >
                   {content.title}
                 </h2>
               )}
@@ -109,11 +128,18 @@ const AboutSection: React.FC<AboutSectionProps> = ({
                 <textarea
                   value={content.description}
                   onChange={(e) => handleChange('description', e.target.value)}
-                  className="text-base sm:text-lg text-gray-600 leading-relaxed bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-4 w-full h-32 sm:h-48 resize-none"
+                  className="text-base sm:text-lg leading-relaxed bg-transparent border-2 border-dashed rounded-lg p-4 w-full h-32 sm:h-48 resize-none"
+                  style={{ 
+                    color: theme?.colors?.textSecondary,
+                    borderColor: `${theme?.colors?.primary}50`
+                  }}
                   placeholder="Enter description"
                 />
               ) : (
-                <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+                <p 
+                  className="text-base sm:text-lg leading-relaxed"
+                  style={{ color: theme?.colors?.textSecondary }}
+                >
                   {content.description}
                 </p>
               )}
@@ -140,7 +166,11 @@ const AboutSection: React.FC<AboutSectionProps> = ({
                             updatedStats[index] = { ...updatedStats[index], value: e.target.value };
                             handleChange('stats', updatedStats);
                           }}
-                          className="text-2xl sm:text-3xl font-bold mb-2 bg-transparent border border-gray-300 rounded px-2 py-1 w-full text-center"
+                          className="text-2xl sm:text-3xl font-bold mb-2 bg-transparent border rounded px-2 py-1 w-full text-center"
+                          style={{ 
+                            color: theme?.colors?.primary,
+                            borderColor: theme?.colors?.border
+                          }}
                           placeholder="Value"
                         />
                         <input
@@ -151,16 +181,28 @@ const AboutSection: React.FC<AboutSectionProps> = ({
                             updatedStats[index] = { ...updatedStats[index], label: e.target.value };
                             handleChange('stats', updatedStats);
                           }}
-                          className="text-gray-600 bg-transparent border border-gray-300 rounded px-2 py-1 w-full text-center text-sm"
+                          className="bg-transparent border rounded px-2 py-1 w-full text-center text-sm"
+                          style={{ 
+                            color: theme?.colors?.textSecondary,
+                            borderColor: theme?.colors?.border
+                          }}
                           placeholder="Label"
                         />
                       </>
                     ) : (
                       <>
-                        <div className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: theme?.colors?.primary }}>
+                        <div 
+                          className="text-2xl sm:text-3xl font-bold mb-2" 
+                          style={{ color: theme?.colors?.primary }}
+                        >
                           {stat.value}
                         </div>
-                        <div className="text-gray-600 text-sm sm:text-base">{stat.label}</div>
+                        <div 
+                          className="text-sm sm:text-base"
+                          style={{ color: theme?.colors?.textSecondary }}
+                        >
+                          {stat.label}
+                        </div>
                       </>
                     )}
                   </div>
@@ -174,7 +216,13 @@ const AboutSection: React.FC<AboutSectionProps> = ({
   );
 
   const renderTeamAbout = () => (
-    <section className="py-12 sm:py-20 bg-gray-50" style={{ fontFamily: theme?.fonts?.primary }}>
+    <section 
+      className="py-12 sm:py-20" 
+      style={{ 
+        fontFamily: theme?.fonts?.primary,
+        backgroundColor: theme?.colors?.background || '#f9fafb'
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-16">
           {isEditing ? (
@@ -182,11 +230,18 @@ const AboutSection: React.FC<AboutSectionProps> = ({
               type="text"
               value={content.title}
               onChange={(e) => handleChange('title', e.target.value)}
-              className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 text-center w-full max-w-2xl mx-auto"
+              className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 bg-transparent border-2 border-dashed rounded-lg p-2 text-center w-full max-w-2xl mx-auto"
+              style={{ 
+                color: theme?.colors?.primary,
+                borderColor: `${theme?.colors?.primary}50`
+              }}
               placeholder="Enter section title"
             />
           ) : (
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.colors?.primary }}>
+            <h2 
+              className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4" 
+              style={{ color: theme?.colors?.primary }}
+            >
               {content.title}
             </h2>
           )}
@@ -201,6 +256,10 @@ const AboutSection: React.FC<AboutSectionProps> = ({
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
               className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 text-center"
+              style={{ 
+                backgroundColor: theme?.colors?.surface,
+                boxShadow: theme?.shadows?.lg
+              }}
             >
               {isEditing ? (
                 <>
@@ -245,8 +304,18 @@ const AboutSection: React.FC<AboutSectionProps> = ({
                     alt={member.name}
                     className="w-20 h-20 sm:w-24 sm:h-24 rounded-full mx-auto mb-4 object-cover"
                   />
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{member.name}</h3>
-                  <p className="text-gray-600 text-sm">{member.role}</p>
+                  <h3 
+                    className="text-lg font-semibold mb-2"
+                    style={{ color: theme?.colors?.text }}
+                  >
+                    {member.name}
+                  </h3>
+                  <p 
+                    className="text-sm"
+                    style={{ color: theme?.colors?.textSecondary }}
+                  >
+                    {member.role}
+                  </p>
                 </>
               )}
             </motion.div>
@@ -257,7 +326,13 @@ const AboutSection: React.FC<AboutSectionProps> = ({
   );
 
   const renderValuesAbout = () => (
-    <section className="py-12 sm:py-20 bg-white" style={{ fontFamily: theme?.fonts?.primary }}>
+    <section 
+      className="py-12 sm:py-20" 
+      style={{ 
+        fontFamily: theme?.fonts?.primary,
+        backgroundColor: theme?.colors?.surface || '#ffffff'
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-16">
           {isEditing ? (
@@ -265,11 +340,18 @@ const AboutSection: React.FC<AboutSectionProps> = ({
               type="text"
               value={content.title}
               onChange={(e) => handleChange('title', e.target.value)}
-              className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 text-center w-full max-w-2xl mx-auto"
+              className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 bg-transparent border-2 border-dashed rounded-lg p-2 text-center w-full max-w-2xl mx-auto"
+              style={{ 
+                color: theme?.colors?.primary,
+                borderColor: `${theme?.colors?.primary}50`
+              }}
               placeholder="Enter section title"
             />
           ) : (
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.colors?.primary }}>
+            <h2 
+              className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4" 
+              style={{ color: theme?.colors?.primary }}
+            >
               {content.title}
             </h2>
           )}
@@ -288,8 +370,12 @@ const AboutSection: React.FC<AboutSectionProps> = ({
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
                 className="text-center p-6 rounded-xl hover:shadow-lg transition-shadow duration-300"
+                style={{ boxShadow: theme?.shadows?.md }}
               >
-                <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center">
+                <div 
+                  className="w-16 h-16 mx-auto mb-6 rounded-2xl flex items-center justify-center"
+                  style={{ background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})` }}
+                >
                   <Icon className="w-8 h-8 text-white" />
                 </div>
                 
@@ -303,7 +389,11 @@ const AboutSection: React.FC<AboutSectionProps> = ({
                         updatedValues[index] = { ...updatedValues[index], title: e.target.value };
                         handleChange('values', updatedValues);
                       }}
-                      className="text-lg font-semibold mb-4 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 w-full text-center"
+                      className="text-lg font-semibold mb-4 bg-transparent border-2 border-dashed rounded-lg p-2 w-full text-center"
+                      style={{ 
+                        color: theme?.colors?.text,
+                        borderColor: `${theme?.colors?.primary}50`
+                      }}
                       placeholder="Value title"
                     />
                     <textarea
@@ -313,16 +403,26 @@ const AboutSection: React.FC<AboutSectionProps> = ({
                         updatedValues[index] = { ...updatedValues[index], description: e.target.value };
                         handleChange('values', updatedValues);
                       }}
-                      className="text-gray-600 leading-relaxed bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 w-full h-20 resize-none text-sm"
+                      className="leading-relaxed bg-transparent border-2 border-dashed rounded-lg p-2 w-full h-20 resize-none text-sm"
+                      style={{ 
+                        color: theme?.colors?.textSecondary,
+                        borderColor: `${theme?.colors?.primary}50`
+                      }}
                       placeholder="Value description"
                     />
                   </>
                 ) : (
                   <>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    <h3 
+                      className="text-lg font-semibold mb-4"
+                      style={{ color: theme?.colors?.text }}
+                    >
                       {value.title}
                     </h3>
-                    <p className="text-gray-600 leading-relaxed text-sm">
+                    <p 
+                      className="leading-relaxed text-sm"
+                      style={{ color: theme?.colors?.textSecondary }}
+                    >
                       {value.description}
                     </p>
                   </>

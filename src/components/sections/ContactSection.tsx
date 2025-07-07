@@ -2,6 +2,31 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 
+interface ThemeConfig {
+  fonts: {
+    primary: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    surface: string;
+    text: string;
+    textSecondary: string;
+    border: string;
+    success: string;
+    warning: string;
+    error: string;
+  };
+  shadows: {
+    sm: string;
+    md: string;
+    lg: string;
+    xl: string;
+  };
+}
+
 interface ContactSectionProps {
   content: {
     title: string;
@@ -12,9 +37,10 @@ interface ContactSectionProps {
   };
   isEditing: boolean;
   onChange: (content: any) => void;
+  theme?: ThemeConfig;
 }
 
-const ContactSection: React.FC<ContactSectionProps> = ({ content, isEditing, onChange }) => {
+const ContactSection: React.FC<ContactSectionProps> = ({ content, isEditing, onChange, theme }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -33,7 +59,13 @@ const ContactSection: React.FC<ContactSectionProps> = ({ content, isEditing, onC
   };
 
   return (
-    <section className="py-20 bg-white">
+    <section 
+      className="py-20" 
+      style={{ 
+        backgroundColor: theme?.colors?.surface || '#ffffff',
+        fontFamily: theme?.fonts?.primary
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <motion.div
@@ -48,23 +80,37 @@ const ContactSection: React.FC<ContactSectionProps> = ({ content, isEditing, onC
                   type="text"
                   value={content.title}
                   onChange={(e) => handleChange('title', e.target.value)}
-                  className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 text-center"
+                  className="text-3xl sm:text-4xl font-bold mb-4 bg-transparent border-2 border-dashed rounded-lg p-2 text-center"
+                  style={{ 
+                    color: theme?.colors?.primary,
+                    borderColor: `${theme?.colors?.primary}50`
+                  }}
                   placeholder="Enter section title"
                 />
                 <input
                   type="text"
                   value={content.subtitle}
                   onChange={(e) => handleChange('subtitle', e.target.value)}
-                  className="text-xl text-gray-600 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 text-center"
+                  className="text-xl bg-transparent border-2 border-dashed rounded-lg p-2 text-center"
+                  style={{ 
+                    color: theme?.colors?.textSecondary,
+                    borderColor: `${theme?.colors?.primary}50`
+                  }}
                   placeholder="Enter subtitle"
                 />
               </>
             ) : (
               <>
-                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                <h2 
+                  className="text-3xl sm:text-4xl font-bold mb-4"
+                  style={{ color: theme?.colors?.primary }}
+                >
                   {content.title}
                 </h2>
-                <p className="text-xl text-gray-600">
+                <p 
+                  className="text-xl"
+                  style={{ color: theme?.colors?.textSecondary }}
+                >
                   {content.subtitle}
                 </p>
               </>
@@ -81,66 +127,107 @@ const ContactSection: React.FC<ContactSectionProps> = ({ content, isEditing, onC
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-2xl font-bold text-gray-900 mb-8">Get in Touch</h3>
+              <h3 
+                className="text-2xl font-bold mb-8"
+                style={{ color: theme?.colors?.text }}
+              >
+                Get in Touch
+              </h3>
               
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Mail className="w-6 h-6 text-blue-600" />
+                  <div 
+                    className="w-12 h-12 rounded-lg flex items-center justify-center"
+                    style={{ backgroundColor: `${theme?.colors?.primary}20` }}
+                  >
+                    <Mail className="w-6 h-6" style={{ color: theme?.colors?.primary }} />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900">Email</h4>
+                    <h4 
+                      className="font-semibold"
+                      style={{ color: theme?.colors?.text }}
+                    >
+                      Email
+                    </h4>
                     {isEditing ? (
                       <input
                         type="email"
                         value={content.email}
                         onChange={(e) => handleChange('email', e.target.value)}
-                        className="text-gray-600 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-1"
+                        className="bg-transparent border-2 border-dashed rounded-lg p-1"
+                        style={{ 
+                          color: theme?.colors?.textSecondary,
+                          borderColor: `${theme?.colors?.primary}50`
+                        }}
                         placeholder="email@example.com"
                       />
                     ) : (
-                      <p className="text-gray-600">{content.email}</p>
+                      <p style={{ color: theme?.colors?.textSecondary }}>{content.email}</p>
                     )}
                   </div>
                 </div>
                 
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Phone className="w-6 h-6 text-blue-600" />
+                  <div 
+                    className="w-12 h-12 rounded-lg flex items-center justify-center"
+                    style={{ backgroundColor: `${theme?.colors?.primary}20` }}
+                  >
+                    <Phone className="w-6 h-6" style={{ color: theme?.colors?.primary }} />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900">Phone</h4>
+                    <h4 
+                      className="font-semibold"
+                      style={{ color: theme?.colors?.text }}
+                    >
+                      Phone
+                    </h4>
                     {isEditing ? (
                       <input
                         type="tel"
                         value={content.phone}
                         onChange={(e) => handleChange('phone', e.target.value)}
-                        className="text-gray-600 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-1"
+                        className="bg-transparent border-2 border-dashed rounded-lg p-1"
+                        style={{ 
+                          color: theme?.colors?.textSecondary,
+                          borderColor: `${theme?.colors?.primary}50`
+                        }}
                         placeholder="+1 (555) 123-4567"
                       />
                     ) : (
-                      <p className="text-gray-600">{content.phone}</p>
+                      <p style={{ color: theme?.colors?.textSecondary }}>{content.phone}</p>
                     )}
                   </div>
                 </div>
                 
                 {(content.address || isEditing) && (
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <MapPin className="w-6 h-6 text-blue-600" />
+                    <div 
+                      className="w-12 h-12 rounded-lg flex items-center justify-center"
+                      style={{ backgroundColor: `${theme?.colors?.primary}20` }}
+                    >
+                      <MapPin className="w-6 h-6" style={{ color: theme?.colors?.primary }} />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900">Address</h4>
+                      <h4 
+                        className="font-semibold"
+                        style={{ color: theme?.colors?.text }}
+                      >
+                        Address
+                      </h4>
                       {isEditing ? (
                         <input
                           type="text"
                           value={content.address || ''}
                           onChange={(e) => handleChange('address', e.target.value)}
-                          className="text-gray-600 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-1"
+                          className="bg-transparent border-2 border-dashed rounded-lg p-1"
+                          style={{ 
+                            color: theme?.colors?.textSecondary,
+                            borderColor: `${theme?.colors?.primary}50`
+                          }}
                           placeholder="123 Main St, City, State 12345"
                         />
                       ) : (
-                        <p className="text-gray-600">{content.address}</p>
+                        <p style={{ color: theme?.colors?.textSecondary }}>{content.address}</p>
                       )}
                     </div>
                   </div>
@@ -159,42 +246,63 @@ const ContactSection: React.FC<ContactSectionProps> = ({ content, isEditing, onC
             >
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label 
+                    className="block text-sm font-semibold mb-2"
+                    style={{ color: theme?.colors?.text }}
+                  >
                     Name
                   </label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200"
+                    style={{ 
+                      borderColor: theme?.colors?.border,
+                      backgroundColor: theme?.colors?.surface
+                    }}
                     placeholder="Your Name"
                     required
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label 
+                    className="block text-sm font-semibold mb-2"
+                    style={{ color: theme?.colors?.text }}
+                  >
                     Email
                   </label>
                   <input
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200"
+                    style={{ 
+                      borderColor: theme?.colors?.border,
+                      backgroundColor: theme?.colors?.surface
+                    }}
                     placeholder="your.email@example.com"
                     required
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label 
+                    className="block text-sm font-semibold mb-2"
+                    style={{ color: theme?.colors?.text }}
+                  >
                     Message
                   </label>
                   <textarea
                     value={formData.message}
                     onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
                     rows={6}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
+                    className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 resize-none"
+                    style={{ 
+                      borderColor: theme?.colors?.border,
+                      backgroundColor: theme?.colors?.surface
+                    }}
                     placeholder="Your message..."
                     required
                   />
@@ -204,7 +312,10 @@ const ContactSection: React.FC<ContactSectionProps> = ({ content, isEditing, onC
                   type="submit"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 flex items-center justify-center gap-2"
+                  className="w-full text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+                  style={{ 
+                    background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`
+                  }}
                 >
                   <Send className="w-5 h-5" />
                   Send Message

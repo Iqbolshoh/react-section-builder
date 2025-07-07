@@ -158,15 +158,38 @@ const SectionRenderer: React.FC<SectionRendererProps> = ({
           <button
             {...attributes}
             {...listeners}
-            className="p-2 bg-white border-2 border-gray-300 rounded-xl shadow-lg hover:shadow-xl transition-all cursor-grab active:cursor-grabbing hover:border-emerald-400"
+            className="p-2 bg-white border-2 rounded-xl shadow-lg hover:shadow-xl transition-all cursor-grab active:cursor-grabbing"
+            style={{ 
+              borderColor: theme?.colors?.border,
+              boxShadow: theme?.shadows?.lg
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = theme?.colors?.primary || '#10b981';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = theme?.colors?.border || '#e2e8f0';
+            }}
           >
-            <GripVertical className="w-4 h-4 text-gray-600" />
+            <GripVertical className="w-4 h-4" style={{ color: theme?.colors?.textSecondary }} />
           </button>
 
           {/* Edit Button */}
           <button
             onClick={handleEdit}
-            className="p-2 bg-emerald-500 border-2 border-emerald-500 rounded-xl shadow-lg hover:shadow-xl transition-all text-white hover:bg-emerald-600"
+            className="p-2 border-2 rounded-xl shadow-lg hover:shadow-xl transition-all text-white"
+            style={{ 
+              backgroundColor: theme?.colors?.primary,
+              borderColor: theme?.colors?.primary,
+              boxShadow: theme?.shadows?.lg
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = theme?.colors?.secondary || '#06b6d4';
+              e.currentTarget.style.borderColor = theme?.colors?.secondary || '#06b6d4';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = theme?.colors?.primary || '#10b981';
+              e.currentTarget.style.borderColor = theme?.colors?.primary || '#10b981';
+            }}
           >
             <Edit3 className="w-4 h-4" />
           </button>
@@ -174,7 +197,12 @@ const SectionRenderer: React.FC<SectionRendererProps> = ({
           {/* Duplicate Button */}
           <button
             onClick={handleDuplicate}
-            className="p-2 bg-blue-500 border-2 border-blue-500 rounded-xl shadow-lg hover:shadow-xl transition-all text-white hover:bg-blue-600"
+            className="p-2 border-2 rounded-xl shadow-lg hover:shadow-xl transition-all text-white"
+            style={{ 
+              backgroundColor: theme?.colors?.accent,
+              borderColor: theme?.colors?.accent,
+              boxShadow: theme?.shadows?.lg
+            }}
           >
             <Copy className="w-4 h-4" />
           </button>
@@ -182,7 +210,12 @@ const SectionRenderer: React.FC<SectionRendererProps> = ({
           {/* Delete Button */}
           <button
             onClick={handleDelete}
-            className="p-2 bg-red-500 border-2 border-red-500 rounded-xl shadow-lg hover:shadow-xl transition-all text-white hover:bg-red-600"
+            className="p-2 border-2 rounded-xl shadow-lg hover:shadow-xl transition-all text-white"
+            style={{ 
+              backgroundColor: theme?.colors?.error,
+              borderColor: theme?.colors?.error,
+              boxShadow: theme?.shadows?.lg
+            }}
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -191,15 +224,30 @@ const SectionRenderer: React.FC<SectionRendererProps> = ({
 
       {/* Section Label */}
       {isSelected && !isPreview && (
-        <div className="absolute -top-8 left-0 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-4 py-2 rounded-t-xl text-sm font-semibold shadow-lg">
+        <div 
+          className="absolute -top-8 left-0 text-white px-4 py-2 rounded-t-xl text-sm font-semibold shadow-lg"
+          style={{ 
+            background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`,
+            boxShadow: theme?.shadows?.lg
+          }}
+        >
           {section.type.charAt(0).toUpperCase() + section.type.slice(1).replace('-', ' ')} Section
         </div>
       )}
 
       {/* Editing Mode Overlay */}
       {isEditing && (
-        <div className="absolute inset-0 bg-emerald-500 bg-opacity-10 border-4 border-emerald-500 border-dashed rounded-lg pointer-events-none">
-          <div className="absolute top-4 left-4 bg-emerald-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+        <div 
+          className="absolute inset-0 bg-opacity-10 border-4 border-dashed rounded-lg pointer-events-none"
+          style={{ 
+            backgroundColor: `${theme?.colors?.primary}10`,
+            borderColor: theme?.colors?.primary
+          }}
+        >
+          <div 
+            className="absolute top-4 left-4 text-white px-3 py-1 rounded-full text-sm font-semibold"
+            style={{ backgroundColor: theme?.colors?.primary }}
+          >
             Editing Mode
           </div>
         </div>

@@ -8,6 +8,28 @@ interface Service {
   description: string;
 }
 
+interface ThemeConfig {
+  fonts: {
+    primary: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    surface: string;
+    text: string;
+    textSecondary: string;
+    border: string;
+  };
+  shadows: {
+    sm: string;
+    md: string;
+    lg: string;
+    xl: string;
+  };
+}
+
 interface ServicesSectionProps {
   content: {
     title: string;
@@ -15,9 +37,10 @@ interface ServicesSectionProps {
   };
   isEditing: boolean;
   onChange: (content: any) => void;
+  theme?: ThemeConfig;
 }
 
-const ServicesSection: React.FC<ServicesSectionProps> = ({ content, isEditing, onChange }) => {
+const ServicesSection: React.FC<ServicesSectionProps> = ({ content, isEditing, onChange, theme }) => {
   const handleChange = (field: string, value: any) => {
     onChange({ ...content, [field]: value });
   };
@@ -48,7 +71,13 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ content, isEditing, o
   };
 
   return (
-    <section className="py-20 bg-gray-50">
+    <section 
+      className="py-20" 
+      style={{ 
+        backgroundColor: theme?.colors?.background || '#f9fafb',
+        fontFamily: theme?.fonts?.primary
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <motion.div
@@ -62,11 +91,18 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ content, isEditing, o
                 type="text"
                 value={content.title}
                 onChange={(e) => handleChange('title', e.target.value)}
-                className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 text-center"
+                className="text-3xl sm:text-4xl font-bold mb-4 bg-transparent border-2 border-dashed rounded-lg p-2 text-center"
+                style={{ 
+                  color: theme?.colors?.primary,
+                  borderColor: `${theme?.colors?.primary}50`
+                }}
                 placeholder="Enter section title"
               />
             ) : (
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              <h2 
+                className="text-3xl sm:text-4xl font-bold mb-4"
+                style={{ color: theme?.colors?.primary }}
+              >
                 {content.title}
               </h2>
             )}
@@ -104,29 +140,47 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ content, isEditing, o
                       type="text"
                       value={service.icon}
                       onChange={(e) => handleServiceChange(index, 'icon', e.target.value)}
-                      className="text-sm border border-gray-300 rounded px-2 py-1 mb-2 w-full"
+                      className="text-sm border rounded px-2 py-1 mb-2 w-full"
+                      style={{ 
+                        borderColor: theme?.colors?.border,
+                        color: theme?.colors?.text
+                      }}
                       placeholder="Icon name (e.g., Star)"
                     />
                     <input
                       type="text"
                       value={service.title}
                       onChange={(e) => handleServiceChange(index, 'title', e.target.value)}
-                      className="text-xl font-semibold text-gray-900 mb-4 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 w-full"
+                      className="text-xl font-semibold mb-4 bg-transparent border-2 border-dashed rounded-lg p-2 w-full"
+                      style={{ 
+                        color: theme?.colors?.text,
+                        borderColor: `${theme?.colors?.primary}50`
+                      }}
                       placeholder="Service title"
                     />
                     <textarea
                       value={service.description}
                       onChange={(e) => handleServiceChange(index, 'description', e.target.value)}
-                      className="text-gray-600 leading-relaxed bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 w-full h-24 resize-none"
+                      className="leading-relaxed bg-transparent border-2 border-dashed rounded-lg p-2 w-full h-24 resize-none"
+                      style={{ 
+                        color: theme?.colors?.textSecondary,
+                        borderColor: `${theme?.colors?.primary}50`
+                      }}
                       placeholder="Service description"
                     />
                   </>
                 ) : (
                   <>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                    <h3 
+                      className="text-xl font-semibold mb-4"
+                      style={{ color: theme?.colors?.text }}
+                    >
                       {service.title}
                     </h3>
-                    <p className="text-gray-600 leading-relaxed">
+                    <p 
+                      className="leading-relaxed"
+                      style={{ color: theme?.colors?.textSecondary }}
+                    >
                       {service.description}
                     </p>
                   </>
@@ -138,13 +192,36 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ content, isEditing, o
           {isEditing && (
             <motion.button
               onClick={addService}
-              className="border-2 border-dashed border-gray-300 rounded-xl p-8 hover:border-blue-400 hover:bg-blue-50 transition-all duration-200 flex items-center justify-center"
+              className="border-2 border-dashed rounded-xl p-8 transition-all duration-200 flex items-center justify-center"
+              style={{ 
+                borderColor: theme?.colors?.border,
+                backgroundColor: 'transparent'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = theme?.colors?.primary || '#3b82f6';
+                e.currentTarget.style.backgroundColor = `${theme?.colors?.primary}10` || '#dbeafe';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = theme?.colors?.border || '#d1d5db';
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}
               whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              className="rounded-xl p-8 hover:shadow-xl transition-shadow duration-300 relative group"
+                  className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity text-white"
+                  style={{ backgroundColor: theme?.colors?.error || '#ef4444' }}
+                backgroundColor: theme?.colors?.surface,
+                boxShadow: theme?.shadows?.lg
+              }}
             >
               <div className="text-center">
-                <LucideIcons.Plus className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                <span className="text-gray-600">Add Service</span>
+              <div 
+                className="w-16 h-16 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"
+                style={{ background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})` }}
+                <LucideIcons.Plus 
+                  className="w-8 h-8 mx-auto mb-2" 
+                  style={{ color: theme?.colors?.textSecondary }}
+                />
+                <span style={{ color: theme?.colors?.textSecondary }}>Add Service</span>
               </div>
             </motion.button>
           )}

@@ -40,10 +40,11 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
   const renderSplitHero = () => (
     <section 
-      className="relative min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
       style={{ 
         fontFamily: `var(--font-primary, ${theme?.fonts?.primary || 'Inter'})`,
-        backgroundColor: 'var(--color-background, #f8fafc)'
+        background: `linear-gradient(135deg, ${theme?.colors?.primary}10, ${theme?.colors?.secondary}10)`,
+        backgroundColor: theme?.colors?.background || '#f8fafc'
       }}
     >
       {/* Animated Background Elements */}
@@ -55,7 +56,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             rotate: [0, 180, 360]
           }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl"
+          className="absolute top-20 left-20 w-72 h-72 rounded-full blur-3xl"
+          style={{ 
+            background: `linear-gradient(135deg, ${theme?.colors?.primary}20, ${theme?.colors?.secondary}20)`
+          }}
         />
         <motion.div
           animate={{ 
@@ -64,7 +68,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             rotate: [360, 180, 0]
           }}
           transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-br from-purple-400/10 to-pink-400/10 rounded-full blur-3xl"
+          className="absolute bottom-20 right-20 w-96 h-96 rounded-full blur-3xl"
+          style={{ 
+            background: `linear-gradient(135deg, ${theme?.colors?.secondary}20, ${theme?.colors?.accent}20)`
+          }}
         />
       </div>
 
@@ -199,22 +206,26 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 />
                 
                 {/* Floating Elements */}
-                <motion.div
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 w-16 h-16 sm:w-24 sm:h-24 rounded-full opacity-20"
-                  style={{ 
-                    background: `linear-gradient(135deg, var(--color-primary, ${theme?.colors?.primary || '#0ea5e9'}), var(--color-secondary, ${theme?.colors?.secondary || '#06b6d4'}))`
-                  }}
-                />
-                <motion.div
-                  animate={{ y: [0, 10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -bottom-2 -left-2 sm:-bottom-4 sm:-left-4 w-12 h-12 sm:w-16 sm:h-16 rounded-full opacity-30"
-                  style={{ 
-                    background: `linear-gradient(135deg, var(--color-secondary, ${theme?.colors?.secondary || '#06b6d4'}), var(--color-accent, #f59e0b))`
-                  }}
-                />
+                {!isEditing && (
+                  <>
+                    <motion.div
+                      animate={{ y: [0, -10, 0] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                      className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 w-16 h-16 sm:w-24 sm:h-24 rounded-full opacity-20"
+                      style={{ 
+                        background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`
+                      }}
+                    />
+                    <motion.div
+                      animate={{ y: [0, 10, 0] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                      className="absolute -bottom-2 -left-2 sm:-bottom-4 sm:-left-4 w-12 h-12 sm:w-16 sm:h-16 rounded-full opacity-30"
+                      style={{ 
+                        background: `linear-gradient(135deg, ${theme?.colors?.secondary}, ${theme?.colors?.accent})`
+                      }}
+                    />
+                  </>
+                )}
               </div>
             )}
           </motion.div>
@@ -227,7 +238,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
     <section 
       className="relative min-h-screen flex items-center justify-center text-center bg-cover bg-center bg-no-repeat"
       style={{ 
-        backgroundImage: content.image ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${content.image})` : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        backgroundImage: content.image ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${content.image})` : `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`,
         fontFamily: `var(--font-primary, ${theme?.fonts?.primary || 'Inter'})`
       }}
     >
@@ -417,7 +428,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
     <section 
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
       style={{ 
-        background: `linear-gradient(135deg, var(--color-primary, ${theme?.colors?.primary || '#0ea5e9'}), var(--color-secondary, ${theme?.colors?.secondary || '#06b6d4'}))`,
+        background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`,
         fontFamily: `var(--font-primary, ${theme?.fonts?.primary || 'Inter'})`
       }}
     >
