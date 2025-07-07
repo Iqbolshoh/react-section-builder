@@ -1,16 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Plus, X, ArrowRight, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin, Youtube, Github } from 'lucide-react';
-
-interface Link {
-  title: string;
-  url: string;
-}
-
-interface SocialLink {
-  platform: string;
-  url: string;
-}
+import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin, ChevronRight, Heart, ArrowRight } from 'lucide-react';
 
 interface ThemeConfig {
   fonts: {
@@ -30,6 +20,13 @@ interface ThemeConfig {
     success: string;
     warning: string;
     error: string;
+    primary100: string;
+    primary200: string;
+    primary300: string;
+    secondary100: string;
+    secondary200: string;
+    accent100: string;
+    accent200: string;
   };
   shadows: {
     sm: string;
@@ -42,23 +39,23 @@ interface ThemeConfig {
 interface FooterSectionProps {
   content: {
     companyName: string;
+    logo?: string;
     description?: string;
-    links: Link[];
-    socialLinks: SocialLink[];
-    contactInfo?: {
+    links: { title: string; url: string }[];
+    socialLinks: { platform: string; url: string }[];
+    contactInfo?: { 
       address?: string;
       phone?: string;
       email?: string;
     };
+    copyright?: string;
     newsletterEnabled?: boolean;
     newsletterTitle?: string;
-    newsletterPlaceholder?: string;
-    copyrightText?: string;
-    columns?: {
+    newsletterSubtitle?: string;
+    linkGroups?: {
       title: string;
-      links: Link[];
+      links: { title: string; url: string }[];
     }[];
-    logo?: string;
   };
   isEditing: boolean;
   onChange: (content: any) => void;
@@ -66,7 +63,13 @@ interface FooterSectionProps {
   variant?: string;
 }
 
-const FooterSection: React.FC<FooterSectionProps> = ({ content, isEditing, onChange, theme, variant = 'footer-comprehensive' }) => {
+const FooterSection: React.FC<FooterSectionProps> = ({ 
+  content, 
+  isEditing, 
+  onChange, 
+  theme,
+  variant = 'footer-comprehensive'
+}) => {
   const handleChange = (field: string, value: any) => {
     onChange({ ...content, [field]: value });
   };
@@ -83,955 +86,882 @@ const FooterSection: React.FC<FooterSectionProps> = ({ content, isEditing, onCha
     handleChange('socialLinks', updatedSocialLinks);
   };
 
-  const handleColumnLinkChange = (columnIndex: number, linkIndex: number, field: string, value: string) => {
-    if (!content.columns) return;
-    
-    const updatedColumns = [...content.columns];
-    updatedColumns[columnIndex].links[linkIndex] = { 
-      ...updatedColumns[columnIndex].links[linkIndex], 
-      [field]: value 
-    };
-    handleChange('columns', updatedColumns);
-  };
-
-  const handleColumnTitleChange = (columnIndex: number, value: string) => {
-    if (!content.columns) return;
-    
-    const updatedColumns = [...content.columns];
-    updatedColumns[columnIndex].title = value;
-    handleChange('columns', updatedColumns);
-  };
-
-  const addLink = () => {
-    handleChange('links', [...content.links, { title: 'New Link', url: '#' }]);
-  };
-
-  const removeLink = (index: number) => {
-    const updatedLinks = content.links.filter((_, i) => i !== index);
-    handleChange('links', updatedLinks);
-  };
-
-  const addSocialLink = () => {
-    handleChange('socialLinks', [...content.socialLinks, { platform: 'New Platform', url: '#' }]);
-  };
-
-  const removeSocialLink = (index: number) => {
-    const updatedSocialLinks = content.socialLinks.filter((_, i) => i !== index);
-    handleChange('socialLinks', updatedSocialLinks);
-  };
-
-  const addColumnLink = (columnIndex: number) => {
-    if (!content.columns) return;
-    
-    const updatedColumns = [...content.columns];
-    updatedColumns[columnIndex].links.push({ title: 'New Link', url: '#' });
-    handleChange('columns', updatedColumns);
-  };
-
-  const removeColumnLink = (columnIndex: number, linkIndex: number) => {
-    if (!content.columns) return;
-    
-    const updatedColumns = [...content.columns];
-    updatedColumns[columnIndex].links = updatedColumns[columnIndex].links.filter((_, i) => i !== linkIndex);
-    handleChange('columns', updatedColumns);
-  };
-
   const getSocialIcon = (platform: string) => {
     switch (platform.toLowerCase()) {
-      case 'facebook': return <Facebook className="w-4 h-4" />;
-      case 'twitter': return <Twitter className="w-4 h-4" />;
-      case 'instagram': return <Instagram className="w-4 h-4" />;
-      case 'linkedin': return <Linkedin className="w-4 h-4" />;
-      case 'youtube': return <Youtube className="w-4 h-4" />;
-      case 'github': return <Github className="w-4 h-4" />;
+      case 'facebook': return <Facebook className="w-5 h-5" />;
+      case 'twitter': return <Twitter className="w-5 h-5" />;
+      case 'instagram': return <Instagram className="w-5 h-5" />;
+      case 'linkedin': return <Linkedin className="w-5 h-5" />;
+      case 'youtube': return <Youtube className="w-5 h-5" />;
       default: return null;
     }
   };
 
+  // Comprehensive Footer
   const renderComprehensiveFooter = () => (
     <footer 
-      className="py-16"
       style={{ 
         backgroundColor: theme?.colors?.text || '#1f2937',
+        color: '#ffffff',
         fontFamily: theme?.fonts?.primary
       }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Company Info */}
-          <div className="col-span-1 md:col-span-2">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <div className="flex items-center gap-3 mb-4">
-                {isEditing ? (
-                  <input
-                    type="url"
-                    value={content.logo || ''}
-                    onChange={(e) => handleChange('logo', e.target.value)}
-                    className="w-12 h-12 border-2 border-dashed rounded-lg text-xs text-white"
-                    style={{ borderColor: 'rgba(255, 255, 255, 0.3)' }}
-                    placeholder="Logo URL"
-                  />
-                ) : content.logo ? (
-                  <img src={content.logo} alt="Logo" className="w-10 h-10 object-contain" />
-                ) : null}
-                
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={content.companyName}
-                    onChange={(e) => handleChange('companyName', e.target.value)}
-                    className="text-2xl font-bold mb-4 bg-transparent border-2 border-dashed rounded-lg p-2 text-white"
-                    style={{ 
-                      borderColor: 'rgba(255, 255, 255, 0.3)',
-                      fontFamily: theme?.fonts?.primary
-                    }}
-                    placeholder="Company Name"
-                  />
-                ) : (
-                  <h3 
-                    className="text-2xl font-bold"
-                    style={{ 
-                      color: theme?.colors?.surface || '#ffffff',
-                      fontFamily: theme?.fonts?.primary
-                    }}
-                  >
-                    {content.companyName}
-                  </h3>
-                )}
-              </div>
-              
-              {isEditing ? (
-                <textarea
-                  value={content.description || ''}
-                  onChange={(e) => handleChange('description', e.target.value)}
-                  className="mb-6 bg-transparent border-2 border-dashed rounded-lg p-2 w-full h-24 resize-none text-white"
+          <div className="col-span-1 lg:col-span-1">
+            <div className="flex items-center gap-3 mb-4">
+              {content.logo && (
+                <img src={content.logo} alt={content.companyName} className="w-10 h-10 object-contain" />
+              )}
+              <h3 
+                className="text-xl font-bold text-white"
+                style={{ fontFamily: theme?.fonts?.primary }}
+              >
+                {content.companyName}
+              </h3>
+            </div>
+            
+            {content.description && (
+              <p 
+                className="text-gray-400 mb-6"
+                style={{ fontFamily: theme?.fonts?.secondary }}
+              >
+                {content.description}
+              </p>
+            )}
+            
+            {/* Social Links */}
+            <div className="flex flex-wrap gap-3">
+              {content.socialLinks.map((social, index) => (
+                <a
+                  key={index}
+                  href={social.url}
+                  className="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
                   style={{ 
-                    borderColor: 'rgba(255, 255, 255, 0.3)',
-                    fontFamily: theme?.fonts?.secondary
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    color: '#ffffff'
                   }}
-                  placeholder="Company description"
-                />
-              ) : (
-                <p 
-                  className="mb-6"
-                  style={{ 
-                    color: `rgba(255, 255, 255, 0.7)`,
-                    fontFamily: theme?.fonts?.secondary
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = theme?.colors?.primary || '#3b82f6';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
                   }}
                 >
-                  {content.description || 'Building beautiful websites made simple.'}
-                </p>
-              )}
-              
-              {/* Contact Info */}
-              {(content.contactInfo || isEditing) && (
-                <div className="space-y-3 mb-6">
-                  {isEditing ? (
-                    <>
-                      <div className="flex items-center gap-2">
-                        <Mail className="w-4 h-4 text-white opacity-70" />
-                        <input
-                          type="email"
-                          value={content.contactInfo?.email || ''}
-                          onChange={(e) => handleChange('contactInfo', { ...content.contactInfo, email: e.target.value })}
-                          className="bg-transparent border border-white/30 rounded p-1 text-sm text-white"
-                          placeholder="Email address"
-                        />
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Phone className="w-4 h-4 text-white opacity-70" />
-                        <input
-                          type="tel"
-                          value={content.contactInfo?.phone || ''}
-                          onChange={(e) => handleChange('contactInfo', { ...content.contactInfo, phone: e.target.value })}
-                          className="bg-transparent border border-white/30 rounded p-1 text-sm text-white"
-                          placeholder="Phone number"
-                        />
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-white opacity-70" />
-                        <input
-                          type="text"
-                          value={content.contactInfo?.address || ''}
-                          onChange={(e) => handleChange('contactInfo', { ...content.contactInfo, address: e.target.value })}
-                          className="bg-transparent border border-white/30 rounded p-1 text-sm text-white"
-                          placeholder="Address"
-                        />
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      {content.contactInfo?.email && (
-                        <div className="flex items-center gap-2">
-                          <Mail className="w-4 h-4 text-white opacity-70" />
-                          <span 
-                            className="text-sm"
-                            style={{ 
-                              color: 'rgba(255, 255, 255, 0.7)',
-                              fontFamily: theme?.fonts?.secondary
-                            }}
-                          >
-                            {content.contactInfo.email}
-                          </span>
-                        </div>
-                      )}
-                      {content.contactInfo?.phone && (
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-white opacity-70" />
-                          <span 
-                            className="text-sm"
-                            style={{ 
-                              color: 'rgba(255, 255, 255, 0.7)',
-                              fontFamily: theme?.fonts?.secondary
-                            }}
-                          >
-                            {content.contactInfo.phone}
-                          </span>
-                        </div>
-                      )}
-                      {content.contactInfo?.address && (
-                        <div className="flex items-center gap-2">
-                          <MapPin className="w-4 h-4 text-white opacity-70" />
-                          <span 
-                            className="text-sm"
-                            style={{ 
-                              color: 'rgba(255, 255, 255, 0.7)',
-                              fontFamily: theme?.fonts?.secondary
-                            }}
-                          >
-                            {content.contactInfo.address}
-                          </span>
-                        </div>
-                      )}
-                    </>
-                  )}
-                </div>
-              )}
-              
-              {/* Social Links */}
-              <div className="flex flex-wrap gap-3">
-                {content.socialLinks.map((social, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    {isEditing ? (
-                      <>
-                        <input
-                          type="text"
-                          value={social.platform}
-                          onChange={(e) => handleSocialLinkChange(index, 'platform', e.target.value)}
-                          className="flex-1 bg-transparent border border-white/30 rounded p-1 text-sm text-white"
-                          placeholder="Platform"
-                        />
-                        <input
-                          type="url"
-                          value={social.url}
-                          onChange={(e) => handleSocialLinkChange(index, 'url', e.target.value)}
-                          className="flex-1 bg-transparent border border-white/30 rounded p-1 text-sm text-white"
-                          placeholder="URL"
-                        />
-                        <button
-                          onClick={() => removeSocialLink(index)}
-                          className="w-4 h-4 text-white rounded-full flex items-center justify-center text-xs"
-                          style={{ backgroundColor: theme?.colors?.error }}
-                        >
-                          <X className="w-2 h-2" />
-                        </button>
-                      </>
-                    ) : (
-                      <a
-                        href={social.url}
-                        className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-                        style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                        }}
-                      >
-                        {getSocialIcon(social.platform)}
-                      </a>
-                    )}
-                  </div>
-                ))}
-                {isEditing && (
-                  <button
-                    onClick={addSocialLink}
-                    className="flex items-center gap-2 text-sm"
-                    style={{ color: theme?.colors?.primary }}
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add Social
-                  </button>
-                )}
-              </div>
-            </motion.div>
+                  {getSocialIcon(social.platform)}
+                </a>
+              ))}
+            </div>
           </div>
 
-          {/* Links */}
+          {/* Quick Links */}
           <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
+            <h4 
+              className="text-lg font-semibold mb-4 text-white"
+              style={{ fontFamily: theme?.fonts?.primary }}
             >
-              <h4 
-                className="text-lg font-semibold mb-4"
-                style={{ 
-                  color: theme?.colors?.surface || '#ffffff',
-                  fontFamily: theme?.fonts?.primary
-                }}
-              >
-                Quick Links
-              </h4>
-              <ul className="space-y-2">
-                {content.links.map((link, index) => (
-                  <li key={index} className="flex items-center gap-2">
-                    {isEditing ? (
-                      <>
-                        <input
-                          type="text"
-                          value={link.title}
-                          onChange={(e) => handleLinkChange(index, 'title', e.target.value)}
-                          className="flex-1 bg-transparent border border-white/30 rounded p-1 text-sm text-white"
-                          placeholder="Link title"
-                        />
-                        <input
-                          type="url"
-                          value={link.url}
-                          onChange={(e) => handleLinkChange(index, 'url', e.target.value)}
-                          className="flex-1 bg-transparent border border-white/30 rounded p-1 text-sm text-white"
-                          placeholder="URL"
-                        />
-                        <button
-                          onClick={() => removeLink(index)}
-                          className="w-4 h-4 text-white rounded-full flex items-center justify-center text-xs"
-                          style={{ backgroundColor: theme?.colors?.error }}
-                        >
-                          <X className="w-2 h-2" />
-                        </button>
-                      </>
-                    ) : (
-                      <a
-                        href={link.url}
-                        className="transition-colors flex items-center gap-1"
-                        style={{ 
-                          color: 'rgba(255, 255, 255, 0.7)',
-                          fontFamily: theme?.fonts?.secondary
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.color = theme?.colors?.surface || '#ffffff';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)';
-                        }}
-                      >
-                        <ArrowRight className="w-3 h-3 opacity-0 -ml-4 transition-all group-hover:opacity-100 group-hover:ml-0" />
-                        {link.title}
-                      </a>
-                    )}
-                  </li>
-                ))}
-                {isEditing && (
-                  <li>
-                    <button
-                      onClick={addLink}
-                      className="flex items-center gap-2 text-sm"
-                      style={{ color: theme?.colors?.primary }}
-                    >
-                      <Plus className="w-4 h-4" />
-                      Add Link
-                    </button>
-                  </li>
-                )}
-              </ul>
-            </motion.div>
+              Quick Links
+            </h4>
+            <ul className="space-y-2">
+              {content.links.slice(0, 6).map((link, index) => (
+                <li key={index}>
+                  <a 
+                    href={link.url}
+                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
+                    style={{ fontFamily: theme?.fonts?.secondary }}
+                  >
+                    <ChevronRight className="w-4 h-4" style={{ color: theme?.colors?.primary }} />
+                    {link.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h4 
+              className="text-lg font-semibold mb-4 text-white"
+              style={{ fontFamily: theme?.fonts?.primary }}
+            >
+              Contact Us
+            </h4>
+            <ul className="space-y-4">
+              {content.contactInfo?.address && (
+                <li className="flex items-start gap-3">
+                  <MapPin className="w-5 h-5 mt-1" style={{ color: theme?.colors?.primary }} />
+                  <span 
+                    className="text-gray-400"
+                    style={{ fontFamily: theme?.fonts?.secondary }}
+                  >
+                    {content.contactInfo.address}
+                  </span>
+                </li>
+              )}
+              {content.contactInfo?.phone && (
+                <li className="flex items-center gap-3">
+                  <Phone className="w-5 h-5" style={{ color: theme?.colors?.primary }} />
+                  <span 
+                    className="text-gray-400"
+                    style={{ fontFamily: theme?.fonts?.secondary }}
+                  >
+                    {content.contactInfo.phone}
+                  </span>
+                </li>
+              )}
+              {content.contactInfo?.email && (
+                <li className="flex items-center gap-3">
+                  <Mail className="w-5 h-5" style={{ color: theme?.colors?.primary }} />
+                  <span 
+                    className="text-gray-400"
+                    style={{ fontFamily: theme?.fonts?.secondary }}
+                  >
+                    {content.contactInfo.email}
+                  </span>
+                </li>
+              )}
+            </ul>
           </div>
 
           {/* Newsletter */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              viewport={{ once: true }}
-            >
+          {content.newsletterEnabled && (
+            <div>
               <h4 
-                className="text-lg font-semibold mb-4"
-                style={{ 
-                  color: theme?.colors?.surface || '#ffffff',
-                  fontFamily: theme?.fonts?.primary
-                }}
+                className="text-lg font-semibold mb-4 text-white"
+                style={{ fontFamily: theme?.fonts?.primary }}
               >
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={content.newsletterTitle || 'Subscribe'}
-                    onChange={(e) => handleChange('newsletterTitle', e.target.value)}
-                    className="bg-transparent border border-white/30 rounded p-1 text-white"
-                    placeholder="Newsletter title"
-                  />
-                ) : (
-                  content.newsletterTitle || 'Subscribe'
-                )}
+                {content.newsletterTitle || 'Newsletter'}
               </h4>
-              
-              {isEditing ? (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={content.newsletterEnabled || false}
-                      onChange={(e) => handleChange('newsletterEnabled', e.target.checked)}
-                      className="rounded"
-                    />
-                    <span className="text-sm text-white">Enable newsletter</span>
-                  </div>
-                  <input
-                    type="text"
-                    value={content.newsletterPlaceholder || 'Your email'}
-                    onChange={(e) => handleChange('newsletterPlaceholder', e.target.value)}
-                    className="bg-transparent border border-white/30 rounded p-2 text-white w-full"
-                    placeholder="Placeholder text"
-                  />
-                </div>
-              ) : content.newsletterEnabled !== false ? (
+              <p 
+                className="text-gray-400 mb-4"
+                style={{ fontFamily: theme?.fonts?.secondary }}
+              >
+                {content.newsletterSubtitle || 'Subscribe to our newsletter for updates'}
+              </p>
+              <form className="space-y-2">
                 <div className="flex">
                   <input
                     type="email"
-                    placeholder={content.newsletterPlaceholder || "Your email"}
-                    className="flex-1 px-4 py-2 rounded-l-lg"
+                    placeholder="Your email"
+                    className="px-4 py-3 rounded-l-lg w-full"
                     style={{ 
-                      backgroundColor: 'rgba(255, 255, 255, 0.1)', 
-                      color: 'white',
-                      borderColor: 'rgba(255, 255, 255, 0.2)'
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      color: '#ffffff',
+                      border: 'none',
+                      fontFamily: theme?.fonts?.secondary
                     }}
                   />
                   <button
-                    className="px-4 py-2 rounded-r-lg"
+                    type="submit"
+                    className="px-4 py-3 rounded-r-lg text-white"
                     style={{ 
                       backgroundColor: theme?.colors?.primary,
-                      color: 'white'
+                      fontFamily: theme?.fonts?.secondary
                     }}
                   >
                     <ArrowRight className="w-5 h-5" />
                   </button>
                 </div>
-              ) : null}
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Bottom Bar */}
-        <div 
-          className="border-t mt-12 pt-8"
-          style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
-        >
-          <div className="text-center">
-            <p 
-              style={{ 
-                color: 'rgba(255, 255, 255, 0.7)',
-                fontFamily: theme?.fonts?.secondary
-              }}
-            >
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={content.copyrightText || `© ${new Date().getFullYear()} ${content.companyName}. All rights reserved.`}
-                  onChange={(e) => handleChange('copyrightText', e.target.value)}
-                  className="bg-transparent border border-white/30 rounded p-1 text-white text-center w-full"
-                  placeholder="Copyright text"
-                />
-              ) : (
-                content.copyrightText || `© ${new Date().getFullYear()} ${content.companyName}. All rights reserved.`
-              )}
-            </p>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
-
-  const renderMinimalFooter = () => (
-    <footer 
-      className="py-8"
-      style={{ 
-        backgroundColor: theme?.colors?.surface || '#ffffff',
-        borderTop: `1px solid ${theme?.colors?.border || '#e5e7eb'}`,
-        fontFamily: theme?.fonts?.primary
-      }}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          {/* Logo and Copyright */}
-          <div className="flex items-center gap-3">
-            {isEditing ? (
-              <>
-                <input
-                  type="url"
-                  value={content.logo || ''}
-                  onChange={(e) => handleChange('logo', e.target.value)}
-                  className="w-10 h-10 border-2 border-dashed rounded-lg text-xs"
-                  style={{ borderColor: `${theme?.colors?.primary}50` }}
-                  placeholder="Logo URL"
-                />
-                <input
-                  type="text"
-                  value={content.companyName}
-                  onChange={(e) => handleChange('companyName', e.target.value)}
-                  className="text-lg font-bold bg-transparent border-2 border-dashed rounded-lg p-2"
-                  style={{ 
-                    color: theme?.colors?.text,
-                    borderColor: `${theme?.colors?.primary}50`,
-                    fontFamily: theme?.fonts?.primary
-                  }}
-                  placeholder="Company Name"
-                />
-              </>
-            ) : (
-              <>
-                {content.logo && (
-                  <img src={content.logo} alt="Logo" className="w-8 h-8 object-contain" />
-                )}
-                <span 
-                  className="text-lg font-bold"
-                  style={{ 
-                    color: theme?.colors?.text,
-                    fontFamily: theme?.fonts?.primary
-                  }}
+                <p 
+                  className="text-xs text-gray-500"
+                  style={{ fontFamily: theme?.fonts?.secondary }}
                 >
-                  {content.companyName}
-                </span>
-              </>
-            )}
-          </div>
-          
-          {/* Links */}
-          <div className="flex flex-wrap items-center gap-6">
-            {content.links.slice(0, 5).map((link, index) => (
-              <div key={index} className="flex items-center gap-2">
-                {isEditing ? (
-                  <>
-                    <input
-                      type="text"
-                      value={link.title}
-                      onChange={(e) => handleLinkChange(index, 'title', e.target.value)}
-                      className="bg-transparent border border-gray-300 rounded p-1 text-sm"
-                      style={{ 
-                        borderColor: theme?.colors?.border,
-                        color: theme?.colors?.text
-                      }}
-                      placeholder="Link title"
-                    />
-                    <button
-                      onClick={() => removeLink(index)}
-                      className="text-xs"
-                      style={{ color: theme?.colors?.error }}
-                    >
-                      ×
-                    </button>
-                  </>
-                ) : (
-                  <a
-                    href={link.url}
-                    className="text-sm transition-colors"
-                    style={{ 
-                      color: theme?.colors?.textSecondary,
-                      fontFamily: theme?.fonts?.secondary
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = theme?.colors?.primary || '#3b82f6';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = theme?.colors?.textSecondary || '#6b7280';
-                    }}
-                  >
-                    {link.title}
-                  </a>
-                )}
-              </div>
-            ))}
-            {isEditing && (
-              <button
-                onClick={addLink}
-                className="text-xs"
-                style={{ color: theme?.colors?.primary }}
-              >
-                + Add
-              </button>
-            )}
-          </div>
-          
-          {/* Social Links */}
-          <div className="flex items-center gap-3">
-            {content.socialLinks.map((social, index) => (
-              <div key={index} className="flex items-center gap-2">
-                {isEditing ? (
-                  <>
-                    <input
-                      type="text"
-                      value={social.platform}
-                      onChange={(e) => handleSocialLinkChange(index, 'platform', e.target.value)}
-                      className="w-20 bg-transparent border border-gray-300 rounded p-1 text-xs"
-                      style={{ 
-                        borderColor: theme?.colors?.border,
-                        color: theme?.colors?.text
-                      }}
-                      placeholder="Platform"
-                    />
-                    <button
-                      onClick={() => removeSocialLink(index)}
-                      className="text-xs"
-                      style={{ color: theme?.colors?.error }}
-                    >
-                      ×
-                    </button>
-                  </>
-                ) : (
-                  <a
-                    href={social.url}
-                    className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-                    style={{ 
-                      backgroundColor: `${theme?.colors?.primary}15`
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = `${theme?.colors?.primary}25`;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = `${theme?.colors?.primary}15`;
-                    }}
-                  >
-                    {getSocialIcon(social.platform)}
-                  </a>
-                )}
-              </div>
-            ))}
-            {isEditing && (
-              <button
-                onClick={addSocialLink}
-                className="text-xs"
-                style={{ color: theme?.colors?.primary }}
-              >
-                + Add
-              </button>
-            )}
-          </div>
+                  We respect your privacy. Unsubscribe at any time.
+                </p>
+              </form>
+            </div>
+          )}
         </div>
-        
+
         {/* Copyright */}
-        <div className="text-center mt-6">
-          <p 
-            className="text-sm"
-            style={{ 
-              color: theme?.colors?.textSecondary,
-              fontFamily: theme?.fonts?.secondary
-            }}
-          >
-            {isEditing ? (
-              <input
-                type="text"
-                value={content.copyrightText || `© ${new Date().getFullYear()} ${content.companyName}. All rights reserved.`}
-                onChange={(e) => handleChange('copyrightText', e.target.value)}
-                className="bg-transparent border border-gray-300 rounded p-1 text-center w-full"
-                style={{ 
-                  borderColor: theme?.colors?.border,
-                  color: theme?.colors?.textSecondary
-                }}
-                placeholder="Copyright text"
-              />
-            ) : (
-              content.copyrightText || `© ${new Date().getFullYear()} ${content.companyName}. All rights reserved.`
-            )}
+        <div 
+          className="border-t mt-12 pt-8 text-center text-gray-400"
+          style={{ 
+            borderColor: 'rgba(255, 255, 255, 0.1)',
+            fontFamily: theme?.fonts?.secondary
+          }}
+        >
+          <p>
+            © {new Date().getFullYear()} {content.companyName}. All rights reserved.
           </p>
         </div>
       </div>
     </footer>
   );
 
-  const renderMultiColumnFooter = () => (
+  // Minimal Footer
+  const renderMinimalFooter = () => (
     <footer 
-      className="py-16"
+      className="py-8"
       style={{ 
-        backgroundColor: theme?.colors?.text || '#1f2937',
+        backgroundColor: theme?.colors?.surface || '#ffffff',
+        borderTop: `1px solid ${theme?.colors?.border}`,
         fontFamily: theme?.fonts?.primary
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-          {/* Company Info */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            {content.logo && (
+              <img src={content.logo} alt={content.companyName} className="w-8 h-8 object-contain" />
+            )}
+            <span 
+              className="text-sm font-semibold"
+              style={{ 
+                color: theme?.colors?.text,
+                fontFamily: theme?.fonts?.primary
+              }}
             >
+              {content.companyName}
+            </span>
+          </div>
+          
+          <div className="flex flex-wrap justify-center gap-6">
+            {content.links.slice(0, 5).map((link, index) => (
+              <a
+                key={index}
+                href={link.url}
+                className="text-sm transition-colors"
+                style={{ 
+                  color: theme?.colors?.textSecondary,
+                  fontFamily: theme?.fonts?.secondary
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = theme?.colors?.primary || '#3b82f6';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = theme?.colors?.textSecondary || '#6b7280';
+                }}
+              >
+                {link.title}
+              </a>
+            ))}
+          </div>
+          
+          <div className="flex gap-3">
+            {content.socialLinks.slice(0, 4).map((social, index) => (
+              <a
+                key={index}
+                href={social.url}
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+                style={{ 
+                  backgroundColor: `${theme?.colors?.primary}15`,
+                  color: theme?.colors?.primary
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = theme?.colors?.primary || '#3b82f6';
+                  e.currentTarget.style.color = '#ffffff';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = `${theme?.colors?.primary}15`;
+                  e.currentTarget.style.color = theme?.colors?.primary || '#3b82f6';
+                }}
+              >
+                {getSocialIcon(social.platform)}
+              </a>
+            ))}
+          </div>
+        </div>
+        
+        <div 
+          className="text-center text-xs mt-6"
+          style={{ 
+            color: theme?.colors?.textSecondary,
+            fontFamily: theme?.fonts?.secondary
+          }}
+        >
+          <p>© {new Date().getFullYear()} {content.companyName}. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  );
+
+  // Newsletter Footer
+  const renderNewsletterFooter = () => (
+    <footer style={{ fontFamily: theme?.fonts?.primary }}>
+      {/* Newsletter Section */}
+      <div 
+        className="py-12 lg:py-16"
+        style={{ 
+          background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`,
+          color: '#ffffff'
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div>
+              <h3 
+                className="text-2xl sm:text-3xl font-bold mb-4"
+                style={{ fontFamily: theme?.fonts?.primary }}
+              >
+                {content.newsletterTitle || 'Subscribe to Our Newsletter'}
+              </h3>
+              <p 
+                className="text-white text-opacity-90"
+                style={{ fontFamily: theme?.fonts?.secondary }}
+              >
+                {content.newsletterSubtitle || 'Get the latest news and updates delivered to your inbox'}
+              </p>
+            </div>
+            <div>
+              <form className="flex flex-col sm:flex-row gap-3">
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  className="flex-1 px-4 py-3 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
+                  style={{ fontFamily: theme?.fonts?.secondary }}
+                />
+                <button
+                  type="submit"
+                  className="px-6 py-3 bg-white text-gray-900 rounded-xl font-semibold hover:bg-gray-100 transition-colors"
+                  style={{ fontFamily: theme?.fonts?.accent }}
+                >
+                  Subscribe
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Main Footer */}
+      <div 
+        className="py-12 lg:py-16"
+        style={{ 
+          backgroundColor: theme?.colors?.text || '#1f2937',
+          color: '#ffffff'
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+            {/* Company Info */}
+            <div>
               <div className="flex items-center gap-3 mb-4">
-                {isEditing ? (
-                  <input
-                    type="url"
-                    value={content.logo || ''}
-                    onChange={(e) => handleChange('logo', e.target.value)}
-                    className="w-12 h-12 border-2 border-dashed rounded-lg text-xs text-white"
-                    style={{ borderColor: 'rgba(255, 255, 255, 0.3)' }}
-                    placeholder="Logo URL"
-                  />
-                ) : content.logo ? (
-                  <img src={content.logo} alt="Logo" className="w-10 h-10 object-contain" />
-                ) : null}
-                
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={content.companyName}
-                    onChange={(e) => handleChange('companyName', e.target.value)}
-                    className="text-xl font-bold bg-transparent border-2 border-dashed rounded-lg p-2 text-white"
-                    style={{ 
-                      borderColor: 'rgba(255, 255, 255, 0.3)',
-                      fontFamily: theme?.fonts?.primary
-                    }}
-                    placeholder="Company Name"
-                  />
-                ) : (
-                  <h3 
-                    className="text-xl font-bold"
-                    style={{ 
-                      color: theme?.colors?.surface || '#ffffff',
-                      fontFamily: theme?.fonts?.primary
-                    }}
-                  >
-                    {content.companyName}
-                  </h3>
+                {content.logo && (
+                  <img src={content.logo} alt={content.companyName} className="w-10 h-10 object-contain" />
                 )}
+                <h3 
+                  className="text-xl font-bold text-white"
+                  style={{ fontFamily: theme?.fonts?.primary }}
+                >
+                  {content.companyName}
+                </h3>
               </div>
               
-              {isEditing ? (
-                <textarea
-                  value={content.description || ''}
-                  onChange={(e) => handleChange('description', e.target.value)}
-                  className="mb-6 bg-transparent border-2 border-dashed rounded-lg p-2 w-full h-24 resize-none text-white"
-                  style={{ 
-                    borderColor: 'rgba(255, 255, 255, 0.3)',
-                    fontFamily: theme?.fonts?.secondary
-                  }}
-                  placeholder="Company description"
-                />
-              ) : (
+              {content.description && (
                 <p 
-                  className="mb-6"
-                  style={{ 
-                    color: `rgba(255, 255, 255, 0.7)`,
-                    fontFamily: theme?.fonts?.secondary
-                  }}
+                  className="text-gray-400 mb-6"
+                  style={{ fontFamily: theme?.fonts?.secondary }}
                 >
-                  {content.description || 'Building beautiful websites made simple.'}
+                  {content.description}
                 </p>
               )}
               
               {/* Social Links */}
               <div className="flex flex-wrap gap-3">
                 {content.socialLinks.map((social, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    {isEditing ? (
-                      <>
-                        <input
-                          type="text"
-                          value={social.platform}
-                          onChange={(e) => handleSocialLinkChange(index, 'platform', e.target.value)}
-                          className="flex-1 bg-transparent border border-white/30 rounded p-1 text-sm text-white"
-                          placeholder="Platform"
-                        />
-                        <input
-                          type="url"
-                          value={social.url}
-                          onChange={(e) => handleSocialLinkChange(index, 'url', e.target.value)}
-                          className="flex-1 bg-transparent border border-white/30 rounded p-1 text-sm text-white"
-                          placeholder="URL"
-                        />
-                        <button
-                          onClick={() => removeSocialLink(index)}
-                          className="w-4 h-4 text-white rounded-full flex items-center justify-center text-xs"
-                          style={{ backgroundColor: theme?.colors?.error }}
-                        >
-                          <X className="w-2 h-2" />
-                        </button>
-                      </>
-                    ) : (
-                      <a
-                        href={social.url}
-                        className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-                        style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                        }}
-                      >
-                        {getSocialIcon(social.platform)}
-                      </a>
-                    )}
-                  </div>
-                ))}
-                {isEditing && (
-                  <button
-                    onClick={addSocialLink}
-                    className="flex items-center gap-2 text-sm"
-                    style={{ color: theme?.colors?.primary }}
+                  <a
+                    key={index}
+                    href={social.url}
+                    className="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+                    style={{ 
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      color: '#ffffff'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = theme?.colors?.primary || '#3b82f6';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                    }}
                   >
-                    <Plus className="w-4 h-4" />
-                    Add Social
-                  </button>
-                )}
+                    {getSocialIcon(social.platform)}
+                  </a>
+                ))}
               </div>
-            </motion.div>
+            </div>
+
+            {/* Quick Links */}
+            <div>
+              <h4 
+                className="text-lg font-semibold mb-4 text-white"
+                style={{ fontFamily: theme?.fonts?.primary }}
+              >
+                Quick Links
+              </h4>
+              <ul className="space-y-2">
+                {content.links.slice(0, 6).map((link, index) => (
+                  <li key={index}>
+                    <a 
+                      href={link.url}
+                      className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
+                      style={{ fontFamily: theme?.fonts?.secondary }}
+                    >
+                      <ChevronRight className="w-4 h-4" style={{ color: theme?.colors?.primary }} />
+                      {link.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Contact Info */}
+            <div>
+              <h4 
+                className="text-lg font-semibold mb-4 text-white"
+                style={{ fontFamily: theme?.fonts?.primary }}
+              >
+                Contact Us
+              </h4>
+              <ul className="space-y-4">
+                {content.contactInfo?.address && (
+                  <li className="flex items-start gap-3">
+                    <MapPin className="w-5 h-5 mt-1" style={{ color: theme?.colors?.primary }} />
+                    <span 
+                      className="text-gray-400"
+                      style={{ fontFamily: theme?.fonts?.secondary }}
+                    >
+                      {content.contactInfo.address}
+                    </span>
+                  </li>
+                )}
+                {content.contactInfo?.phone && (
+                  <li className="flex items-center gap-3">
+                    <Phone className="w-5 h-5" style={{ color: theme?.colors?.primary }} />
+                    <span 
+                      className="text-gray-400"
+                      style={{ fontFamily: theme?.fonts?.secondary }}
+                    >
+                      {content.contactInfo.phone}
+                    </span>
+                  </li>
+                )}
+                {content.contactInfo?.email && (
+                  <li className="flex items-center gap-3">
+                    <Mail className="w-5 h-5" style={{ color: theme?.colors?.primary }} />
+                    <span 
+                      className="text-gray-400"
+                      style={{ fontFamily: theme?.fonts?.secondary }}
+                    >
+                      {content.contactInfo.email}
+                    </span>
+                  </li>
+                )}
+              </ul>
+            </div>
+
+            {/* Legal Links */}
+            <div>
+              <h4 
+                className="text-lg font-semibold mb-4 text-white"
+                style={{ fontFamily: theme?.fonts?.primary }}
+              >
+                Legal
+              </h4>
+              <ul className="space-y-2">
+                <li>
+                  <a 
+                    href="#privacy"
+                    className="text-gray-400 hover:text-white transition-colors"
+                    style={{ fontFamily: theme?.fonts?.secondary }}
+                  >
+                    Privacy Policy
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="#terms"
+                    className="text-gray-400 hover:text-white transition-colors"
+                    style={{ fontFamily: theme?.fonts?.secondary }}
+                  >
+                    Terms of Service
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="#cookies"
+                    className="text-gray-400 hover:text-white transition-colors"
+                    style={{ fontFamily: theme?.fonts?.secondary }}
+                  >
+                    Cookie Policy
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          {/* Columns */}
-          {content.columns?.map((column, columnIndex) => (
-            <div key={columnIndex}>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 + (columnIndex * 0.1) }}
-                viewport={{ once: true }}
-              >
-                <h4 
-                  className="text-lg font-semibold mb-4"
+          {/* Copyright */}
+          <div 
+            className="border-t mt-12 pt-8 text-center text-gray-400"
+            style={{ 
+              borderColor: 'rgba(255, 255, 255, 0.1)',
+              fontFamily: theme?.fonts?.secondary
+            }}
+          >
+            <p>
+              © {new Date().getFullYear()} {content.companyName}. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+
+  // Social Footer
+  const renderSocialFooter = () => (
+    <footer 
+      className="py-12"
+      style={{ 
+        backgroundColor: theme?.colors?.surface || '#ffffff',
+        borderTop: `1px solid ${theme?.colors?.border}`,
+        fontFamily: theme?.fonts?.primary
+      }}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="flex items-center justify-center gap-3 mb-6">
+          {content.logo && (
+            <img src={content.logo} alt={content.companyName} className="w-10 h-10 object-contain" />
+          )}
+          <h3 
+            className="text-xl font-bold"
+            style={{ 
+              color: theme?.colors?.primary,
+              fontFamily: theme?.fonts?.primary
+            }}
+          >
+            {content.companyName}
+          </h3>
+        </div>
+        
+        <div className="flex flex-wrap justify-center gap-6 mb-8">
+          {content.links.slice(0, 6).map((link, index) => (
+            <a
+              key={index}
+              href={link.url}
+              className="text-sm transition-colors"
+              style={{ 
+                color: theme?.colors?.textSecondary,
+                fontFamily: theme?.fonts?.secondary
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = theme?.colors?.primary || '#3b82f6';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = theme?.colors?.textSecondary || '#6b7280';
+              }}
+            >
+              {link.title}
+            </a>
+          ))}
+        </div>
+        
+        <div className="flex justify-center gap-4 mb-8">
+          {content.socialLinks.map((social, index) => (
+            <motion.a
+              key={index}
+              href={social.url}
+              whileHover={{ scale: 1.1, y: -2 }}
+              className="w-12 h-12 rounded-full flex items-center justify-center transition-colors"
+              style={{ 
+                backgroundColor: `${theme?.colors?.primary}15`,
+                color: theme?.colors?.primary
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = theme?.colors?.primary || '#3b82f6';
+                e.currentTarget.style.color = '#ffffff';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = `${theme?.colors?.primary}15`;
+                e.currentTarget.style.color = theme?.colors?.primary || '#3b82f6';
+              }}
+            >
+              {getSocialIcon(social.platform)}
+            </motion.a>
+          ))}
+        </div>
+        
+        <div 
+          className="text-sm"
+          style={{ 
+            color: theme?.colors?.textSecondary,
+            fontFamily: theme?.fonts?.secondary
+          }}
+        >
+          <p className="mb-2">© {new Date().getFullYear()} {content.companyName}. All rights reserved.</p>
+          <p className="flex items-center justify-center gap-1">
+            Made with <Heart className="w-4 h-4" style={{ color: theme?.colors?.error }} /> by {content.companyName}
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+
+  // Corporate Footer
+  const renderCorporateFooter = () => (
+    <footer style={{ fontFamily: theme?.fonts?.primary }}>
+      {/* Main Footer */}
+      <div 
+        className="py-12 lg:py-16"
+        style={{ 
+          backgroundColor: theme?.colors?.background || '#f9fafb',
+          color: theme?.colors?.text
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-12">
+            {/* Company Info */}
+            <div className="md:col-span-3 lg:col-span-2">
+              <div className="flex items-center gap-3 mb-4">
+                {content.logo && (
+                  <img src={content.logo} alt={content.companyName} className="w-10 h-10 object-contain" />
+                )}
+                <h3 
+                  className="text-xl font-bold"
                   style={{ 
-                    color: theme?.colors?.surface || '#ffffff',
+                    color: theme?.colors?.primary,
                     fontFamily: theme?.fonts?.primary
                   }}
                 >
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={column.title}
-                      onChange={(e) => handleColumnTitleChange(columnIndex, e.target.value)}
-                      className="bg-transparent border border-white/30 rounded p-1 text-white"
-                      placeholder="Column title"
-                    />
-                  ) : (
-                    column.title
-                  )}
-                </h4>
-                <ul className="space-y-2">
-                  {column.links.map((link, linkIndex) => (
-                    <li key={linkIndex} className="flex items-center gap-2">
-                      {isEditing ? (
-                        <>
-                          <input
-                            type="text"
-                            value={link.title}
-                            onChange={(e) => handleColumnLinkChange(columnIndex, linkIndex, 'title', e.target.value)}
-                            className="flex-1 bg-transparent border border-white/30 rounded p-1 text-sm text-white"
-                            placeholder="Link title"
-                          />
-                          <input
-                            type="url"
-                            value={link.url}
-                            onChange={(e) => handleColumnLinkChange(columnIndex, linkIndex, 'url', e.target.value)}
-                            className="flex-1 bg-transparent border border-white/30 rounded p-1 text-sm text-white"
-                            placeholder="URL"
-                          />
-                          <button
-                            onClick={() => removeColumnLink(columnIndex, linkIndex)}
-                            className="w-4 h-4 text-white rounded-full flex items-center justify-center text-xs"
-                            style={{ backgroundColor: theme?.colors?.error }}
-                          >
-                            <X className="w-2 h-2" />
-                          </button>
-                        </>
-                      ) : (
-                        <a
-                          href={link.url}
-                          className="transition-colors group flex items-center gap-1"
-                          style={{ 
-                            color: 'rgba(255, 255, 255, 0.7)',
-                            fontFamily: theme?.fonts?.secondary
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.color = theme?.colors?.surface || '#ffffff';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)';
-                          }}
-                        >
-                          <ArrowRight className="w-3 h-3 opacity-0 -ml-4 transition-all group-hover:opacity-100 group-hover:ml-0" />
-                          {link.title}
-                        </a>
-                      )}
-                    </li>
-                  ))}
-                  {isEditing && (
-                    <li>
-                      <button
-                        onClick={() => addColumnLink(columnIndex)}
-                        className="flex items-center gap-2 text-sm"
-                        style={{ color: theme?.colors?.primary }}
-                      >
-                        <Plus className="w-4 h-4" />
-                        Add Link
-                      </button>
-                    </li>
-                  )}
-                </ul>
-              </motion.div>
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom Bar */}
-        <div 
-          className="border-t mt-12 pt-8"
-          style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
-        >
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p 
-              style={{ 
-                color: 'rgba(255, 255, 255, 0.7)',
-                fontFamily: theme?.fonts?.secondary
-              }}
-            >
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={content.copyrightText || `© ${new Date().getFullYear()} ${content.companyName}. All rights reserved.`}
-                  onChange={(e) => handleChange('copyrightText', e.target.value)}
-                  className="bg-transparent border border-white/30 rounded p-1 text-white w-full md:w-auto"
-                  placeholder="Copyright text"
-                />
-              ) : (
-                content.copyrightText || `© ${new Date().getFullYear()} ${content.companyName}. All rights reserved.`
-              )}
-            </p>
-            
-            {/* Additional Links */}
-            <div className="flex flex-wrap items-center gap-4">
-              {content.links.slice(0, 3).map((link, index) => (
-                <a
-                  key={index}
-                  href={link.url}
-                  className="text-sm transition-colors"
+                  {content.companyName}
+                </h3>
+              </div>
+              
+              {content.description && (
+                <p 
+                  className="mb-6"
                   style={{ 
-                    color: 'rgba(255, 255, 255, 0.7)',
+                    color: theme?.colors?.textSecondary,
                     fontFamily: theme?.fonts?.secondary
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = theme?.colors?.surface || '#ffffff';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)';
+                >
+                  {content.description}
+                </p>
+              )}
+              
+              {/* Contact Info */}
+              <div className="space-y-3 mb-6">
+                {content.contactInfo?.address && (
+                  <div className="flex items-start gap-3">
+                    <MapPin 
+                      className="w-5 h-5 mt-1" 
+                      style={{ color: theme?.colors?.primary }}
+                    />
+                    <span 
+                      style={{ 
+                        color: theme?.colors?.textSecondary,
+                        fontFamily: theme?.fonts?.secondary
+                      }}
+                    >
+                      {content.contactInfo.address}
+                    </span>
+                  </div>
+                )}
+                {content.contactInfo?.phone && (
+                  <div className="flex items-center gap-3">
+                    <Phone 
+                      className="w-5 h-5" 
+                      style={{ color: theme?.colors?.primary }}
+                    />
+                    <span 
+                      style={{ 
+                        color: theme?.colors?.textSecondary,
+                        fontFamily: theme?.fonts?.secondary
+                      }}
+                    >
+                      {content.contactInfo.phone}
+                    </span>
+                  </div>
+                )}
+                {content.contactInfo?.email && (
+                  <div className="flex items-center gap-3">
+                    <Mail 
+                      className="w-5 h-5" 
+                      style={{ color: theme?.colors?.primary }}
+                    />
+                    <span 
+                      style={{ 
+                        color: theme?.colors?.textSecondary,
+                        fontFamily: theme?.fonts?.secondary
+                      }}
+                    >
+                      {content.contactInfo.email}
+                    </span>
+                  </div>
+                )}
+              </div>
+              
+              {/* Social Links */}
+              <div className="flex flex-wrap gap-3">
+                {content.socialLinks.map((social, index) => (
+                  <a
+                    key={index}
+                    href={social.url}
+                    className="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+                    style={{ 
+                      backgroundColor: `${theme?.colors?.primary}15`,
+                      color: theme?.colors?.primary
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = theme?.colors?.primary || '#3b82f6';
+                      e.currentTarget.style.color = '#ffffff';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = `${theme?.colors?.primary}15`;
+                      e.currentTarget.style.color = theme?.colors?.primary || '#3b82f6';
+                    }}
+                  >
+                    {getSocialIcon(social.platform)}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Link Groups */}
+            {content.linkGroups?.map((group, groupIndex) => (
+              <div key={groupIndex}>
+                <h4 
+                  className="text-lg font-semibold mb-4"
+                  style={{ 
+                    color: theme?.colors?.text,
+                    fontFamily: theme?.fonts?.primary
                   }}
                 >
-                  {link.title}
-                </a>
-              ))}
+                  {group.title}
+                </h4>
+                <ul className="space-y-2">
+                  {group.links.map((link, linkIndex) => (
+                    <li key={linkIndex}>
+                      <a 
+                        href={link.url}
+                        className="transition-colors flex items-center gap-2"
+                        style={{ 
+                          color: theme?.colors?.textSecondary,
+                          fontFamily: theme?.fonts?.secondary
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = theme?.colors?.primary || '#3b82f6';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = theme?.colors?.textSecondary || '#6b7280';
+                        }}
+                      >
+                        <ChevronRight className="w-4 h-4" style={{ color: theme?.colors?.primary }} />
+                        {link.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+
+            {/* If no link groups are defined, show a single column of links */}
+            {(!content.linkGroups || content.linkGroups.length === 0) && (
+              <div>
+                <h4 
+                  className="text-lg font-semibold mb-4"
+                  style={{ 
+                    color: theme?.colors?.text,
+                    fontFamily: theme?.fonts?.primary
+                  }}
+                >
+                  Quick Links
+                </h4>
+                <ul className="space-y-2">
+                  {content.links.slice(0, 6).map((link, index) => (
+                    <li key={index}>
+                      <a 
+                        href={link.url}
+                        className="transition-colors flex items-center gap-2"
+                        style={{ 
+                          color: theme?.colors?.textSecondary,
+                          fontFamily: theme?.fonts?.secondary
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = theme?.colors?.primary || '#3b82f6';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = theme?.colors?.textSecondary || '#6b7280';
+                        }}
+                      >
+                        <ChevronRight className="w-4 h-4" style={{ color: theme?.colors?.primary }} />
+                        {link.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      
+      {/* Copyright Bar */}
+      <div 
+        className="py-6"
+        style={{ 
+          backgroundColor: theme?.colors?.text || '#1f2937',
+          color: '#ffffff'
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div 
+              className="text-sm text-gray-400"
+              style={{ fontFamily: theme?.fonts?.secondary }}
+            >
+              © {new Date().getFullYear()} {content.companyName}. All rights reserved.
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-6">
+              <a 
+                href="#privacy"
+                className="text-sm transition-colors"
+                style={{ 
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  fontFamily: theme?.fonts?.secondary
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#ffffff';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)';
+                }}
+              >
+                Privacy Policy
+              </a>
+              <a 
+                href="#terms"
+                className="text-sm transition-colors"
+                style={{ 
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  fontFamily: theme?.fonts?.secondary
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#ffffff';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)';
+                }}
+              >
+                Terms of Service
+              </a>
+              <a 
+                href="#cookies"
+                className="text-sm transition-colors"
+                style={{ 
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  fontFamily: theme?.fonts?.secondary
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#ffffff';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)';
+                }}
+              >
+                Cookie Policy
+              </a>
             </div>
           </div>
         </div>
@@ -1039,424 +969,302 @@ const FooterSection: React.FC<FooterSectionProps> = ({ content, isEditing, onCha
     </footer>
   );
 
-  const renderNewsletterFooter = () => (
+  // Modern Footer
+  const renderModernFooter = () => (
     <footer 
-      className="py-16"
+      className="py-12 lg:py-16"
       style={{ 
-        backgroundColor: theme?.colors?.text || '#1f2937',
+        backgroundColor: theme?.colors?.background || '#f9fafb',
         fontFamily: theme?.fonts?.primary
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Newsletter Section */}
-        <div 
-          className="rounded-2xl p-8 mb-12"
-          style={{ 
-            background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`,
-            boxShadow: theme?.shadows?.lg
-          }}
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-16">
+          {/* Company Info */}
+          <div className="md:col-span-1">
+            <div className="flex items-center gap-3 mb-4">
+              {content.logo && (
+                <img src={content.logo} alt={content.companyName} className="w-10 h-10 object-contain" />
+              )}
               <h3 
-                className="text-2xl font-bold mb-4 text-white"
-                style={{ fontFamily: theme?.fonts?.primary }}
+                className="text-xl font-bold"
+                style={{ 
+                  color: theme?.colors?.primary,
+                  fontFamily: theme?.fonts?.primary
+                }}
               >
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={content.newsletterTitle || 'Subscribe to our newsletter'}
-                    onChange={(e) => handleChange('newsletterTitle', e.target.value)}
-                    className="bg-transparent border-2 border-dashed border-white/50 rounded-lg p-2 w-full text-white"
-                    placeholder="Newsletter title"
-                  />
-                ) : (
-                  content.newsletterTitle || 'Subscribe to our newsletter'
-                )}
+                {content.companyName}
               </h3>
-              <p 
-                className="text-white text-opacity-90"
-                style={{ fontFamily: theme?.fonts?.secondary }}
-              >
-                Stay updated with our latest news, updates, and offers.
-              </p>
             </div>
-            <div>
-              <div className="flex">
-                <input
-                  type="email"
-                  placeholder={content.newsletterPlaceholder || "Your email address"}
-                  className="flex-1 px-4 py-3 rounded-l-lg"
+            
+            {content.description && (
+              <p 
+                className="mb-6"
+                style={{ 
+                  color: theme?.colors?.textSecondary,
+                  fontFamily: theme?.fonts?.secondary
+                }}
+              >
+                {content.description}
+              </p>
+            )}
+            
+            {/* Social Links */}
+            <div className="flex flex-wrap gap-3">
+              {content.socialLinks.map((social, index) => (
+                <motion.a
+                  key={index}
+                  href={social.url}
+                  whileHover={{ y: -3 }}
+                  className="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
                   style={{ 
-                    backgroundColor: 'rgba(255, 255, 255, 0.2)', 
-                    color: 'white',
-                    borderColor: 'rgba(255, 255, 255, 0.2)',
-                    fontFamily: theme?.fonts?.secondary
+                    backgroundColor: `${theme?.colors?.primary}15`,
+                    color: theme?.colors?.primary
                   }}
-                />
-                <button
-                  className="px-6 py-3 rounded-r-lg font-medium"
-                  style={{ 
-                    backgroundColor: 'white',
-                    color: theme?.colors?.primary,
-                    fontFamily: theme?.fonts?.accent
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = theme?.colors?.primary || '#3b82f6';
+                    e.currentTarget.style.color = '#ffffff';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = `${theme?.colors?.primary}15`;
+                    e.currentTarget.style.color = theme?.colors?.primary || '#3b82f6';
                   }}
                 >
-                  Subscribe
-                </button>
+                  {getSocialIcon(social.platform)}
+                </motion.a>
+              ))}
+            </div>
+          </div>
+
+          {/* Links */}
+          <div className="md:col-span-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
+              <div>
+                <h4 
+                  className="text-lg font-semibold mb-4"
+                  style={{ 
+                    color: theme?.colors?.text,
+                    fontFamily: theme?.fonts?.primary
+                  }}
+                >
+                  Company
+                </h4>
+                <ul className="space-y-2">
+                  {content.links.slice(0, 4).map((link, index) => (
+                    <li key={index}>
+                      <a 
+                        href={link.url}
+                        className="transition-colors"
+                        style={{ 
+                          color: theme?.colors?.textSecondary,
+                          fontFamily: theme?.fonts?.secondary
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = theme?.colors?.primary || '#3b82f6';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = theme?.colors?.textSecondary || '#6b7280';
+                        }}
+                      >
+                        {link.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              {isEditing && (
-                <input
-                  type="text"
-                  value={content.newsletterPlaceholder || 'Your email address'}
-                  onChange={(e) => handleChange('newsletterPlaceholder', e.target.value)}
-                  className="mt-2 bg-transparent border border-white/30 rounded p-1 text-white w-full"
-                  placeholder="Placeholder text"
-                />
-              )}
+              
+              <div>
+                <h4 
+                  className="text-lg font-semibold mb-4"
+                  style={{ 
+                    color: theme?.colors?.text,
+                    fontFamily: theme?.fonts?.primary
+                  }}
+                >
+                  Resources
+                </h4>
+                <ul className="space-y-2">
+                  <li>
+                    <a 
+                      href="#blog"
+                      className="transition-colors"
+                      style={{ 
+                        color: theme?.colors?.textSecondary,
+                        fontFamily: theme?.fonts?.secondary
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = theme?.colors?.primary || '#3b82f6';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = theme?.colors?.textSecondary || '#6b7280';
+                      }}
+                    >
+                      Blog
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#help"
+                      className="transition-colors"
+                      style={{ 
+                        color: theme?.colors?.textSecondary,
+                        fontFamily: theme?.fonts?.secondary
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = theme?.colors?.primary || '#3b82f6';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = theme?.colors?.textSecondary || '#6b7280';
+                      }}
+                    >
+                      Help Center
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#guides"
+                      className="transition-colors"
+                      style={{ 
+                        color: theme?.colors?.textSecondary,
+                        fontFamily: theme?.fonts?.secondary
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = theme?.colors?.primary || '#3b82f6';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = theme?.colors?.textSecondary || '#6b7280';
+                      }}
+                    >
+                      Guides
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#events"
+                      className="transition-colors"
+                      style={{ 
+                        color: theme?.colors?.textSecondary,
+                        fontFamily: theme?.fonts?.secondary
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = theme?.colors?.primary || '#3b82f6';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = theme?.colors?.textSecondary || '#6b7280';
+                      }}
+                    >
+                      Events
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              
+              <div>
+                <h4 
+                  className="text-lg font-semibold mb-4"
+                  style={{ 
+                    color: theme?.colors?.text,
+                    fontFamily: theme?.fonts?.primary
+                  }}
+                >
+                  Legal
+                </h4>
+                <ul className="space-y-2">
+                  <li>
+                    <a 
+                      href="#privacy"
+                      className="transition-colors"
+                      style={{ 
+                        color: theme?.colors?.textSecondary,
+                        fontFamily: theme?.fonts?.secondary
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = theme?.colors?.primary || '#3b82f6';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = theme?.colors?.textSecondary || '#6b7280';
+                      }}
+                    >
+                      Privacy Policy
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#terms"
+                      className="transition-colors"
+                      style={{ 
+                        color: theme?.colors?.textSecondary,
+                        fontFamily: theme?.fonts?.secondary
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = theme?.colors?.primary || '#3b82f6';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = theme?.colors?.textSecondary || '#6b7280';
+                      }}
+                    >
+                      Terms of Service
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#cookies"
+                      className="transition-colors"
+                      style={{ 
+                        color: theme?.colors?.textSecondary,
+                        fontFamily: theme?.fonts?.secondary
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = theme?.colors?.primary || '#3b82f6';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = theme?.colors?.textSecondary || '#6b7280';
+                      }}
+                    >
+                      Cookie Policy
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Company Info */}
-          <div className="col-span-1 md:col-span-2">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <div className="flex items-center gap-3 mb-4">
-                {isEditing ? (
-                  <input
-                    type="url"
-                    value={content.logo || ''}
-                    onChange={(e) => handleChange('logo', e.target.value)}
-                    className="w-12 h-12 border-2 border-dashed rounded-lg text-xs text-white"
-                    style={{ borderColor: 'rgba(255, 255, 255, 0.3)' }}
-                    placeholder="Logo URL"
-                  />
-                ) : content.logo ? (
-                  <img src={content.logo} alt="Logo" className="w-10 h-10 object-contain" />
-                ) : null}
-                
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={content.companyName}
-                    onChange={(e) => handleChange('companyName', e.target.value)}
-                    className="text-xl font-bold bg-transparent border-2 border-dashed rounded-lg p-2 text-white"
-                    style={{ 
-                      borderColor: 'rgba(255, 255, 255, 0.3)',
-                      fontFamily: theme?.fonts?.primary
-                    }}
-                    placeholder="Company Name"
-                  />
-                ) : (
-                  <h3 
-                    className="text-xl font-bold"
-                    style={{ 
-                      color: theme?.colors?.surface || '#ffffff',
-                      fontFamily: theme?.fonts?.primary
-                    }}
-                  >
-                    {content.companyName}
-                  </h3>
-                )}
-              </div>
-              
-              {isEditing ? (
-                <textarea
-                  value={content.description || ''}
-                  onChange={(e) => handleChange('description', e.target.value)}
-                  className="mb-6 bg-transparent border-2 border-dashed rounded-lg p-2 w-full h-24 resize-none text-white"
-                  style={{ 
-                    borderColor: 'rgba(255, 255, 255, 0.3)',
-                    fontFamily: theme?.fonts?.secondary
-                  }}
-                  placeholder="Company description"
-                />
-              ) : (
-                <p 
-                  className="mb-6"
-                  style={{ 
-                    color: `rgba(255, 255, 255, 0.7)`,
-                    fontFamily: theme?.fonts?.secondary
-                  }}
-                >
-                  {content.description || 'Building beautiful websites made simple.'}
-                </p>
-              )}
-              
-              {/* Contact Info */}
-              {(content.contactInfo || isEditing) && (
-                <div className="space-y-3 mb-6">
-                  {isEditing ? (
-                    <>
-                      <div className="flex items-center gap-2">
-                        <Mail className="w-4 h-4 text-white opacity-70" />
-                        <input
-                          type="email"
-                          value={content.contactInfo?.email || ''}
-                          onChange={(e) => handleChange('contactInfo', { ...content.contactInfo, email: e.target.value })}
-                          className="bg-transparent border border-white/30 rounded p-1 text-sm text-white"
-                          placeholder="Email address"
-                        />
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Phone className="w-4 h-4 text-white opacity-70" />
-                        <input
-                          type="tel"
-                          value={content.contactInfo?.phone || ''}
-                          onChange={(e) => handleChange('contactInfo', { ...content.contactInfo, phone: e.target.value })}
-                          className="bg-transparent border border-white/30 rounded p-1 text-sm text-white"
-                          placeholder="Phone number"
-                        />
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-white opacity-70" />
-                        <input
-                          type="text"
-                          value={content.contactInfo?.address || ''}
-                          onChange={(e) => handleChange('contactInfo', { ...content.contactInfo, address: e.target.value })}
-                          className="bg-transparent border border-white/30 rounded p-1 text-sm text-white"
-                          placeholder="Address"
-                        />
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      {content.contactInfo?.email && (
-                        <div className="flex items-center gap-2">
-                          <Mail className="w-4 h-4 text-white opacity-70" />
-                          <span 
-                            className="text-sm"
-                            style={{ 
-                              color: 'rgba(255, 255, 255, 0.7)',
-                              fontFamily: theme?.fonts?.secondary
-                            }}
-                          >
-                            {content.contactInfo.email}
-                          </span>
-                        </div>
-                      )}
-                      {content.contactInfo?.phone && (
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-white opacity-70" />
-                          <span 
-                            className="text-sm"
-                            style={{ 
-                              color: 'rgba(255, 255, 255, 0.7)',
-                              fontFamily: theme?.fonts?.secondary
-                            }}
-                          >
-                            {content.contactInfo.phone}
-                          </span>
-                        </div>
-                      )}
-                      {content.contactInfo?.address && (
-                        <div className="flex items-center gap-2">
-                          <MapPin className="w-4 h-4 text-white opacity-70" />
-                          <span 
-                            className="text-sm"
-                            style={{ 
-                              color: 'rgba(255, 255, 255, 0.7)',
-                              fontFamily: theme?.fonts?.secondary
-                            }}
-                          >
-                            {content.contactInfo.address}
-                          </span>
-                        </div>
-                      )}
-                    </>
-                  )}
-                </div>
-              )}
-            </motion.div>
-          </div>
-
-          {/* Links */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              <h4 
-                className="text-lg font-semibold mb-4"
-                style={{ 
-                  color: theme?.colors?.surface || '#ffffff',
-                  fontFamily: theme?.fonts?.primary
-                }}
-              >
-                Quick Links
-              </h4>
-              <ul className="space-y-2">
-                {content.links.map((link, index) => (
-                  <li key={index} className="flex items-center gap-2">
-                    {isEditing ? (
-                      <>
-                        <input
-                          type="text"
-                          value={link.title}
-                          onChange={(e) => handleLinkChange(index, 'title', e.target.value)}
-                          className="flex-1 bg-transparent border border-white/30 rounded p-1 text-sm text-white"
-                          placeholder="Link title"
-                        />
-                        <input
-                          type="url"
-                          value={link.url}
-                          onChange={(e) => handleLinkChange(index, 'url', e.target.value)}
-                          className="flex-1 bg-transparent border border-white/30 rounded p-1 text-sm text-white"
-                          placeholder="URL"
-                        />
-                        <button
-                          onClick={() => removeLink(index)}
-                          className="w-4 h-4 text-white rounded-full flex items-center justify-center text-xs"
-                          style={{ backgroundColor: theme?.colors?.error }}
-                        >
-                          <X className="w-2 h-2" />
-                        </button>
-                      </>
-                    ) : (
-                      <a
-                        href={link.url}
-                        className="transition-colors group flex items-center gap-1"
-                        style={{ 
-                          color: 'rgba(255, 255, 255, 0.7)',
-                          fontFamily: theme?.fonts?.secondary
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.color = theme?.colors?.surface || '#ffffff';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)';
-                        }}
-                      >
-                        <ArrowRight className="w-3 h-3 opacity-0 -ml-4 transition-all group-hover:opacity-100 group-hover:ml-0" />
-                        {link.title}
-                      </a>
-                    )}
-                  </li>
-                ))}
-                {isEditing && (
-                  <li>
-                    <button
-                      onClick={addLink}
-                      className="flex items-center gap-2 text-sm"
-                      style={{ color: theme?.colors?.primary }}
-                    >
-                      <Plus className="w-4 h-4" />
-                      Add Link
-                    </button>
-                  </li>
-                )}
-              </ul>
-            </motion.div>
-          </div>
-
-          {/* Social Links */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              viewport={{ once: true }}
-            >
-              <h4 
-                className="text-lg font-semibold mb-4"
-                style={{ 
-                  color: theme?.colors?.surface || '#ffffff',
-                  fontFamily: theme?.fonts?.primary
-                }}
-              >
-                Follow Us
-              </h4>
-              <div className="flex flex-wrap gap-3">
-                {content.socialLinks.map((social, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    {isEditing ? (
-                      <>
-                        <input
-                          type="text"
-                          value={social.platform}
-                          onChange={(e) => handleSocialLinkChange(index, 'platform', e.target.value)}
-                          className="flex-1 bg-transparent border border-white/30 rounded p-1 text-sm text-white"
-                          placeholder="Platform"
-                        />
-                        <input
-                          type="url"
-                          value={social.url}
-                          onChange={(e) => handleSocialLinkChange(index, 'url', e.target.value)}
-                          className="flex-1 bg-transparent border border-white/30 rounded p-1 text-sm text-white"
-                          placeholder="URL"
-                        />
-                        <button
-                          onClick={() => removeSocialLink(index)}
-                          className="w-4 h-4 text-white rounded-full flex items-center justify-center text-xs"
-                          style={{ backgroundColor: theme?.colors?.error }}
-                        >
-                          <X className="w-2 h-2" />
-                        </button>
-                      </>
-                    ) : (
-                      <a
-                        href={social.url}
-                        className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-                        style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                        }}
-                      >
-                        {getSocialIcon(social.platform)}
-                      </a>
-                    )}
-                  </div>
-                ))}
-                {isEditing && (
-                  <button
-                    onClick={addSocialLink}
-                    className="flex items-center gap-2 text-sm"
-                    style={{ color: theme?.colors?.primary }}
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add Social
-                  </button>
-                )}
-              </div>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Bottom Bar */}
+        {/* Copyright */}
         <div 
-          className="border-t mt-12 pt-8"
-          style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
+          className="border-t mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4"
+          style={{ 
+            borderColor: theme?.colors?.border,
+            fontFamily: theme?.fonts?.secondary
+          }}
         >
-          <div className="text-center">
-            <p 
+          <div 
+            className="text-sm"
+            style={{ color: theme?.colors?.textSecondary }}
+          >
+            © {new Date().getFullYear()} {content.companyName}. All rights reserved.
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <span 
+              className="text-sm"
+              style={{ color: theme?.colors?.textSecondary }}
+            >
+              Language:
+            </span>
+            <select 
+              className="text-sm border rounded-lg px-2 py-1"
               style={{ 
-                color: 'rgba(255, 255, 255, 0.7)',
-                fontFamily: theme?.fonts?.secondary
+                borderColor: theme?.colors?.border,
+                color: theme?.colors?.text,
+                backgroundColor: theme?.colors?.surface
               }}
             >
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={content.copyrightText || `© ${new Date().getFullYear()} ${content.companyName}. All rights reserved.`}
-                  onChange={(e) => handleChange('copyrightText', e.target.value)}
-                  className="bg-transparent border border-white/30 rounded p-1 text-white text-center w-full"
-                  placeholder="Copyright text"
-                />
-              ) : (
-                content.copyrightText || `© ${new Date().getFullYear()} ${content.companyName}. All rights reserved.`
-              )}
-            </p>
+              <option value="en">English</option>
+              <option value="es">Español</option>
+              <option value="fr">Français</option>
+              <option value="de">Deutsch</option>
+            </select>
           </div>
         </div>
       </div>
@@ -1465,42 +1273,41 @@ const FooterSection: React.FC<FooterSectionProps> = ({ content, isEditing, onCha
 
   // Initialize default content if needed
   React.useEffect(() => {
-    if (variant === 'footer-multi-column' && !content.columns) {
-      handleChange('columns', [
+    if (variant === 'footer-newsletter' && !content.newsletterEnabled) {
+      handleChange('newsletterEnabled', true);
+      handleChange('newsletterTitle', 'Stay Updated');
+      handleChange('newsletterSubtitle', 'Subscribe to our newsletter for the latest news and updates');
+    }
+    
+    if (variant === 'footer-corporate' && !content.linkGroups) {
+      handleChange('linkGroups', [
         {
-          title: 'Products',
+          title: 'Company',
           links: [
-            { title: 'Features', url: '#' },
-            { title: 'Pricing', url: '#' },
-            { title: 'Testimonials', url: '#' }
+            { title: 'About Us', url: '#about' },
+            { title: 'Careers', url: '#careers' },
+            { title: 'News', url: '#news' },
+            { title: 'Contact', url: '#contact' }
           ]
         },
         {
-          title: 'Resources',
+          title: 'Services',
           links: [
-            { title: 'Documentation', url: '#' },
-            { title: 'Guides', url: '#' },
-            { title: 'Support', url: '#' }
+            { title: 'Web Design', url: '#web-design' },
+            { title: 'Development', url: '#development' },
+            { title: 'Marketing', url: '#marketing' },
+            { title: 'Consulting', url: '#consulting' }
+          ]
+        },
+        {
+          title: 'Legal',
+          links: [
+            { title: 'Privacy Policy', url: '#privacy' },
+            { title: 'Terms of Service', url: '#terms' },
+            { title: 'Cookie Policy', url: '#cookies' }
           ]
         }
       ]);
-    }
-    
-    if (variant === 'footer-newsletter' && !content.newsletterTitle) {
-      handleChange('newsletterTitle', 'Subscribe to our newsletter');
-      handleChange('newsletterPlaceholder', 'Your email address');
-      handleChange('newsletterEnabled', true);
-    }
-    
-    if (!content.contactInfo) {
-      handleChange('contactInfo', {
-        email: 'hello@example.com',
-        phone: '+1 (555) 123-4567'
-      });
-    }
-    
-    if (!content.description) {
-      handleChange('description', 'Building beautiful websites made simple with our powerful drag-and-drop builder.');
     }
   }, [variant]);
 
@@ -1509,8 +1316,10 @@ const FooterSection: React.FC<FooterSectionProps> = ({ content, isEditing, onCha
       return renderMinimalFooter();
     case 'footer-newsletter':
       return renderNewsletterFooter();
-    case 'footer-multi-column':
-      return renderMultiColumnFooter();
+    case 'footer-social':
+      return renderSocialFooter();
+    case 'footer-corporate':
+      return renderCorporateFooter();
     default:
       return renderComprehensiveFooter();
   }
