@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Globe, Image as ImageIcon, Check, AlertCircle } from 'lucide-react';
-import {
+import { 
+  X, 
+  Globe, 
+  Image as ImageIcon, 
+  Check, 
+  AlertCircle,
   Briefcase,
   Palette,
   ShoppingCart,
@@ -11,11 +15,13 @@ import {
   GraduationCap,
   HandHeart,
   Cpu,
-  User
+  User,
+  ArrowRight,
+  Rocket,
+  Sparkles
 } from 'lucide-react';
 import { useProject } from '../contexts/ProjectContext';
 import { useNavigate } from 'react-router-dom';
-import { useTheme } from '../contexts/ThemeContext';
 
 interface WebsiteSetupModalProps {
   isOpen: boolean;
@@ -34,7 +40,6 @@ interface WebsiteInfo {
 
 const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }) => {
   const { createProject } = useProject();
-  const { currentTheme } = useTheme();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [isCreating, setIsCreating] = useState(false);
@@ -243,7 +248,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
         className="fixed inset-0 flex items-center justify-center z-50 p-4"
         style={{ 
           backgroundColor: 'rgba(0, 0, 0, 0.6)',
-          backdropFilter: 'blur(5px)'
+          backdropFilter: 'blur(10px)'
         }}
         onClick={onClose}
       >
@@ -251,34 +256,27 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-3xl shadow-2xl"
-          style={{ 
-            backgroundColor: currentTheme.colors.surface,
-            boxShadow: currentTheme.shadows.xl
-          }}
+          className="w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-3xl platform-shadow-2xl"
+          style={{ backgroundColor: 'var(--bg-primary)' }}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div 
-            className="text-white p-6"
-            style={{ 
-              background: `linear-gradient(135deg, ${currentTheme.colors.primary}, ${currentTheme.colors.secondary})`,
-              fontFamily: currentTheme.fonts.primary
-            }}
-          >
+          <div className="platform-gradient-primary p-6 text-white">
             <div className="flex items-center justify-between">
               <div>
-                <h2 
-                  className="text-2xl font-bold"
-                  style={{ fontFamily: currentTheme.fonts.primary }}
-                >
-                  Create Your Website
-                </h2>
-                <p 
-                  className="mt-1 text-white text-opacity-90"
-                  style={{ fontFamily: currentTheme.fonts.secondary }}
-                >
-                  Step {step} of 4
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                    <Rocket className="w-5 h-5" />
+                  </div>
+                  <h2 className="text-2xl font-bold platform-font-primary">Create Your Website</h2>
+                </div>
+                <p className="text-white text-opacity-90 platform-font-secondary">
+                  Step {step} of 4 • {
+                    step === 1 ? 'Basic Information' : 
+                    step === 2 ? 'SEO Settings' : 
+                    step === 3 ? 'Visual Identity' : 
+                    'Review & Create'
+                  }
                 </p>
               </div>
               <button
@@ -291,10 +289,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
             </div>
 
             {/* Progress Bar */}
-            <div 
-              className="mt-6 rounded-full h-2"
-              style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
-            >
+            <div className="mt-6 rounded-full h-2 bg-white/20">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${(step / 4) * 100}%` }}
@@ -305,13 +300,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
           </div>
 
           {/* Content */}
-          <div 
-            className="p-6 overflow-auto max-h-[calc(90vh-200px)]"
-            style={{ 
-              backgroundColor: currentTheme.colors.background,
-              color: currentTheme.colors.text
-            }}
-          >
+          <div className="p-6 overflow-auto max-h-[calc(90vh-200px)] platform-bg-secondary">
             {step === 1 && (
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
@@ -319,33 +308,16 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                 className="space-y-6"
               >
                 <div>
-                  <h3 
-                    className="text-xl font-bold mb-2"
-                    style={{ 
-                      color: currentTheme.colors.text,
-                      fontFamily: currentTheme.fonts.primary
-                    }}
-                  >
+                  <h3 className="text-xl font-bold mb-2 platform-text-primary platform-font-primary">
                     Basic Information
                   </h3>
-                  <p 
-                    style={{ 
-                      color: currentTheme.colors.textSecondary,
-                      fontFamily: currentTheme.fonts.secondary
-                    }}
-                  >
+                  <p className="platform-text-secondary platform-font-secondary">
                     Let's start with the basics of your website
                   </p>
                 </div>
 
                 <div>
-                  <label 
-                    className="block text-sm font-semibold mb-2"
-                    style={{ 
-                      color: currentTheme.colors.text,
-                      fontFamily: currentTheme.fonts.primary
-                    }}
-                  >
+                  <label className="block text-sm font-semibold mb-2 platform-text-primary platform-font-primary">
                     Website Name *
                   </label>
                   <input
@@ -353,43 +325,21 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                     value={websiteInfo.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
                     placeholder="My Awesome Website"
-                    className={`w-full px-4 py-3 border rounded-xl transition-all`}
-                    style={{ 
-                      borderColor: errors.name ? currentTheme.colors.error : currentTheme.colors.border,
-                      backgroundColor: currentTheme.colors.surface,
-                      color: currentTheme.colors.text,
-                      fontFamily: currentTheme.fonts.secondary
-                    }}
+                    className={`input ${errors.name ? 'border-red-500' : ''}`}
                   />
                   {errors.name && (
-                    <p 
-                      className="mt-1 text-sm"
-                      style={{ color: currentTheme.colors.error }}
-                    >
+                    <p className="mt-1 text-sm text-red-500">
                       {errors.name}
                     </p>
                   )}
                 </div>
 
                 <div>
-                  <label 
-                    className="block text-sm font-semibold mb-2"
-                    style={{ 
-                      color: currentTheme.colors.text,
-                      fontFamily: currentTheme.fonts.primary
-                    }}
-                  >
+                  <label className="block text-sm font-semibold mb-2 platform-text-primary platform-font-primary">
                     Website URL *
                   </label>
                   <div className="flex items-center">
-                    <span 
-                      className="px-4 py-3 rounded-l-xl border border-r-0"
-                      style={{ 
-                        backgroundColor: `${currentTheme.colors.primary}15`,
-                        borderColor: currentTheme.colors.border,
-                        color: currentTheme.colors.textSecondary
-                      }}
-                    >
+                    <span className="px-4 py-3 rounded-l-xl border border-r-0 platform-border platform-bg-tertiary platform-text-secondary">
                       https://
                     </span>
                     <input
@@ -397,36 +347,17 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                       value={websiteInfo.url}
                       onChange={(e) => handleUrlChange(e.target.value)}
                       placeholder="subdomain"
-                      className={`flex-1 px-4 py-3 border rounded-none`}
-                      style={{ 
-                        borderColor: errors.url ? currentTheme.colors.error : currentTheme.colors.border,
-                        backgroundColor: currentTheme.colors.surface,
-                        color: currentTheme.colors.text,
-                        fontFamily: currentTheme.fonts.secondary
-                      }}
+                      className={`flex-1 px-4 py-3 border rounded-none ${errors.url ? 'border-red-500' : 'platform-border'}`}
                     />
-                    <span 
-                      className="px-4 py-3 rounded-r-xl border border-l-0"
-                      style={{ 
-                        backgroundColor: `${currentTheme.colors.primary}15`,
-                        borderColor: currentTheme.colors.border,
-                        color: currentTheme.colors.textSecondary
-                      }}
-                    >
-                      .iqbolshoh.com
+                    <span className="px-4 py-3 rounded-r-xl border border-l-0 platform-border platform-bg-tertiary platform-text-secondary">
+                      .templates.uz
                     </span>
                   </div>
 
                   {checkingUrl && (
                     <div className="mt-2 flex items-center gap-2">
-                      <div 
-                        className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin"
-                        style={{ borderColor: currentTheme.colors.primary }}
-                      ></div>
-                      <span 
-                        className="text-sm"
-                        style={{ color: currentTheme.colors.textSecondary }}
-                      >
+                      <div className="w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                      <span className="text-sm platform-text-secondary">
                         Checking availability...
                       </span>
                     </div>
@@ -436,27 +367,15 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                     <div className="mt-2 flex items-center gap-2">
                       {urlAvailable === true ? (
                         <>
-                          <Check 
-                            className="w-4 h-4" 
-                            style={{ color: currentTheme.colors.success }}
-                          />
-                          <span 
-                            className="text-sm"
-                            style={{ color: currentTheme.colors.success }}
-                          >
-                            subdomain.iqbolshoh.com is available!
+                          <Check className="w-4 h-4 text-green-500" />
+                          <span className="text-sm text-green-500">
+                            {websiteInfo.url}.templates.uz is available!
                           </span>
                         </>
                       ) : urlAvailable === false ? (
                         <>
-                          <AlertCircle 
-                            className="w-4 h-4" 
-                            style={{ color: currentTheme.colors.error }}
-                          />
-                          <span 
-                            className="text-sm"
-                            style={{ color: currentTheme.colors.error }}
-                          >
+                          <AlertCircle className="w-4 h-4 text-red-500" />
+                          <span className="text-sm text-red-500">
                             This subdomain is not available
                           </span>
                         </>
@@ -465,31 +384,19 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                   )}
 
                   {errors.url && (
-                    <p 
-                      className="mt-1 text-sm"
-                      style={{ color: currentTheme.colors.error }}
-                    >
+                    <p className="mt-1 text-sm text-red-500">
                       {errors.url}
                     </p>
                   )}
 
-                  <p 
-                    className="text-xs mt-2"
-                    style={{ color: currentTheme.colors.textSecondary }}
-                  >
+                  <p className="text-xs mt-2 platform-text-secondary">
                     Subdomain must be 3-63 characters, lowercase letters, numbers, and hyphens only.
                     Cannot start or end with hyphen.
                   </p>
                 </div>
 
                 <div>
-                  <label 
-                    className="block text-sm font-semibold mb-2"
-                    style={{ 
-                      color: currentTheme.colors.text,
-                      fontFamily: currentTheme.fonts.primary
-                    }}
-                  >
+                  <label className="block text-sm font-semibold mb-2 platform-text-primary platform-font-primary">
                     Category
                   </label>
                   <div className="grid grid-cols-2 gap-3">
@@ -497,24 +404,27 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                       <button
                         key={category.id}
                         onClick={() => handleInputChange('category', category.id)}
-                        className={`p-3 rounded-xl border-2 transition-all text-left flex items-center gap-3`}
-                        style={{ 
-                          backgroundColor: websiteInfo.category === category.id 
-                            ? `${currentTheme.colors.primary}15` 
-                            : currentTheme.colors.surface,
-                          borderColor: websiteInfo.category === category.id 
-                            ? currentTheme.colors.primary 
-                            : currentTheme.colors.border,
-                          color: currentTheme.colors.text,
-                          fontFamily: currentTheme.fonts.secondary
-                        }}
+                        className={`p-3 rounded-xl border-2 transition-all text-left flex items-center gap-3 ${
+                          websiteInfo.category === category.id 
+                            ? 'border-indigo-500 bg-indigo-50' 
+                            : 'platform-border platform-bg-primary'
+                        }`}
                         type="button"
                       >
                         <category.icon 
-                          className="w-5 h-5" 
-                          style={{ color: currentTheme.colors.textSecondary }}
+                          className={`w-5 h-5 ${
+                            websiteInfo.category === category.id 
+                              ? 'text-indigo-500' 
+                              : 'platform-text-secondary'
+                          }`}
                         />
-                        <span className="text-sm font-medium">{category.name}</span>
+                        <span className={`text-sm font-medium ${
+                          websiteInfo.category === category.id 
+                            ? 'text-indigo-700' 
+                            : 'platform-text-primary'
+                        }`}>
+                          {category.name}
+                        </span>
                       </button>
                     ))}
                   </div>
@@ -529,33 +439,16 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                 className="space-y-6"
               >
                 <div>
-                  <h3 
-                    className="text-xl font-bold mb-2"
-                    style={{ 
-                      color: currentTheme.colors.text,
-                      fontFamily: currentTheme.fonts.primary
-                    }}
-                  >
+                  <h3 className="text-xl font-bold mb-2 platform-text-primary platform-font-primary">
                     SEO Settings
                   </h3>
-                  <p 
-                    style={{ 
-                      color: currentTheme.colors.textSecondary,
-                      fontFamily: currentTheme.fonts.secondary
-                    }}
-                  >
+                  <p className="platform-text-secondary platform-font-secondary">
                     Add SEO keywords for your website
                   </p>
                 </div>
 
                 <div>
-                  <label 
-                    className="block text-sm font-semibold mb-2"
-                    style={{ 
-                      color: currentTheme.colors.text,
-                      fontFamily: currentTheme.fonts.primary
-                    }}
-                  >
+                  <label className="block text-sm font-semibold mb-2 platform-text-primary platform-font-primary">
                     SEO Keywords *
                   </label>
                   <input
@@ -563,38 +456,20 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                     value={websiteInfo.seoKeywords}
                     onChange={(e) => handleInputChange('seoKeywords', e.target.value)}
                     placeholder="website, business, services, products"
-                    className={`w-full px-4 py-3 border rounded-xl transition-all`}
-                    style={{ 
-                      borderColor: errors.seoKeywords ? currentTheme.colors.error : currentTheme.colors.border,
-                      backgroundColor: currentTheme.colors.surface,
-                      color: currentTheme.colors.text,
-                      fontFamily: currentTheme.fonts.secondary
-                    }}
+                    className={`input ${errors.seoKeywords ? 'border-red-500' : ''}`}
                   />
                   {errors.seoKeywords && (
-                    <p 
-                      className="mt-1 text-sm"
-                      style={{ color: currentTheme.colors.error }}
-                    >
+                    <p className="mt-1 text-sm text-red-500">
                       {errors.seoKeywords}
                     </p>
                   )}
-                  <p 
-                    className="text-sm mt-1"
-                    style={{ color: currentTheme.colors.textSecondary }}
-                  >
+                  <p className="text-sm mt-1 platform-text-secondary">
                     Enter comma-separated keywords for search engine optimization
                   </p>
                 </div>
 
                 <div>
-                  <label 
-                    className="block text-sm font-semibold mb-2"
-                    style={{ 
-                      color: currentTheme.colors.text,
-                      fontFamily: currentTheme.fonts.primary
-                    }}
-                  >
+                  <label className="block text-sm font-semibold mb-2 platform-text-primary platform-font-primary">
                     Language
                   </label>
                   <div className="grid grid-cols-2 gap-3">
@@ -602,20 +477,20 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                       <button
                         key={language.code}
                         onClick={() => handleInputChange('language', language.code)}
-                        className={`p-3 rounded-xl border-2 transition-all text-left`}
-                        style={{ 
-                          backgroundColor: websiteInfo.language === language.code 
-                            ? `${currentTheme.colors.primary}15` 
-                            : currentTheme.colors.surface,
-                          borderColor: websiteInfo.language === language.code 
-                            ? currentTheme.colors.primary 
-                            : currentTheme.colors.border,
-                          color: currentTheme.colors.text,
-                          fontFamily: currentTheme.fonts.secondary
-                        }}
+                        className={`p-3 rounded-xl border-2 transition-all text-left ${
+                          websiteInfo.language === language.code 
+                            ? 'border-indigo-500 bg-indigo-50' 
+                            : 'platform-border platform-bg-primary'
+                        }`}
                         type="button"
                       >
-                        <span className="text-sm font-medium">{language.name}</span>
+                        <span className={`text-sm font-medium ${
+                          websiteInfo.language === language.code 
+                            ? 'text-indigo-700' 
+                            : 'platform-text-primary'
+                        }`}>
+                          {language.name}
+                        </span>
                       </button>
                     ))}
                   </div>
@@ -630,55 +505,23 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                 className="space-y-6"
               >
                 <div>
-                  <h3 
-                    className="text-xl font-bold mb-2"
-                    style={{ 
-                      color: currentTheme.colors.text,
-                      fontFamily: currentTheme.fonts.primary
-                    }}
-                  >
+                  <h3 className="text-xl font-bold mb-2 platform-text-primary platform-font-primary">
                     Visual Identity
                   </h3>
-                  <p 
-                    style={{ 
-                      color: currentTheme.colors.textSecondary,
-                      fontFamily: currentTheme.fonts.secondary
-                    }}
-                  >
+                  <p className="platform-text-secondary platform-font-secondary">
                     Upload your logo and favicon (optional)
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label 
-                      className="block text-sm font-semibold mb-2"
-                      style={{ 
-                        color: currentTheme.colors.text,
-                        fontFamily: currentTheme.fonts.primary
-                      }}
-                    >
+                    <label className="block text-sm font-semibold mb-2 platform-text-primary platform-font-primary">
                       Logo
                     </label>
                     <div 
-                      className={`border-2 rounded-xl p-6 text-center transition-colors`}
-                      style={{ 
-                        borderColor: errors.logo 
-                          ? currentTheme.colors.error 
-                          : currentTheme.colors.border,
-                        borderStyle: 'dashed',
-                        backgroundColor: currentTheme.colors.surface
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!errors.logo) {
-                          e.currentTarget.style.borderColor = currentTheme.colors.primary;
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!errors.logo) {
-                          e.currentTarget.style.borderColor = currentTheme.colors.border;
-                        }
-                      }}
+                      className={`border-2 rounded-xl p-6 text-center transition-colors ${
+                        errors.logo ? 'border-red-500' : 'border-dashed platform-border hover:border-indigo-300 hover:bg-indigo-50/30'
+                      }`}
                     >
                       {websiteInfo.logo ? (
                         <div className="space-y-3">
@@ -689,8 +532,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                           />
                           <button
                             onClick={() => setWebsiteInfo(prev => ({ ...prev, logo: '' }))}
-                            className="text-sm hover:text-red-700"
-                            style={{ color: currentTheme.colors.error }}
+                            className="text-sm text-red-500 hover:text-red-700"
                             type="button"
                           >
                             Remove
@@ -699,14 +541,10 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                       ) : (
                         <div className="space-y-3">
                           <ImageIcon 
-                            className="w-12 h-12 mx-auto" 
-                            style={{ color: currentTheme.colors.textSecondary }}
+                            className="w-12 h-12 mx-auto platform-text-tertiary" 
                           />
                           <div>
-                            <p 
-                              className="mb-2"
-                              style={{ color: currentTheme.colors.textSecondary }}
-                            >
+                            <p className="mb-2 platform-text-secondary">
                               Upload your logo
                             </p>
                             <input
@@ -721,20 +559,12 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                             />
                             <label
                               htmlFor="logo-upload"
-                              className="px-4 py-2 rounded-lg cursor-pointer inline-block"
-                              style={{ 
-                                backgroundColor: currentTheme.colors.primary,
-                                color: '#ffffff',
-                                fontFamily: currentTheme.fonts.secondary
-                              }}
+                              className="px-4 py-2 bg-indigo-600 text-white rounded-lg cursor-pointer inline-block hover:bg-indigo-700 transition-colors"
                             >
                               Choose File
                             </label>
                             {errors.logo && (
-                              <p 
-                                className="mt-2 text-sm"
-                                style={{ color: currentTheme.colors.error }}
-                              >
+                              <p className="mt-2 text-sm text-red-500">
                                 {errors.logo}
                               </p>
                             )}
@@ -742,43 +572,19 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                         </div>
                       )}
                     </div>
-                    <p 
-                      className="text-xs mt-1"
-                      style={{ color: currentTheme.colors.textSecondary }}
-                    >
+                    <p className="text-xs mt-1 platform-text-secondary">
                       Recommended size: 200x50px, PNG format
                     </p>
                   </div>
 
                   <div>
-                    <label 
-                      className="block text-sm font-semibold mb-2"
-                      style={{ 
-                        color: currentTheme.colors.text,
-                        fontFamily: currentTheme.fonts.primary
-                      }}
-                    >
+                    <label className="block text-sm font-semibold mb-2 platform-text-primary platform-font-primary">
                       Favicon
                     </label>
                     <div 
-                      className={`border-2 rounded-xl p-6 text-center transition-colors`}
-                      style={{ 
-                        borderColor: errors.favicon 
-                          ? currentTheme.colors.error 
-                          : currentTheme.colors.border,
-                        borderStyle: 'dashed',
-                        backgroundColor: currentTheme.colors.surface
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!errors.favicon) {
-                          e.currentTarget.style.borderColor = currentTheme.colors.primary;
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!errors.favicon) {
-                          e.currentTarget.style.borderColor = currentTheme.colors.border;
-                        }
-                      }}
+                      className={`border-2 rounded-xl p-6 text-center transition-colors ${
+                        errors.favicon ? 'border-red-500' : 'border-dashed platform-border hover:border-indigo-300 hover:bg-indigo-50/30'
+                      }`}
                     >
                       {websiteInfo.favicon ? (
                         <div className="space-y-3">
@@ -789,8 +595,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                           />
                           <button
                             onClick={() => setWebsiteInfo(prev => ({ ...prev, favicon: '' }))}
-                            className="text-sm hover:text-red-700"
-                            style={{ color: currentTheme.colors.error }}
+                            className="text-sm text-red-500 hover:text-red-700"
                             type="button"
                           >
                             Remove
@@ -799,14 +604,10 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                       ) : (
                         <div className="space-y-3">
                           <Globe 
-                            className="w-8 h-8 mx-auto" 
-                            style={{ color: currentTheme.colors.textSecondary }}
+                            className="w-8 h-8 mx-auto platform-text-tertiary" 
                           />
                           <div>
-                            <p 
-                              className="mb-2 text-sm"
-                              style={{ color: currentTheme.colors.textSecondary }}
-                            >
+                            <p className="mb-2 text-sm platform-text-secondary">
                               Upload favicon (16x16)
                             </p>
                             <input
@@ -821,20 +622,12 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                             />
                             <label
                               htmlFor="favicon-upload"
-                              className="px-3 py-1 rounded text-sm cursor-pointer inline-block"
-                              style={{ 
-                                backgroundColor: currentTheme.colors.text,
-                                color: '#ffffff',
-                                fontFamily: currentTheme.fonts.secondary
-                              }}
+                              className="px-3 py-1 bg-gray-800 text-white rounded text-sm cursor-pointer inline-block hover:bg-gray-700 transition-colors"
                             >
                               Choose File
                             </label>
                             {errors.favicon && (
-                              <p 
-                                className="mt-2 text-sm"
-                                style={{ color: currentTheme.colors.error }}
-                              >
+                              <p className="mt-2 text-sm text-red-500">
                                 {errors.favicon}
                               </p>
                             )}
@@ -842,10 +635,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                         </div>
                       )}
                     </div>
-                    <p 
-                      className="text-xs mt-1"
-                      style={{ color: currentTheme.colors.textSecondary }}
-                    >
+                    <p className="text-xs mt-1 platform-text-secondary">
                       Square image, 16x16 or 32x32px
                     </p>
                   </div>
@@ -860,112 +650,62 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                 className="space-y-6"
               >
                 <div>
-                  <h3 
-                    className="text-xl font-bold mb-2"
-                    style={{ 
-                      color: currentTheme.colors.text,
-                      fontFamily: currentTheme.fonts.primary
-                    }}
-                  >
+                  <h3 className="text-xl font-bold mb-2 platform-text-primary platform-font-primary">
                     Review & Create
                   </h3>
-                  <p 
-                    style={{ 
-                      color: currentTheme.colors.textSecondary,
-                      fontFamily: currentTheme.fonts.secondary
-                    }}
-                  >
+                  <p className="platform-text-secondary platform-font-secondary">
                     Review your website information before creating
                   </p>
                 </div>
 
-                <div 
-                  className="rounded-xl p-6 space-y-4"
-                  style={{ 
-                    backgroundColor: `${currentTheme.colors.primary}10`,
-                    fontFamily: currentTheme.fonts.secondary
-                  }}
-                >
+                <div className="rounded-xl p-6 space-y-4 bg-indigo-50 border border-indigo-100">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <span 
-                        className="text-sm font-medium"
-                        style={{ color: currentTheme.colors.textSecondary }}
-                      >
+                      <span className="text-sm font-medium text-indigo-500">
                         Website Name
                       </span>
-                      <p 
-                        className="font-semibold"
-                        style={{ color: currentTheme.colors.text }}
-                      >
+                      <p className="font-semibold platform-text-primary">
                         {websiteInfo.name || 'Not specified'}
                       </p>
                     </div>
                     <div>
-                      <span 
-                        className="text-sm font-medium"
-                        style={{ color: currentTheme.colors.textSecondary }}
-                      >
+                      <span className="text-sm font-medium text-indigo-500">
                         URL
                       </span>
-                      <p 
-                        className="font-semibold"
-                        style={{ color: currentTheme.colors.text }}
-                      >
-                        {websiteInfo.url ? `${websiteInfo.url}.iqbolshoh.com` : 'Not specified'}
+                      <p className="font-semibold platform-text-primary">
+                        {websiteInfo.url ? `${websiteInfo.url}.templates.uz` : 'Not specified'}
                       </p>
                     </div>
                     <div>
-                      <span 
-                        className="text-sm font-medium"
-                        style={{ color: currentTheme.colors.textSecondary }}
-                      >
+                      <span className="text-sm font-medium text-indigo-500">
                         Category
                       </span>
-                      <p 
-                        className="font-semibold"
-                        style={{ color: currentTheme.colors.text }}
-                      >
+                      <p className="font-semibold platform-text-primary">
                         {categories.find(c => c.id === websiteInfo.category)?.name || 'Not specified'}
                       </p>
                     </div>
                     <div>
-                      <span 
-                        className="text-sm font-medium"
-                        style={{ color: currentTheme.colors.textSecondary }}
-                      >
+                      <span className="text-sm font-medium text-indigo-500">
                         Language
                       </span>
-                      <p 
-                        className="font-semibold"
-                        style={{ color: currentTheme.colors.text }}
-                      >
+                      <p className="font-semibold platform-text-primary">
                         {languages.find(l => l.code === websiteInfo.language)?.name || 'Not specified'}
                       </p>
                     </div>
                   </div>
 
                   <div>
-                    <span 
-                      className="text-sm font-medium"
-                      style={{ color: currentTheme.colors.textSecondary }}
-                    >
+                    <span className="text-sm font-medium text-indigo-500">
                       SEO Keywords
                     </span>
-                    <p 
-                      className="font-semibold"
-                      style={{ color: currentTheme.colors.text }}
-                    >
+                    <p className="font-semibold platform-text-primary">
                       {websiteInfo.seoKeywords || 'Not specified'}
                     </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <span 
-                        className="text-sm font-medium"
-                        style={{ color: currentTheme.colors.textSecondary }}
-                      >
+                      <span className="text-sm font-medium text-indigo-500">
                         Logo
                       </span>
                       <div className="mt-1">
@@ -976,15 +716,12 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                             className="w-12 h-12 object-contain"
                           />
                         ) : (
-                          <span style={{ color: currentTheme.colors.textSecondary }}>Not uploaded</span>
+                          <span className="platform-text-secondary">Not uploaded</span>
                         )}
                       </div>
                     </div>
                     <div>
-                      <span 
-                        className="text-sm font-medium"
-                        style={{ color: currentTheme.colors.textSecondary }}
-                      >
+                      <span className="text-sm font-medium text-indigo-500">
                         Favicon
                       </span>
                       <div className="mt-1">
@@ -995,7 +732,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                             className="w-6 h-6 object-contain"
                           />
                         ) : (
-                          <span style={{ color: currentTheme.colors.textSecondary }}>Not uploaded</span>
+                          <span className="platform-text-secondary">Not uploaded</span>
                         )}
                       </div>
                     </div>
@@ -1003,44 +740,21 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                 </div>
 
                 {errors.form && (
-                  <div 
-                    className="border-l-4 p-4"
-                    style={{ 
-                      backgroundColor: `${currentTheme.colors.error}15`,
-                      borderColor: currentTheme.colors.error
-                    }}
-                  >
+                  <div className="border-l-4 border-red-500 p-4 bg-red-50">
                     <div className="flex items-center">
-                      <AlertCircle 
-                        className="w-5 h-5 mr-2" 
-                        style={{ color: currentTheme.colors.error }}
-                      />
-                      <p style={{ color: currentTheme.colors.error }}>{errors.form}</p>
+                      <AlertCircle className="w-5 h-5 mr-2 text-red-500" />
+                      <p className="text-red-500">{errors.form}</p>
                     </div>
                   </div>
                 )}
 
                 {isCreating && (
                   <div className="text-center py-8">
-                    <div 
-                      className="w-16 h-16 border-4 border-t-transparent rounded-full animate-spin mx-auto mb-4"
-                      style={{ borderColor: currentTheme.colors.primary }}
-                    ></div>
-                    <h4 
-                      className="text-lg font-semibold mb-2"
-                      style={{ 
-                        color: currentTheme.colors.text,
-                        fontFamily: currentTheme.fonts.primary
-                      }}
-                    >
+                    <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <h4 className="text-lg font-semibold mb-2 platform-text-primary platform-font-primary">
                       Creating Your Website...
                     </h4>
-                    <p 
-                      style={{ 
-                        color: currentTheme.colors.textSecondary,
-                        fontFamily: currentTheme.fonts.secondary
-                      }}
-                    >
+                    <p className="platform-text-secondary platform-font-secondary">
                       Setting up your project and applying initial configuration
                     </p>
                   </div>
@@ -1051,59 +765,37 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
 
           {/* Footer */}
           {!isCreating && (
-            <div 
-              className="border-t p-6 flex items-center justify-between"
-              style={{ 
-                borderColor: currentTheme.colors.border,
-                backgroundColor: currentTheme.colors.background
-              }}
-            >
-              <button
-                onClick={() => step > 1 ? setStep(step - 1) : onClose()}
-                className="px-6 py-3 transition-colors font-medium"
-                style={{ 
-                  color: currentTheme.colors.textSecondary,
-                  fontFamily: currentTheme.fonts.secondary
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = currentTheme.colors.text;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = currentTheme.colors.textSecondary;
-                }}
-                type="button"
-              >
-                {step > 1 ? 'Back' : 'Cancel'}
-              </button>
+            <div className="border-t p-6 platform-border platform-bg-primary">
+              <div className="flex items-center justify-between">
+                <button
+                  onClick={() => step > 1 ? setStep(step - 1) : onClose()}
+                  className="px-6 py-3 transition-colors font-medium platform-text-secondary hover:platform-text-primary"
+                  type="button"
+                >
+                  {step > 1 ? 'Back' : 'Cancel'}
+                </button>
 
-              <div className="flex items-center gap-3">
-                {step < 4 ? (
-                  <button
-                    onClick={handleNextStep}
-                    className="px-8 py-3 text-white rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
-                    style={{ 
-                      background: `linear-gradient(135deg, ${currentTheme.colors.primary}, ${currentTheme.colors.secondary})`,
-                      boxShadow: currentTheme.shadows.md,
-                      fontFamily: currentTheme.fonts.accent
-                    }}
-                    type="button"
-                  >
-                    Continue
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleCreateWebsite}
-                    className="px-8 py-3 text-white rounded-xl transition-all font-semibold"
-                    style={{ 
-                      background: `linear-gradient(135deg, ${currentTheme.colors.success}, ${currentTheme.colors.primary})`,
-                      boxShadow: currentTheme.shadows.md,
-                      fontFamily: currentTheme.fonts.accent
-                    }}
-                    type="button"
-                  >
-                    Create Website
-                  </button>
-                )}
+                <div className="flex items-center gap-3">
+                  {step < 4 ? (
+                    <button
+                      onClick={handleNextStep}
+                      className="btn-primary"
+                      type="button"
+                    >
+                      Continue
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleCreateWebsite}
+                      className="flex items-center gap-2 px-8 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all font-semibold platform-shadow-lg"
+                      type="button"
+                    >
+                      <Rocket className="w-5 h-5" />
+                      Create Website
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           )}

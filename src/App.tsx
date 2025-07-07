@@ -13,13 +13,11 @@ function App() {
       <ThemeProvider>
         <ProjectProvider>
           <DndProvider>
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/editor/:id?" element={<Editor />} />
-                <Route path="/preview/:id" element={<Preview />} />
-              </Routes>
-            </div>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/editor/:id?" element={<Editor />} />
+              <Route path="/preview/:id" element={<Preview />} />
+            </Routes>
           </DndProvider>
         </ProjectProvider>
       </ThemeProvider>

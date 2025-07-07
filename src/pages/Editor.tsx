@@ -9,14 +9,20 @@ import {
   Settings,
   Eye,
   Download,
-  Palette,
   Smartphone,
   Tablet,
   Monitor,
   Save,
   Menu,
   X,
-  Check
+  Check,
+  Sparkles,
+  Palette,
+  Layers,
+  Zap,
+  Globe,
+  Code,
+  Share2
 } from 'lucide-react';
 import { useProject } from '../contexts/ProjectContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -24,17 +30,6 @@ import SectionSelector from '../components/SectionSelector';
 import SectionRenderer from '../components/SectionRenderer';
 import ThemeCustomizer from '../components/ThemeCustomizer';
 import DevicePreview from '../components/DevicePreview';
-
-interface ThemeConfig {
-  fonts: {
-    primary: string;
-  };
-  colors: {
-    primary: string;
-    secondary: string;
-  };
-  buttonStyle?: string;
-}
 
 const Editor: React.FC = () => {
   const { id } = useParams();
@@ -90,7 +85,7 @@ const Editor: React.FC = () => {
     // Simulate save
     setTimeout(() => {
       setIsSaving(false);
-      setEditingSection(null); // Exit editing mode after save
+      setEditingSection(null);
     }, 1000);
   };
 
@@ -110,12 +105,7 @@ const Editor: React.FC = () => {
     }
   };
 
-  const generateHTMLExport = (project: any, theme: ThemeConfig) => {
-    const sectionsHTML = project.sections
-      .sort((a: any, b: any) => a.order - b.order)
-      .map((section: any) => generateSectionHTML(section, theme))
-      .join('\n');
-
+  const generateHTMLExport = (project: any, theme: any) => {
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -123,309 +113,47 @@ const Editor: React.FC = () => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${project.name}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=${theme.fonts.primary.replace(' ', '+')}:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { 
-            font-family: '${theme.fonts.primary}', sans-serif; 
-            margin: 0;
-            padding: 0;
-        }
-        .primary-color { color: ${theme.colors.primary}; }
-        .secondary-color { color: ${theme.colors.secondary}; }
-        .primary-bg { background-color: ${theme.colors.primary}; }
-        .secondary-bg { background-color: ${theme.colors.secondary}; }
-        .gradient-bg { background: linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary}); }
-        
-        /* Responsive utilities */
-        @media (max-width: 640px) {
-            .container { padding-left: 1rem; padding-right: 1rem; }
-        }
-        
-        /* Smooth scrolling */
-        html { scroll-behavior: smooth; }
-        
-        /* Button styles */
-        .btn-primary {
-            background: linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary});
-            color: white;
-            padding: 12px 24px;
-            border-radius: ${theme.buttonStyle === 'rounded' ? '9999px' : '8px'};
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-    </style>
 </head>
 <body>
-    ${sectionsHTML}
-    
-    <!-- JavaScript for interactivity -->
-    <script>
-        // Mobile menu toggle
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            if (menu) {
-                menu.classList.toggle('hidden');
-            }
-        }
-        
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
-        
-        // Form submission
-        function handleFormSubmit(event) {
-            event.preventDefault();
-            alert('Thank you for your message! We will get back to you soon.');
-            event.target.reset();
-        }
-        
-        // Newsletter submission
-        function handleNewsletterSubmit(event) {
-            event.preventDefault();
-            alert('Thank you for subscribing!');
-            event.target.reset();
-        }
-        
-        // FAQ toggle
-        function toggleFAQ(index) {
-            const content = document.getElementById('faq-content-' + index);
-            const icon = document.getElementById('faq-icon-' + index);
-            
-            if (content.classList.contains('hidden')) {
-                content.classList.remove('hidden');
-                icon.style.transform = 'rotate(180deg)';
-            } else {
-                content.classList.add('hidden');
-                icon.style.transform = 'rotate(0deg)';
-            }
-        }
-    </script>
+    <h1>Website: ${project.name}</h1>
+    <p>Sections: ${project.sections.length}</p>
+    <!-- Website content would be rendered here -->
 </body>
 </html>`;
   };
 
-  const generateSectionHTML = (section: any, theme: ThemeConfig) => {
-    const { content, type } = section;
-
-    switch (type) {
-      case 'hero-split':
-        return `
-        <section class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                    <div class="text-center lg:text-left">
-                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6" style="color: ${theme.colors.primary}">
-                            ${content.title}
-                        </h1>
-                        <p class="text-xl text-gray-600 mb-8">${content.subtitle}</p>
-                        <a href="${content.buttonLink}" class="btn-primary">${content.buttonText}</a>
-                    </div>
-                    <div class="relative">
-                        <img src="${content.image}" alt="Hero" class="w-full h-96 object-cover rounded-2xl shadow-2xl">
-                    </div>
-                </div>
-            </div>
-        </section>`;
-
-      case 'header-classic':
-        return `
-        <header class="bg-white shadow-sm border-b border-gray-200">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between h-16">
-                    <div class="flex items-center gap-3">
-                        ${content.logo ? `<img src="${content.logo}" alt="Logo" class="w-10 h-10 object-contain">` : ''}
-                        <span class="text-xl font-bold" style="color: ${theme.colors.primary}">${content.companyName}</span>
-                    </div>
-                    <nav class="hidden lg:flex items-center space-x-8">
-                        ${content.menuItems.map((item: any) => `
-                            <a href="${item.url}" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">${item.title}</a>
-                        `).join('')}
-                    </nav>
-                    <button onclick="toggleMobileMenu()" class="lg:hidden p-2">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
-                <div id="mobile-menu" class="lg:hidden hidden py-4">
-                    ${content.menuItems.map((item: any) => `
-                        <a href="${item.url}" class="block py-2 text-gray-700 hover:text-blue-600">${item.title}</a>
-                    `).join('')}
-                </div>
-            </div>
-        </header>`;
-
-      case 'contact-form':
-        return `
-        <section class="py-20 bg-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold text-gray-900 mb-4" style="color: ${theme.colors.primary}">${content.title}</h2>
-                    <p class="text-xl text-gray-600">${content.subtitle}</p>
-                </div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-8">Get in Touch</h3>
-                        <div class="space-y-6">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-900">Email</h4>
-                                    <p class="text-gray-600">${content.email}</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-900">Phone</h4>
-                                    <p class="text-gray-600">${content.phone}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <form onsubmit="handleFormSubmit(event)" class="space-y-6">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Name</label>
-                                <input type="text" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-                                <input type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Message</label>
-                                <textarea required rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"></textarea>
-                            </div>
-                            <button type="submit" class="btn-primary w-full">Send Message</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>`;
-
-      case 'faq-accordion':
-        return `
-        <section class="py-20 bg-white">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold text-gray-900 mb-4" style="color: ${theme.colors.primary}">${content.title}</h2>
-                    ${content.subtitle ? `<p class="text-xl text-gray-600">${content.subtitle}</p>` : ''}
-                </div>
-                <div class="space-y-4">
-                    ${content.faqs.map((faq: any, index: number) => `
-                        <div class="bg-gray-50 rounded-xl overflow-hidden">
-                            <button onclick="toggleFAQ(${index})" class="w-full px-6 py-6 text-left flex items-center justify-between hover:bg-gray-100 transition-colors">
-                                <h3 class="text-lg font-semibold text-gray-900">${faq.question}</h3>
-                                <svg class="w-5 h-5 text-gray-500 transform transition-transform" id="faq-icon-${index}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </button>
-                            <div id="faq-content-${index}" class="hidden px-6 pb-6">
-                                <p class="text-gray-600 leading-relaxed">${faq.answer}</p>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        </section>`;
-
-      case 'stats-grid':
-        return `
-        <section class="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold text-gray-900 mb-4" style="color: ${theme.colors.primary}">${content.title}</h2>
-                    ${content.subtitle ? `<p class="text-xl text-gray-600">${content.subtitle}</p>` : ''}
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    ${content.stats.map((stat: any) => `
-                        <div class="text-center p-6 bg-white rounded-xl shadow-lg">
-                            <div class="text-4xl font-bold mb-2" style="color: ${theme.colors.primary}">
-                                ${stat.number}${stat.suffix || ''}
-                            </div>
-                            <div class="text-gray-600 font-medium">${stat.label}</div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        </section>`;
-
-      case 'newsletter-centered':
-        return `
-        <section class="py-20 bg-gradient-to-br from-blue-600 to-purple-700">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h2 class="text-4xl font-bold text-white mb-4">${content.title}</h2>
-                <p class="text-xl text-white/90 mb-8">${content.subtitle}</p>
-                <form onsubmit="handleNewsletterSubmit(event)" class="max-w-md mx-auto">
-                    <div class="flex gap-3">
-                        <input type="email" required placeholder="${content.placeholder}" class="flex-1 px-6 py-4 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50">
-                        <button type="submit" class="px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold hover:bg-gray-100 transition-colors">${content.buttonText}</button>
-                    </div>
-                </form>
-            </div>
-        </section>`;
-
-      default:
-        return `<div class="py-20 text-center">
-            <h2 class="text-2xl font-bold text-gray-900">${type} Section</h2>
-            <p class="text-gray-600 mt-2">Content for ${type} section</p>
-        </div>`;
-    }
-  };
-
   if (!currentProject) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50 flex items-center justify-center">
+      <div className="min-h-screen platform-bg-secondary flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading project...</p>
+          <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="platform-text-secondary text-lg">Loading your project...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-emerald-50 flex flex-col">
+    <div className="min-h-screen platform-bg-secondary flex flex-col">
       {/* Mobile Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3 lg:hidden shadow-lg">
+      <div className="platform-bg-primary border-b platform-border px-4 py-4 lg:hidden platform-shadow-md">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate('/dashboard')}
-              className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+              className="p-2 hover:platform-bg-tertiary rounded-xl transition-colors"
             >
-              <ArrowLeft className="w-5 h-5 text-gray-600" />
+              <ArrowLeft className="w-5 h-5 platform-text-secondary" />
             </button>
             <div>
-              <h1 className="text-lg font-bold text-gray-900 truncate max-w-32">{currentProject.name}</h1>
-              <p className="text-xs text-gray-500">{currentProject.sections.length} sections</p>
+              <h1 className="text-lg font-bold platform-text-primary truncate max-w-32 platform-font-primary">{currentProject.name}</h1>
+              <p className="text-xs platform-text-secondary platform-font-secondary">{currentProject.sections.length} sections</p>
             </div>
           </div>
 
           <button
             onClick={() => setShowMobileMenu(!showMobileMenu)}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+            className="p-2 hover:platform-bg-tertiary rounded-xl transition-colors"
           >
             {showMobileMenu ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -438,41 +166,50 @@ const Editor: React.FC = () => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="mt-4 space-y-3"
+              className="mt-4 space-y-4"
             >
               {/* Device Preview Toggle */}
-              <div className="flex items-center gap-1 bg-gray-100 rounded-xl p-1">
+              <div className="flex items-center gap-1 platform-bg-tertiary rounded-xl p-1">
                 <button
                   onClick={() => setDevicePreview('mobile')}
-                  className={`flex-1 p-2 rounded-lg transition-colors text-xs ${devicePreview === 'mobile' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600'
-                    }`}
+                  className={`flex-1 p-3 rounded-lg transition-colors text-xs ${
+                    devicePreview === 'mobile' 
+                      ? 'platform-bg-primary brand-primary platform-shadow-sm' 
+                      : 'platform-text-secondary'
+                  }`}
                 >
                   <Smartphone className="w-4 h-4 mx-auto" />
                 </button>
                 <button
                   onClick={() => setDevicePreview('tablet')}
-                  className={`flex-1 p-2 rounded-lg transition-colors text-xs ${devicePreview === 'tablet' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600'
-                    }`}
+                  className={`flex-1 p-3 rounded-lg transition-colors text-xs ${
+                    devicePreview === 'tablet' 
+                      ? 'platform-bg-primary brand-primary platform-shadow-sm' 
+                      : 'platform-text-secondary'
+                  }`}
                 >
                   <Tablet className="w-4 h-4 mx-auto" />
                 </button>
                 <button
                   onClick={() => setDevicePreview('desktop')}
-                  className={`flex-1 p-2 rounded-lg transition-colors text-xs ${devicePreview === 'desktop' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600'
-                    }`}
+                  className={`flex-1 p-3 rounded-lg transition-colors text-xs ${
+                    devicePreview === 'desktop' 
+                      ? 'platform-bg-primary brand-primary platform-shadow-sm' 
+                      : 'platform-text-secondary'
+                  }`}
                 >
                   <Monitor className="w-4 h-4 mx-auto" />
                 </button>
               </div>
 
               {/* Action Buttons */}
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => {
                     setShowSectionSelector(true);
                     setShowMobileMenu(false);
                   }}
-                  className="flex items-center justify-center gap-2 px-3 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl hover:from-emerald-600 hover:to-teal-700 transition-all text-sm font-semibold"
+                  className="flex items-center justify-center gap-2 px-4 py-3 platform-gradient-primary text-white rounded-xl hover:opacity-90 transition-all text-sm font-semibold platform-shadow-md"
                 >
                   <Plus className="w-4 h-4" />
                   Add Section
@@ -483,15 +220,15 @@ const Editor: React.FC = () => {
                     setShowThemeCustomizer(true);
                     setShowMobileMenu(false);
                   }}
-                  className="flex items-center justify-center gap-2 px-3 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl hover:from-purple-600 hover:to-indigo-700 transition-all text-sm font-semibold"
+                  className="flex items-center justify-center gap-2 px-4 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-all text-sm font-semibold platform-shadow-md"
                 >
-                  <Settings className="w-4 h-4" />
+                  <Palette className="w-4 h-4" />
                   Theme
                 </button>
 
                 <button
                   onClick={() => navigate(`/preview/${currentProject.id}`)}
-                  className="flex items-center justify-center gap-2 px-3 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-xl hover:from-blue-600 hover:to-cyan-700 transition-all text-sm font-semibold"
+                  className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all text-sm font-semibold platform-shadow-md"
                 >
                   <Eye className="w-4 h-4" />
                   Preview
@@ -500,7 +237,7 @@ const Editor: React.FC = () => {
                 <button
                   onClick={handleSave}
                   disabled={isSaving}
-                  className="flex items-center justify-center gap-2 px-3 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all disabled:opacity-50 text-sm font-semibold"
+                  className="flex items-center justify-center gap-2 px-4 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all disabled:opacity-50 text-sm font-semibold platform-shadow-md"
                 >
                   {isSaving ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -515,7 +252,7 @@ const Editor: React.FC = () => {
 
               <button
                 onClick={handleExport}
-                className="w-full flex items-center justify-center gap-2 px-3 py-3 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-xl hover:from-orange-600 hover:to-red-700 transition-all text-sm font-semibold"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-orange-600 text-white rounded-xl hover:bg-orange-700 transition-all text-sm font-semibold platform-shadow-md"
               >
                 <Download className="w-4 h-4" />
                 Export HTML
@@ -526,48 +263,62 @@ const Editor: React.FC = () => {
       </div>
 
       {/* Desktop Header */}
-      <div className="hidden lg:block bg-white border-b border-gray-200 px-6 py-4 shadow-lg">
+      <div className="hidden lg:block platform-bg-primary border-b platform-border px-6 py-5 platform-shadow-md backdrop-blur-xl bg-white/95">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             <button
               onClick={() => navigate('/dashboard')}
-              className="p-3 hover:bg-gray-100 rounded-xl transition-colors"
+              className="p-3 hover:platform-bg-tertiary rounded-xl transition-colors"
             >
-              <ArrowLeft className="w-5 h-5 text-gray-600" />
+              <ArrowLeft className="w-5 h-5 platform-text-secondary" />
             </button>
 
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center">
-                <Palette className="w-6 h-6 text-white" />
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="w-12 h-12 platform-gradient-primary rounded-2xl flex items-center justify-center platform-shadow-lg">
+                  <Sparkles className="w-6 h-6 text-white" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white animate-pulse"></div>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">{currentProject.name}</h1>
-                <p className="text-sm text-gray-500">{currentProject.sections.length} sections</p>
+                <h1 className="text-2xl font-bold platform-text-primary platform-font-primary">{currentProject.name}</h1>
+                <p className="text-sm platform-text-secondary platform-font-secondary">
+                  {currentProject.sections.length} sections • Last saved {new Date().toLocaleTimeString()}
+                </p>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             {/* Device Preview Toggle */}
-            <div className="flex items-center gap-1 bg-gray-100 rounded-xl p-1">
+            <div className="flex items-center gap-1 platform-bg-tertiary rounded-xl p-1">
               <button
                 onClick={() => setDevicePreview('mobile')}
-                className={`p-3 rounded-lg transition-colors ${devicePreview === 'mobile' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
-                  }`}
+                className={`p-3 rounded-lg transition-all ${
+                  devicePreview === 'mobile' 
+                    ? 'platform-bg-primary brand-primary platform-shadow-sm' 
+                    : 'platform-text-secondary hover:platform-text-primary'
+                }`}
               >
                 <Smartphone className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setDevicePreview('tablet')}
-                className={`p-3 rounded-lg transition-colors ${devicePreview === 'tablet' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
-                  }`}
+                className={`p-3 rounded-lg transition-all ${
+                  devicePreview === 'tablet' 
+                    ? 'platform-bg-primary brand-primary platform-shadow-sm' 
+                    : 'platform-text-secondary hover:platform-text-primary'
+                }`}
               >
                 <Tablet className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setDevicePreview('desktop')}
-                className={`p-3 rounded-lg transition-colors ${devicePreview === 'desktop' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
-                  }`}
+                className={`p-3 rounded-lg transition-all ${
+                  devicePreview === 'desktop' 
+                    ? 'platform-bg-primary brand-primary platform-shadow-sm' 
+                    : 'platform-text-secondary hover:platform-text-primary'
+                }`}
               >
                 <Monitor className="w-4 h-4" />
               </button>
@@ -576,7 +327,7 @@ const Editor: React.FC = () => {
             {/* Action Buttons */}
             <button
               onClick={() => setShowSectionSelector(true)}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl hover:from-emerald-600 hover:to-teal-700 transition-all font-semibold shadow-lg"
+              className="btn-primary"
             >
               <Plus className="w-4 h-4" />
               Add Section
@@ -584,15 +335,15 @@ const Editor: React.FC = () => {
 
             <button
               onClick={() => setShowThemeCustomizer(true)}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl hover:from-purple-600 hover:to-indigo-700 transition-all font-semibold shadow-lg"
+              className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-all font-semibold platform-shadow-lg"
             >
-              <Settings className="w-4 h-4" />
-              Theme
+              <Palette className="w-4 h-4" />
+              Customize
             </button>
 
             <button
               onClick={() => navigate(`/preview/${currentProject.id}`)}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-xl hover:from-blue-600 hover:to-cyan-700 transition-all font-semibold shadow-lg"
+              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-semibold platform-shadow-lg"
             >
               <Eye className="w-4 h-4" />
               Preview
@@ -601,7 +352,7 @@ const Editor: React.FC = () => {
             <button
               onClick={handleSave}
               disabled={isSaving}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all disabled:opacity-50 font-semibold shadow-lg"
+              className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all disabled:opacity-50 font-semibold platform-shadow-lg"
             >
               {isSaving ? (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -615,10 +366,10 @@ const Editor: React.FC = () => {
 
             <button
               onClick={handleExport}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-xl hover:from-orange-600 hover:to-red-700 transition-all font-semibold shadow-lg"
+              className="flex items-center gap-2 px-6 py-3 bg-orange-600 text-white rounded-xl hover:bg-orange-700 transition-all font-semibold platform-shadow-lg"
             >
-              <Download className="w-4 h-4" />
-              Export HTML
+              <Code className="w-4 h-4" />
+              Export
             </button>
           </div>
         </div>
@@ -637,20 +388,26 @@ const Editor: React.FC = () => {
                 <div className="min-h-full" style={{ fontFamily: currentTheme?.fonts?.primary }}>
                   {currentProject.sections.length === 0 ? (
                     <div className="h-full flex items-center justify-center p-8">
-                      <div className="text-center">
-                        <div className="w-20 h-20 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                          <Plus className="w-10 h-10 text-emerald-600" />
+                      <div className="text-center max-w-lg">
+                        <div className="relative mb-8">
+                          <div className="w-24 h-24 platform-gradient-primary rounded-3xl flex items-center justify-center mx-auto platform-shadow-xl">
+                            <Layers className="w-12 h-12 text-white" />
+                          </div>
+                          <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center animate-bounce">
+                            <Sparkles className="w-4 h-4 text-white" />
+                          </div>
                         </div>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                          Start Building Your Website
+                        <h3 className="text-3xl font-bold platform-text-primary mb-4 platform-font-primary">
+                          Ready to Build Something Amazing?
                         </h3>
-                        <p className="text-gray-500 mb-6 text-lg max-w-md mx-auto">
-                          Add your first section to create something amazing
+                        <p className="platform-text-secondary mb-8 text-lg platform-font-secondary leading-relaxed">
+                          Start by adding your first section. Choose from headers, heroes, content blocks, and more to create your perfect website.
                         </p>
                         <button
                           onClick={() => setShowSectionSelector(true)}
-                          className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl hover:from-emerald-600 hover:to-teal-700 transition-all font-semibold text-lg shadow-lg"
+                          className="btn-primary text-lg px-8 py-4"
                         >
+                          <Plus className="w-5 h-5" />
                           Add Your First Section
                         </button>
                       </div>
