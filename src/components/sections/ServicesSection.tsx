@@ -120,6 +120,10 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ content, isEditing, o
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
                 className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 relative group"
+                style={{
+                  backgroundColor: theme?.colors?.surface,
+                  boxShadow: theme?.shadows?.lg
+                }}
               >
                 {isEditing && (
                   <button
@@ -206,21 +210,17 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ content, isEditing, o
                 e.currentTarget.style.backgroundColor = 'transparent';
               }}
               whileHover={{ scale: 1.02 }}
-              className="rounded-xl p-8 hover:shadow-xl transition-shadow duration-300 relative group"
-                  className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity text-white"
-                  style={{ backgroundColor: theme?.colors?.error || '#ef4444' }}
-                backgroundColor: theme?.colors?.surface,
-                boxShadow: theme?.shadows?.lg
-              }}
             >
               <div className="text-center">
-              <div 
-                className="w-16 h-16 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"
-                style={{ background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})` }}
-                <LucideIcons.Plus 
-                  className="w-8 h-8 mx-auto mb-2" 
-                  style={{ color: theme?.colors?.textSecondary }}
-                />
+                <div 
+                  className="w-16 h-16 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"
+                  style={{ background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})` }}
+                >
+                  <LucideIcons.Plus 
+                    className="w-8 h-8 mx-auto mb-2" 
+                    style={{ color: theme?.colors?.textSecondary }}
+                  />
+                </div>
                 <span style={{ color: theme?.colors?.textSecondary }}>Add Service</span>
               </div>
             </motion.button>
