@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { X, Palette, Type, Sparkles, Eye, Wand2, Check, Sliders, ColorPicker, Brush, Layers, Droplet, Feather } from 'lucide-react';
+import { X, Palette, Type, Sparkles, Eye, Wand2, Check, Sliders, Sticker as ColorPicker, Brush, Layers, Droplet, Feather } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 
 interface ThemeCustomizerProps {
