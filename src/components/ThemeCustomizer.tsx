@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { X, Palette, Type, Sparkles, Eye, Wand2 } from 'lucide-react';
+import { X, Palette, Type, Sparkles, Eye, Wand2, Check, Sliders, ColorPicker, Brush, Layers, Droplet, Feather } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 
 interface ThemeCustomizerProps {
@@ -9,33 +9,60 @@ interface ThemeCustomizerProps {
 
 const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ onClose }) => {
   const { currentTheme, availableThemes, availableFonts, updateTheme, updateFonts } = useTheme();
-  const [activeTab, setActiveTab] = useState<'colors' | 'fonts'>('colors');
+  const [activeTab, setActiveTab] = useState<'colors' | 'fonts' | 'advanced'>('colors');
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 flex items-center justify-center z-50 p-4"
+      style={{ 
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        backdropFilter: 'blur(5px)'
+      }}
       onClick={onClose}
     >
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-white rounded-3xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden"
+        className="max-w-6xl w-full max-h-[90vh] overflow-hidden rounded-3xl shadow-2xl"
+        style={{ 
+          backgroundColor: currentTheme.colors.surface,
+          boxShadow: currentTheme.shadows.xl
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6">
+        <div 
+          className="text-white p-6"
+          style={{ 
+            background: `linear-gradient(135deg, ${currentTheme.colors.primary}, ${currentTheme.colors.secondary})`,
+            fontFamily: currentTheme.fonts.primary
+          }}
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center">
+              <div 
+                className="w-12 h-12 rounded-2xl flex items-center justify-center"
+                style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
+              >
                 <Sparkles className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold">Theme Customizer</h2>
-                <p className="text-purple-100">Transform your website's look and feel instantly</p>
+                <h2 
+                  className="text-2xl font-bold"
+                  style={{ fontFamily: currentTheme.fonts.primary }}
+                >
+                  Theme Customizer
+                </h2>
+                <p 
+                  className="text-white text-opacity-90"
+                  style={{ fontFamily: currentTheme.fonts.secondary }}
+                >
+                  Transform your website's look and feel instantly
+                </p>
               </div>
             </div>
             <button
@@ -47,14 +74,21 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ onClose }) => {
           </div>
 
           {/* Tabs */}
-          <div className="flex items-center gap-1 mt-6 bg-white bg-opacity-20 rounded-xl p-1">
+          <div 
+            className="flex items-center gap-1 mt-6 rounded-xl p-1"
+            style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
+          >
             <button
               onClick={() => setActiveTab('colors')}
               className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-all font-semibold ${
                 activeTab === 'colors'
-                  ? 'bg-white text-purple-600 shadow-lg'
+                  ? 'bg-white shadow-lg'
                   : 'text-white hover:bg-white hover:bg-opacity-10'
               }`}
+              style={{ 
+                color: activeTab === 'colors' ? currentTheme.colors.primary : 'white',
+                fontFamily: currentTheme.fonts.primary
+              }}
             >
               <Palette className="w-5 h-5" />
               Color Themes
@@ -63,27 +97,73 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ onClose }) => {
               onClick={() => setActiveTab('fonts')}
               className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-all font-semibold ${
                 activeTab === 'fonts'
-                  ? 'bg-white text-purple-600 shadow-lg'
+                  ? 'bg-white shadow-lg'
                   : 'text-white hover:bg-white hover:bg-opacity-10'
               }`}
+              style={{ 
+                color: activeTab === 'fonts' ? currentTheme.colors.primary : 'white',
+                fontFamily: currentTheme.fonts.primary
+              }}
             >
               <Type className="w-5 h-5" />
               Font Collections
+            </button>
+            <button
+              onClick={() => setActiveTab('advanced')}
+              className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-all font-semibold ${
+                activeTab === 'advanced'
+                  ? 'bg-white shadow-lg'
+                  : 'text-white hover:bg-white hover:bg-opacity-10'
+              }`}
+              style={{ 
+                color: activeTab === 'advanced' ? currentTheme.colors.primary : 'white',
+                fontFamily: currentTheme.fonts.primary
+              }}
+            >
+              <Sliders className="w-5 h-5" />
+              Advanced
             </button>
           </div>
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-auto max-h-[calc(90vh-200px)]">
+        <div 
+          className="p-6 overflow-auto max-h-[calc(90vh-200px)]"
+          style={{ 
+            backgroundColor: currentTheme.colors.background,
+            color: currentTheme.colors.text,
+            fontFamily: currentTheme.fonts.primary
+          }}
+        >
           {activeTab === 'colors' && (
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center">
+                <div 
+                  className="w-10 h-10 rounded-xl flex items-center justify-center"
+                  style={{ 
+                    background: `linear-gradient(135deg, ${currentTheme.colors.primary}, ${currentTheme.colors.secondary})`,
+                  }}
+                >
                   <Palette className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">Color Collections</h3>
-                  <p className="text-gray-600">Choose from our curated color palettes</p>
+                  <h3 
+                    className="text-xl font-bold"
+                    style={{ 
+                      color: currentTheme.colors.text,
+                      fontFamily: currentTheme.fonts.primary
+                    }}
+                  >
+                    Color Collections
+                  </h3>
+                  <p 
+                    style={{ 
+                      color: currentTheme.colors.textSecondary,
+                      fontFamily: currentTheme.fonts.secondary
+                    }}
+                  >
+                    Choose from our curated color palettes
+                  </p>
                 </div>
               </div>
 
@@ -94,11 +174,17 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ onClose }) => {
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => updateTheme(theme.id)}
-                    className={`group p-4 rounded-2xl border-2 transition-all text-left ${
+                    className={`group p-4 rounded-2xl border-2 transition-all text-left relative ${
                       currentTheme.id === theme.id
-                        ? 'border-purple-500 bg-purple-50 shadow-lg ring-4 ring-purple-100'
-                        : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                        ? 'ring-4'
+                        : 'hover:shadow-md'
                     }`}
+                    style={{
+                      backgroundColor: currentTheme.id === theme.id ? `${theme.colors.primary}10` : currentTheme.colors.surface,
+                      borderColor: currentTheme.id === theme.id ? theme.colors.primary : currentTheme.colors.border,
+                      boxShadow: currentTheme.id === theme.id ? currentTheme.shadows.lg : 'none',
+                      ringColor: `${theme.colors.primary}30`
+                    }}
                   >
                     {/* Color Preview */}
                     <div className="flex items-center gap-2 mb-3">
@@ -118,15 +204,24 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ onClose }) => {
 
                     {/* Theme Info */}
                     <div>
-                      <h4 className="font-bold text-gray-900 mb-1 group-hover:text-purple-600 transition-colors">
+                      <h4 
+                        className="font-bold mb-1 transition-colors"
+                        style={{ 
+                          color: currentTheme.colors.text,
+                          fontFamily: currentTheme.fonts.primary
+                        }}
+                      >
                         {theme.name}
                       </h4>
                       <div className="flex items-center gap-1">
                         {[theme.colors.primary, theme.colors.secondary, theme.colors.accent, theme.colors.background].map((color, index) => (
                           <div
                             key={index}
-                            className="w-3 h-3 rounded-full border border-gray-200"
-                            style={{ backgroundColor: color }}
+                            className="w-3 h-3 rounded-full border"
+                            style={{ 
+                              backgroundColor: color,
+                              borderColor: currentTheme.colors.border
+                            }}
                           />
                         ))}
                       </div>
@@ -134,7 +229,10 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ onClose }) => {
 
                     {/* Active Indicator */}
                     {currentTheme.id === theme.id && (
-                      <div className="absolute top-2 right-2 w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
+                      <div 
+                        className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center"
+                        style={{ backgroundColor: theme.colors.primary }}
+                      >
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
@@ -147,17 +245,27 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ onClose }) => {
               </div>
 
               {/* Live Preview */}
-              <div className="mt-8 p-6 bg-gray-50 rounded-2xl">
-                <h4 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <Eye className="w-5 h-5" />
+              <div 
+                className="mt-8 p-6 rounded-2xl"
+                style={{ backgroundColor: `${currentTheme.colors.primary}10` }}
+              >
+                <h4 
+                  className="text-lg font-bold mb-4 flex items-center gap-2"
+                  style={{ 
+                    color: currentTheme.colors.text,
+                    fontFamily: currentTheme.fonts.primary
+                  }}
+                >
+                  <Eye className="w-5 h-5" style={{ color: currentTheme.colors.primary }} />
                   Live Preview
                 </h4>
                 <div 
                   className="p-6 rounded-xl shadow-lg"
                   style={{ 
-                    backgroundColor: currentTheme.colors.background,
+                    backgroundColor: currentTheme.colors.surface,
                     color: currentTheme.colors.text,
-                    fontFamily: currentTheme.fonts.primary
+                    fontFamily: currentTheme.fonts.primary,
+                    boxShadow: currentTheme.shadows.lg
                   }}
                 >
                   <h5 
@@ -168,14 +276,21 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ onClose }) => {
                   </h5>
                   <p 
                     className="mb-4"
-                    style={{ color: currentTheme.colors.textSecondary }}
+                    style={{ 
+                      color: currentTheme.colors.textSecondary,
+                      fontFamily: currentTheme.fonts.secondary
+                    }}
                   >
                     This is how your content will look with the selected theme. The colors and fonts will be applied across your entire website.
                   </p>
                   <div className="flex gap-3">
                     <button
                       className="px-6 py-3 rounded-xl font-semibold text-white transition-all"
-                      style={{ backgroundColor: currentTheme.colors.primary }}
+                      style={{ 
+                        background: `linear-gradient(135deg, ${currentTheme.colors.primary}, ${currentTheme.colors.secondary})`,
+                        boxShadow: currentTheme.shadows.md,
+                        fontFamily: currentTheme.fonts.accent
+                      }}
                     >
                       Primary Button
                     </button>
@@ -183,7 +298,8 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ onClose }) => {
                       className="px-6 py-3 rounded-xl font-semibold border-2 transition-all"
                       style={{ 
                         borderColor: currentTheme.colors.secondary,
-                        color: currentTheme.colors.secondary
+                        color: currentTheme.colors.secondary,
+                        fontFamily: currentTheme.fonts.accent
                       }}
                     >
                       Secondary Button
@@ -197,12 +313,32 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ onClose }) => {
           {activeTab === 'fonts' && (
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center">
+                <div 
+                  className="w-10 h-10 rounded-xl flex items-center justify-center"
+                  style={{ 
+                    background: `linear-gradient(135deg, ${currentTheme.colors.primary}, ${currentTheme.colors.secondary})`,
+                  }}
+                >
                   <Type className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">Font Collections</h3>
-                  <p className="text-gray-600">Select the perfect typography for your brand</p>
+                  <h3 
+                    className="text-xl font-bold"
+                    style={{ 
+                      color: currentTheme.colors.text,
+                      fontFamily: currentTheme.fonts.primary
+                    }}
+                  >
+                    Font Collections
+                  </h3>
+                  <p 
+                    style={{ 
+                      color: currentTheme.colors.textSecondary,
+                      fontFamily: currentTheme.fonts.secondary
+                    }}
+                  >
+                    Select the perfect typography for your brand
+                  </p>
                 </div>
               </div>
 
@@ -213,45 +349,87 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ onClose }) => {
                     whileHover={{ scale: 1.01, y: -2 }}
                     whileTap={{ scale: 0.99 }}
                     onClick={() => updateFonts(fontCollection.id)}
-                    className={`group p-6 rounded-2xl border-2 transition-all text-left ${
+                    className={`group p-6 rounded-2xl border-2 transition-all text-left relative ${
                       currentTheme.fonts.primary === fontCollection.fonts.primary
-                        ? 'border-purple-500 bg-purple-50 shadow-lg ring-4 ring-purple-100'
-                        : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                        ? 'ring-4'
+                        : 'hover:shadow-md'
                     }`}
+                    style={{
+                      backgroundColor: currentTheme.fonts.primary === fontCollection.fonts.primary 
+                        ? `${currentTheme.colors.primary}10` 
+                        : currentTheme.colors.surface,
+                      borderColor: currentTheme.fonts.primary === fontCollection.fonts.primary 
+                        ? currentTheme.colors.primary 
+                        : currentTheme.colors.border,
+                      boxShadow: currentTheme.fonts.primary === fontCollection.fonts.primary 
+                        ? currentTheme.shadows.lg 
+                        : 'none',
+                      ringColor: `${currentTheme.colors.primary}30`
+                    }}
                   >
                     {/* Font Preview */}
                     <div className="space-y-3 mb-4">
                       <div 
-                        className="text-2xl font-bold text-gray-900"
-                        style={{ fontFamily: fontCollection.fonts.primary }}
+                        className="text-2xl font-bold"
+                        style={{ 
+                          fontFamily: fontCollection.fonts.primary,
+                          color: currentTheme.colors.text
+                        }}
                       >
                         Heading Font
                       </div>
                       <div 
-                        className="text-lg text-gray-700"
-                        style={{ fontFamily: fontCollection.fonts.secondary }}
+                        className="text-lg"
+                        style={{ 
+                          fontFamily: fontCollection.fonts.secondary,
+                          color: currentTheme.colors.textSecondary
+                        }}
                       >
                         Body text font for paragraphs
                       </div>
                       <div 
-                        className="text-sm font-semibold text-gray-600"
-                        style={{ fontFamily: fontCollection.fonts.accent }}
+                        className="text-sm font-semibold"
+                        style={{ 
+                          fontFamily: fontCollection.fonts.accent,
+                          color: currentTheme.colors.primary
+                        }}
                       >
                         Accent font for buttons and highlights
                       </div>
                     </div>
 
                     {/* Font Info */}
-                    <div className="border-t border-gray-200 pt-4">
-                      <h4 className="font-bold text-gray-900 mb-1 group-hover:text-purple-600 transition-colors">
+                    <div 
+                      className="border-t pt-4"
+                      style={{ borderColor: currentTheme.colors.border }}
+                    >
+                      <h4 
+                        className="font-bold mb-1 transition-colors"
+                        style={{ 
+                          color: currentTheme.colors.text,
+                          fontFamily: currentTheme.fonts.primary
+                        }}
+                      >
                         {fontCollection.name}
                       </h4>
-                      <p className="text-sm text-gray-600 mb-2">{fontCollection.description}</p>
+                      <p 
+                        className="text-sm mb-2"
+                        style={{ 
+                          color: currentTheme.colors.textSecondary,
+                          fontFamily: currentTheme.fonts.secondary
+                        }}
+                      >
+                        {fontCollection.description}
+                      </p>
                       <div className="flex flex-wrap gap-1">
                         {Object.values(fontCollection.fonts).map((font, index) => (
                           <span
                             key={index}
-                            className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium"
+                            className="px-2 py-1 rounded text-xs font-medium"
+                            style={{ 
+                              backgroundColor: `${currentTheme.colors.primary}15`,
+                              color: currentTheme.colors.text
+                            }}
                           >
                             {font}
                           </span>
@@ -261,7 +439,10 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ onClose }) => {
 
                     {/* Active Indicator */}
                     {currentTheme.fonts.primary === fontCollection.fonts.primary && (
-                      <div className="absolute top-4 right-4 w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
+                      <div 
+                        className="absolute top-4 right-4 w-6 h-6 rounded-full flex items-center justify-center"
+                        style={{ backgroundColor: currentTheme.colors.primary }}
+                      >
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
@@ -274,9 +455,18 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ onClose }) => {
               </div>
 
               {/* Typography Preview */}
-              <div className="mt-8 p-6 bg-gray-50 rounded-2xl">
-                <h4 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <Wand2 className="w-5 h-5" />
+              <div 
+                className="mt-8 p-6 rounded-2xl"
+                style={{ backgroundColor: `${currentTheme.colors.primary}10` }}
+              >
+                <h4 
+                  className="text-lg font-bold mb-4 flex items-center gap-2"
+                  style={{ 
+                    color: currentTheme.colors.text,
+                    fontFamily: currentTheme.fonts.primary
+                  }}
+                >
+                  <Wand2 className="w-5 h-5" style={{ color: currentTheme.colors.primary }} />
                   Typography Preview
                 </h4>
                 <div className="space-y-4">
@@ -310,8 +500,9 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ onClose }) => {
                   <button
                     className="px-6 py-3 rounded-xl font-semibold text-white"
                     style={{ 
+                      background: `linear-gradient(135deg, ${currentTheme.colors.primary}, ${currentTheme.colors.secondary})`,
                       fontFamily: currentTheme.fonts.accent,
-                      backgroundColor: currentTheme.colors.accent
+                      boxShadow: currentTheme.shadows.md
                     }}
                   >
                     Call to Action Button
@@ -320,12 +511,374 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ onClose }) => {
               </div>
             </div>
           )}
+
+          {activeTab === 'advanced' && (
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <div 
+                  className="w-10 h-10 rounded-xl flex items-center justify-center"
+                  style={{ 
+                    background: `linear-gradient(135deg, ${currentTheme.colors.primary}, ${currentTheme.colors.secondary})`,
+                  }}
+                >
+                  <Sliders className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 
+                    className="text-xl font-bold"
+                    style={{ 
+                      color: currentTheme.colors.text,
+                      fontFamily: currentTheme.fonts.primary
+                    }}
+                  >
+                    Advanced Customization
+                  </h3>
+                  <p 
+                    style={{ 
+                      color: currentTheme.colors.textSecondary,
+                      fontFamily: currentTheme.fonts.secondary
+                    }}
+                  >
+                    Fine-tune your website's appearance
+                  </p>
+                </div>
+              </div>
+
+              {/* Color Customization */}
+              <div 
+                className="p-6 rounded-2xl mb-6"
+                style={{ 
+                  backgroundColor: currentTheme.colors.surface,
+                  boxShadow: currentTheme.shadows.md
+                }}
+              >
+                <h4 
+                  className="text-lg font-bold mb-4 flex items-center gap-2"
+                  style={{ 
+                    color: currentTheme.colors.text,
+                    fontFamily: currentTheme.fonts.primary
+                  }}
+                >
+                  <ColorPicker className="w-5 h-5" style={{ color: currentTheme.colors.primary }} />
+                  Color Adjustments
+                </h4>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label 
+                      className="block text-sm font-medium mb-2"
+                      style={{ 
+                        color: currentTheme.colors.text,
+                        fontFamily: currentTheme.fonts.secondary
+                      }}
+                    >
+                      Primary Color
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <div 
+                        className="w-10 h-10 rounded-lg"
+                        style={{ backgroundColor: currentTheme.colors.primary }}
+                      ></div>
+                      <input 
+                        type="text" 
+                        value={currentTheme.colors.primary} 
+                        readOnly
+                        className="px-3 py-2 rounded-lg border text-sm"
+                        style={{ 
+                          borderColor: currentTheme.colors.border,
+                          backgroundColor: currentTheme.colors.surface,
+                          color: currentTheme.colors.text
+                        }}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label 
+                      className="block text-sm font-medium mb-2"
+                      style={{ 
+                        color: currentTheme.colors.text,
+                        fontFamily: currentTheme.fonts.secondary
+                      }}
+                    >
+                      Secondary Color
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <div 
+                        className="w-10 h-10 rounded-lg"
+                        style={{ backgroundColor: currentTheme.colors.secondary }}
+                      ></div>
+                      <input 
+                        type="text" 
+                        value={currentTheme.colors.secondary} 
+                        readOnly
+                        className="px-3 py-2 rounded-lg border text-sm"
+                        style={{ 
+                          borderColor: currentTheme.colors.border,
+                          backgroundColor: currentTheme.colors.surface,
+                          color: currentTheme.colors.text
+                        }}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label 
+                      className="block text-sm font-medium mb-2"
+                      style={{ 
+                        color: currentTheme.colors.text,
+                        fontFamily: currentTheme.fonts.secondary
+                      }}
+                    >
+                      Accent Color
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <div 
+                        className="w-10 h-10 rounded-lg"
+                        style={{ backgroundColor: currentTheme.colors.accent }}
+                      ></div>
+                      <input 
+                        type="text" 
+                        value={currentTheme.colors.accent} 
+                        readOnly
+                        className="px-3 py-2 rounded-lg border text-sm"
+                        style={{ 
+                          borderColor: currentTheme.colors.border,
+                          backgroundColor: currentTheme.colors.surface,
+                          color: currentTheme.colors.text
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Style Customization */}
+              <div 
+                className="p-6 rounded-2xl mb-6"
+                style={{ 
+                  backgroundColor: currentTheme.colors.surface,
+                  boxShadow: currentTheme.shadows.md
+                }}
+              >
+                <h4 
+                  className="text-lg font-bold mb-4 flex items-center gap-2"
+                  style={{ 
+                    color: currentTheme.colors.text,
+                    fontFamily: currentTheme.fonts.primary
+                  }}
+                >
+                  <Brush className="w-5 h-5" style={{ color: currentTheme.colors.primary }} />
+                  Style Preferences
+                </h4>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label 
+                      className="block text-sm font-medium mb-2"
+                      style={{ 
+                        color: currentTheme.colors.text,
+                        fontFamily: currentTheme.fonts.secondary
+                      }}
+                    >
+                      Button Style
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <button 
+                        className="px-4 py-2 rounded-lg text-white text-sm"
+                        style={{ 
+                          backgroundColor: currentTheme.colors.primary,
+                          fontFamily: currentTheme.fonts.accent
+                        }}
+                      >
+                        Rounded
+                      </button>
+                      <button 
+                        className="px-4 py-2 rounded-full text-white text-sm"
+                        style={{ 
+                          backgroundColor: currentTheme.colors.primary,
+                          fontFamily: currentTheme.fonts.accent
+                        }}
+                      >
+                        Pill
+                      </button>
+                      <button 
+                        className="px-4 py-2 text-white text-sm"
+                        style={{ 
+                          backgroundColor: currentTheme.colors.primary,
+                          fontFamily: currentTheme.fonts.accent
+                        }}
+                      >
+                        Square
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label 
+                      className="block text-sm font-medium mb-2"
+                      style={{ 
+                        color: currentTheme.colors.text,
+                        fontFamily: currentTheme.fonts.secondary
+                      }}
+                    >
+                      Section Style
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <button 
+                        className="px-4 py-2 rounded-lg text-sm border"
+                        style={{ 
+                          borderColor: currentTheme.colors.border,
+                          color: currentTheme.colors.text,
+                          fontFamily: currentTheme.fonts.secondary
+                        }}
+                      >
+                        Boxed
+                      </button>
+                      <button 
+                        className="px-4 py-2 rounded-lg text-sm border"
+                        style={{ 
+                          borderColor: currentTheme.colors.border,
+                          color: currentTheme.colors.text,
+                          fontFamily: currentTheme.fonts.secondary
+                        }}
+                      >
+                        Full Width
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Effects Customization */}
+              <div 
+                className="p-6 rounded-2xl"
+                style={{ 
+                  backgroundColor: currentTheme.colors.surface,
+                  boxShadow: currentTheme.shadows.md
+                }}
+              >
+                <h4 
+                  className="text-lg font-bold mb-4 flex items-center gap-2"
+                  style={{ 
+                    color: currentTheme.colors.text,
+                    fontFamily: currentTheme.fonts.primary
+                  }}
+                >
+                  <Feather className="w-5 h-5" style={{ color: currentTheme.colors.primary }} />
+                  Effects & Transitions
+                </h4>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label 
+                      className="block text-sm font-medium mb-2"
+                      style={{ 
+                        color: currentTheme.colors.text,
+                        fontFamily: currentTheme.fonts.secondary
+                      }}
+                    >
+                      Animation Style
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <button 
+                        className="px-4 py-2 rounded-lg text-sm border"
+                        style={{ 
+                          borderColor: currentTheme.colors.border,
+                          color: currentTheme.colors.text,
+                          fontFamily: currentTheme.fonts.secondary
+                        }}
+                      >
+                        Subtle
+                      </button>
+                      <button 
+                        className="px-4 py-2 rounded-lg text-sm border"
+                        style={{ 
+                          borderColor: currentTheme.colors.border,
+                          color: currentTheme.colors.text,
+                          fontFamily: currentTheme.fonts.secondary
+                        }}
+                      >
+                        Dynamic
+                      </button>
+                      <button 
+                        className="px-4 py-2 rounded-lg text-sm border"
+                        style={{ 
+                          borderColor: currentTheme.colors.border,
+                          color: currentTheme.colors.text,
+                          fontFamily: currentTheme.fonts.secondary
+                        }}
+                      >
+                        None
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label 
+                      className="block text-sm font-medium mb-2"
+                      style={{ 
+                        color: currentTheme.colors.text,
+                        fontFamily: currentTheme.fonts.secondary
+                      }}
+                    >
+                      Shadow Intensity
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <button 
+                        className="px-4 py-2 rounded-lg text-sm border"
+                        style={{ 
+                          borderColor: currentTheme.colors.border,
+                          color: currentTheme.colors.text,
+                          fontFamily: currentTheme.fonts.secondary
+                        }}
+                      >
+                        Light
+                      </button>
+                      <button 
+                        className="px-4 py-2 rounded-lg text-sm border"
+                        style={{ 
+                          borderColor: currentTheme.colors.border,
+                          color: currentTheme.colors.text,
+                          fontFamily: currentTheme.fonts.secondary
+                        }}
+                      >
+                        Medium
+                      </button>
+                      <button 
+                        className="px-4 py-2 rounded-lg text-sm border"
+                        style={{ 
+                          borderColor: currentTheme.colors.border,
+                          color: currentTheme.colors.text,
+                          fontFamily: currentTheme.fonts.secondary
+                        }}
+                      >
+                        Heavy
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Footer */}
-        <div className="border-t border-gray-200 p-6 bg-gray-50">
+        <div 
+          className="border-t p-6"
+          style={{ 
+            borderColor: currentTheme.colors.border,
+            backgroundColor: currentTheme.colors.background
+          }}
+        >
           <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-600">
+            <div 
+              className="text-sm"
+              style={{ 
+                color: currentTheme.colors.textSecondary,
+                fontFamily: currentTheme.fonts.secondary
+              }}
+            >
               <span className="font-semibold">Current Theme:</span> {currentTheme.name} • 
               <span className="font-semibold ml-2">Font:</span> {currentTheme.fonts.primary}
             </div>
@@ -333,7 +886,12 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ onClose }) => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onClose}
-              className="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all font-semibold shadow-lg"
+              className="px-8 py-3 rounded-xl text-white font-semibold shadow-lg"
+              style={{ 
+                background: `linear-gradient(135deg, ${currentTheme.colors.primary}, ${currentTheme.colors.secondary})`,
+                boxShadow: currentTheme.shadows.lg,
+                fontFamily: currentTheme.fonts.accent
+              }}
             >
               Apply Changes
             </motion.button>
