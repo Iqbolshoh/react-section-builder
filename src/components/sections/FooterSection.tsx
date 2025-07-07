@@ -12,6 +12,33 @@ interface SocialLink {
   url: string;
 }
 
+interface ThemeConfig {
+  fonts: {
+    primary: string;
+    secondary: string;
+    accent: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    surface: string;
+    text: string;
+    textSecondary: string;
+    border: string;
+    success: string;
+    warning: string;
+    error: string;
+  };
+  shadows: {
+    sm: string;
+    md: string;
+    lg: string;
+    xl: string;
+  };
+}
+
 interface FooterSectionProps {
   content: {
     companyName: string;
@@ -20,9 +47,10 @@ interface FooterSectionProps {
   };
   isEditing: boolean;
   onChange: (content: any) => void;
+  theme?: ThemeConfig;
 }
 
-const FooterSection: React.FC<FooterSectionProps> = ({ content, isEditing, onChange }) => {
+const FooterSection: React.FC<FooterSectionProps> = ({ content, isEditing, onChange, theme }) => {
   const handleChange = (field: string, value: any) => {
     onChange({ ...content, [field]: value });
   };
@@ -58,7 +86,13 @@ const FooterSection: React.FC<FooterSectionProps> = ({ content, isEditing, onCha
   };
 
   return (
-    <footer className="bg-gray-900 text-white py-16">
+    <footer 
+      className="py-16"
+      style={{ 
+        backgroundColor: theme?.colors?.text || '#1f2937',
+        fontFamily: theme?.fonts?.primary
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
@@ -74,13 +108,31 @@ const FooterSection: React.FC<FooterSectionProps> = ({ content, isEditing, onCha
                   type="text"
                   value={content.companyName}
                   onChange={(e) => handleChange('companyName', e.target.value)}
-                  className="text-2xl font-bold mb-4 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 text-white"
+                  className="text-2xl font-bold mb-4 bg-transparent border-2 border-dashed rounded-lg p-2 text-white"
+                  style={{ 
+                    borderColor: `${theme?.colors?.primary}50`,
+                    fontFamily: theme?.fonts?.primary
+                  }}
                   placeholder="Company Name"
                 />
               ) : (
-                <h3 className="text-2xl font-bold mb-4">{content.companyName}</h3>
+                <h3 
+                  className="text-2xl font-bold mb-4"
+                  style={{ 
+                    color: theme?.colors?.surface || '#ffffff',
+                    fontFamily: theme?.fonts?.primary
+                  }}
+                >
+                  {content.companyName}
+                </h3>
               )}
-              <p className="text-gray-400 mb-6">
+              <p 
+                className="mb-6"
+                style={{ 
+                  color: `${theme?.colors?.textSecondary}80` || '#9ca3af',
+                  fontFamily: theme?.fonts?.secondary
+                }}
+              >
                 Building beautiful websites made simple.
               </p>
             </motion.div>
@@ -94,7 +146,15 @@ const FooterSection: React.FC<FooterSectionProps> = ({ content, isEditing, onCha
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+              <h4 
+                className="text-lg font-semibold mb-4"
+                style={{ 
+                  color: theme?.colors?.surface || '#ffffff',
+                  fontFamily: theme?.fonts?.primary
+                }}
+              >
+                Quick Links
+              </h4>
               <ul className="space-y-2">
                 {content.links.map((link, index) => (
                   <li key={index} className="flex items-center gap-2">
@@ -104,19 +164,25 @@ const FooterSection: React.FC<FooterSectionProps> = ({ content, isEditing, onCha
                           type="text"
                           value={link.title}
                           onChange={(e) => handleLinkChange(index, 'title', e.target.value)}
-                          className="flex-1 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-1 text-white text-sm"
+                          className="flex-1 bg-transparent border-2 border-dashed rounded-lg p-1 text-white text-sm"
+                          style={{ 
+                            borderColor: `${theme?.colors?.primary}50`,
+                            fontFamily: theme?.fonts?.secondary
+                          }}
                           placeholder="Link title"
                         />
                         <input
                           type="url"
                           value={link.url}
                           onChange={(e) => handleLinkChange(index, 'url', e.target.value)}
-                          className="flex-1 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-1 text-white text-sm"
+                          className="flex-1 bg-transparent border-2 border-dashed rounded-lg p-1 text-white text-sm"
+                          style={{ borderColor: `${theme?.colors?.primary}50` }}
                           placeholder="URL"
                         />
                         <button
                           onClick={() => removeLink(index)}
-                          className="w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center text-xs"
+                          className="w-4 h-4 text-white rounded-full flex items-center justify-center text-xs"
+                          style={{ backgroundColor: theme?.colors?.error }}
                         >
                           <X className="w-2 h-2" />
                         </button>
@@ -124,7 +190,17 @@ const FooterSection: React.FC<FooterSectionProps> = ({ content, isEditing, onCha
                     ) : (
                       <a
                         href={link.url}
-                        className="text-gray-400 hover:text-white transition-colors"
+                        className="transition-colors"
+                        style={{ 
+                          color: `${theme?.colors?.textSecondary}80` || '#9ca3af',
+                          fontFamily: theme?.fonts?.secondary
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = theme?.colors?.surface || '#ffffff';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = `${theme?.colors?.textSecondary}80` || '#9ca3af';
+                        }}
                       >
                         {link.title}
                       </a>
@@ -135,7 +211,8 @@ const FooterSection: React.FC<FooterSectionProps> = ({ content, isEditing, onCha
                   <li>
                     <button
                       onClick={addLink}
-                      className="flex items-center gap-2 text-blue-400 hover:text-blue-300 text-sm"
+                      className="flex items-center gap-2 text-sm"
+                      style={{ color: theme?.colors?.primary }}
                     >
                       <Plus className="w-4 h-4" />
                       Add Link
@@ -154,7 +231,15 @@ const FooterSection: React.FC<FooterSectionProps> = ({ content, isEditing, onCha
               transition={{ duration: 0.6, delay: 0.4 }}
               viewport={{ once: true }}
             >
-              <h4 className="text-lg font-semibold mb-4">Follow Us</h4>
+              <h4 
+                className="text-lg font-semibold mb-4"
+                style={{ 
+                  color: theme?.colors?.surface || '#ffffff',
+                  fontFamily: theme?.fonts?.primary
+                }}
+              >
+                Follow Us
+              </h4>
               <div className="space-y-2">
                 {content.socialLinks.map((social, index) => (
                   <div key={index} className="flex items-center gap-2">
@@ -164,19 +249,25 @@ const FooterSection: React.FC<FooterSectionProps> = ({ content, isEditing, onCha
                           type="text"
                           value={social.platform}
                           onChange={(e) => handleSocialLinkChange(index, 'platform', e.target.value)}
-                          className="flex-1 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-1 text-white text-sm"
+                          className="flex-1 bg-transparent border-2 border-dashed rounded-lg p-1 text-white text-sm"
+                          style={{ 
+                            borderColor: `${theme?.colors?.primary}50`,
+                            fontFamily: theme?.fonts?.secondary
+                          }}
                           placeholder="Platform"
                         />
                         <input
                           type="url"
                           value={social.url}
                           onChange={(e) => handleSocialLinkChange(index, 'url', e.target.value)}
-                          className="flex-1 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-1 text-white text-sm"
+                          className="flex-1 bg-transparent border-2 border-dashed rounded-lg p-1 text-white text-sm"
+                          style={{ borderColor: `${theme?.colors?.primary}50` }}
                           placeholder="URL"
                         />
                         <button
                           onClick={() => removeSocialLink(index)}
-                          className="w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center text-xs"
+                          className="w-4 h-4 text-white rounded-full flex items-center justify-center text-xs"
+                          style={{ backgroundColor: theme?.colors?.error }}
                         >
                           <X className="w-2 h-2" />
                         </button>
@@ -184,7 +275,17 @@ const FooterSection: React.FC<FooterSectionProps> = ({ content, isEditing, onCha
                     ) : (
                       <a
                         href={social.url}
-                        className="text-gray-400 hover:text-white transition-colors"
+                        className="transition-colors"
+                        style={{ 
+                          color: `${theme?.colors?.textSecondary}80` || '#9ca3af',
+                          fontFamily: theme?.fonts?.secondary
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = theme?.colors?.surface || '#ffffff';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = `${theme?.colors?.textSecondary}80` || '#9ca3af';
+                        }}
                       >
                         {social.platform}
                       </a>
@@ -194,7 +295,8 @@ const FooterSection: React.FC<FooterSectionProps> = ({ content, isEditing, onCha
                 {isEditing && (
                   <button
                     onClick={addSocialLink}
-                    className="flex items-center gap-2 text-blue-400 hover:text-blue-300 text-sm"
+                    className="flex items-center gap-2 text-sm"
+                    style={{ color: theme?.colors?.primary }}
                   >
                     <Plus className="w-4 h-4" />
                     Add Social Link
@@ -206,9 +308,19 @@ const FooterSection: React.FC<FooterSectionProps> = ({ content, isEditing, onCha
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-800 mt-12 pt-8">
-          <div className="text-center text-gray-400">
-            <p>&copy; {new Date().getFullYear()} {content.companyName}. All rights reserved.</p>
+        <div 
+          className="border-t mt-12 pt-8"
+          style={{ borderColor: `${theme?.colors?.border}50` || '#374151' }}
+        >
+          <div className="text-center">
+            <p 
+              style={{ 
+                color: `${theme?.colors?.textSecondary}80` || '#9ca3af',
+                fontFamily: theme?.fonts?.secondary
+              }}
+            >
+              &copy; {new Date().getFullYear()} {content.companyName}. All rights reserved.
+            </p>
           </div>
         </div>
       </div>

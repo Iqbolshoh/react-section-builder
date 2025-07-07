@@ -9,6 +9,33 @@ interface Testimonial {
   avatar?: string;
 }
 
+interface ThemeConfig {
+  fonts: {
+    primary: string;
+    secondary: string;
+    accent: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    surface: string;
+    text: string;
+    textSecondary: string;
+    border: string;
+    success: string;
+    warning: string;
+    error: string;
+  };
+  shadows: {
+    sm: string;
+    md: string;
+    lg: string;
+    xl: string;
+  };
+}
+
 interface TestimonialsSectionProps {
   content: {
     title: string;
@@ -16,9 +43,10 @@ interface TestimonialsSectionProps {
   };
   isEditing: boolean;
   onChange: (content: any) => void;
+  theme?: ThemeConfig;
 }
 
-const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ content, isEditing, onChange }) => {
+const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ content, isEditing, onChange, theme }) => {
   const handleChange = (field: string, value: any) => {
     onChange({ ...content, [field]: value });
   };
@@ -44,7 +72,13 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ content, isEd
   };
 
   return (
-    <section className="py-20 bg-gray-50">
+    <section 
+      className="py-20" 
+      style={{ 
+        backgroundColor: theme?.colors?.background || '#f9fafb',
+        fontFamily: theme?.fonts?.primary
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <motion.div
@@ -58,11 +92,22 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ content, isEd
                 type="text"
                 value={content.title}
                 onChange={(e) => handleChange('title', e.target.value)}
-                className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 text-center"
+                className="text-3xl sm:text-4xl font-bold mb-4 bg-transparent border-2 border-dashed rounded-lg p-2 text-center"
+                style={{ 
+                  color: theme?.colors?.primary,
+                  borderColor: `${theme?.colors?.primary}50`,
+                  fontFamily: theme?.fonts?.primary
+                }}
                 placeholder="Enter section title"
               />
             ) : (
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              <h2 
+                className="text-3xl sm:text-4xl font-bold mb-4"
+                style={{ 
+                  color: theme?.colors?.primary,
+                  fontFamily: theme?.fonts?.primary
+                }}
+              >
                 {content.title}
               </h2>
             )}
@@ -77,12 +122,17 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ content, isEd
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 relative group"
+              className="rounded-xl p-8 transition-shadow duration-300 relative group"
+              style={{
+                backgroundColor: theme?.colors?.surface,
+                boxShadow: theme?.shadows?.lg
+              }}
             >
               {isEditing && (
                 <button
                   onClick={() => removeTestimonial(index)}
-                  className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute top-2 right-2 w-6 h-6 text-white rounded-full flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{ backgroundColor: theme?.colors?.error }}
                 >
                   ×
                 </button>
@@ -90,7 +140,11 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ content, isEd
               
               <div className="flex items-center gap-1 mb-6">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                  <Star 
+                    key={i} 
+                    className="w-5 h-5 fill-current" 
+                    style={{ color: theme?.colors?.warning || '#f59e0b' }}
+                  />
                 ))}
               </div>
               
@@ -98,18 +152,35 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ content, isEd
                 <textarea
                   value={testimonial.content}
                   onChange={(e) => handleTestimonialChange(index, 'content', e.target.value)}
-                  className="text-gray-700 leading-relaxed mb-6 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 w-full h-32 resize-none"
+                  className="leading-relaxed mb-6 bg-transparent border-2 border-dashed rounded-lg p-2 w-full h-32 resize-none"
+                  style={{ 
+                    color: theme?.colors?.text,
+                    borderColor: `${theme?.colors?.primary}50`,
+                    fontFamily: theme?.fonts?.secondary
+                  }}
                   placeholder="Testimonial content"
                 />
               ) : (
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p 
+                  className="leading-relaxed mb-6"
+                  style={{ 
+                    color: theme?.colors?.text,
+                    fontFamily: theme?.fonts?.secondary
+                  }}
+                >
                   "{testimonial.content}"
                 </p>
               )}
               
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-semibold">
+                <div 
+                  className="w-12 h-12 rounded-full flex items-center justify-center"
+                  style={{ background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})` }}
+                >
+                  <span 
+                    className="text-white font-semibold"
+                    style={{ fontFamily: theme?.fonts?.accent }}
+                  >
                     {testimonial.name.charAt(0)}
                   </span>
                 </div>
@@ -120,21 +191,47 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ content, isEd
                         type="text"
                         value={testimonial.name}
                         onChange={(e) => handleTestimonialChange(index, 'name', e.target.value)}
-                        className="font-semibold text-gray-900 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-1 w-full text-sm mb-1"
+                        className="font-semibold bg-transparent border-2 border-dashed rounded-lg p-1 w-full text-sm mb-1"
+                        style={{ 
+                          color: theme?.colors?.text,
+                          borderColor: `${theme?.colors?.primary}50`,
+                          fontFamily: theme?.fonts?.primary
+                        }}
                         placeholder="Customer name"
                       />
                       <input
                         type="text"
                         value={testimonial.role}
                         onChange={(e) => handleTestimonialChange(index, 'role', e.target.value)}
-                        className="text-gray-600 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-1 w-full text-sm"
+                        className="bg-transparent border-2 border-dashed rounded-lg p-1 w-full text-sm"
+                        style={{ 
+                          color: theme?.colors?.textSecondary,
+                          borderColor: `${theme?.colors?.primary}50`,
+                          fontFamily: theme?.fonts?.secondary
+                        }}
                         placeholder="Customer role"
                       />
                     </>
                   ) : (
                     <>
-                      <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                      <div className="text-gray-600 text-sm">{testimonial.role}</div>
+                      <div 
+                        className="font-semibold"
+                        style={{ 
+                          color: theme?.colors?.text,
+                          fontFamily: theme?.fonts?.primary
+                        }}
+                      >
+                        {testimonial.name}
+                      </div>
+                      <div 
+                        className="text-sm"
+                        style={{ 
+                          color: theme?.colors?.textSecondary,
+                          fontFamily: theme?.fonts?.secondary
+                        }}
+                      >
+                        {testimonial.role}
+                      </div>
                     </>
                   )}
                 </div>
@@ -145,13 +242,25 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ content, isEd
           {isEditing && (
             <motion.button
               onClick={addTestimonial}
-              className="border-2 border-dashed border-gray-300 rounded-xl p-8 hover:border-blue-400 hover:bg-blue-50 transition-all duration-200 flex items-center justify-center"
+              className="border-2 border-dashed rounded-xl p-8 transition-all duration-200 flex items-center justify-center"
+              style={{ 
+                borderColor: theme?.colors?.border,
+                backgroundColor: 'transparent'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = theme?.colors?.primary || '#3b82f6';
+                e.currentTarget.style.backgroundColor = `${theme?.colors?.primary}10` || '#dbeafe';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = theme?.colors?.border || '#d1d5db';
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
               <div className="text-center">
-                <Plus className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                <span className="text-gray-600">Add Testimonial</span>
+                <Plus className="w-8 h-8 mx-auto mb-2" style={{ color: theme?.colors?.textSecondary }} />
+                <span style={{ color: theme?.colors?.textSecondary }}>Add Testimonial</span>
               </div>
             </motion.button>
           )}

@@ -11,10 +11,27 @@ interface Feature {
 interface ThemeConfig {
   fonts: {
     primary: string;
+    secondary: string;
+    accent: string;
   };
   colors: {
     primary: string;
     secondary: string;
+    accent: string;
+    background: string;
+    surface: string;
+    text: string;
+    textSecondary: string;
+    border: string;
+    success: string;
+    warning: string;
+    error: string;
+  };
+  shadows: {
+    sm: string;
+    md: string;
+    lg: string;
+    xl: string;
   };
 }
 
@@ -67,7 +84,13 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
   };
 
   const renderGridFeatures = () => (
-    <section className="py-12 sm:py-20 bg-white" style={{ fontFamily: theme?.fonts?.primary }}>
+    <section 
+      className="py-12 sm:py-20" 
+      style={{ 
+        backgroundColor: theme?.colors?.surface || '#ffffff',
+        fontFamily: theme?.fonts?.primary
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-16">
           {isEditing ? (
@@ -76,24 +99,46 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
                 type="text"
                 value={content.title}
                 onChange={(e) => handleChange('title', e.target.value)}
-                className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 text-center w-full max-w-2xl mx-auto"
+                className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 bg-transparent border-2 border-dashed rounded-lg p-2 text-center w-full max-w-2xl mx-auto"
+                style={{ 
+                  color: theme?.colors?.primary,
+                  borderColor: `${theme?.colors?.primary}50`,
+                  fontFamily: theme?.fonts?.primary
+                }}
                 placeholder="Enter section title"
               />
               <input
                 type="text"
                 value={content.subtitle || ''}
                 onChange={(e) => handleChange('subtitle', e.target.value)}
-                className="text-lg sm:text-xl text-gray-600 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 text-center w-full max-w-3xl mx-auto"
+                className="text-lg sm:text-xl bg-transparent border-2 border-dashed rounded-lg p-2 text-center w-full max-w-3xl mx-auto"
+                style={{ 
+                  color: theme?.colors?.textSecondary,
+                  borderColor: `${theme?.colors?.primary}50`,
+                  fontFamily: theme?.fonts?.secondary
+                }}
                 placeholder="Enter subtitle (optional)"
               />
             </>
           ) : (
             <>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.colors?.primary }}>
+              <h2 
+                className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4" 
+                style={{ 
+                  color: theme?.colors?.primary,
+                  fontFamily: theme?.fonts?.primary
+                }}
+              >
                 {content.title}
               </h2>
               {content.subtitle && (
-                <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
+                <p 
+                  className="text-lg sm:text-xl max-w-3xl mx-auto"
+                  style={{ 
+                    color: theme?.colors?.textSecondary,
+                    fontFamily: theme?.fonts?.secondary
+                  }}
+                >
                   {content.subtitle}
                 </p>
               )}
@@ -111,18 +156,32 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="text-center p-6 rounded-xl hover:shadow-lg transition-shadow duration-300 relative group"
+                className="text-center p-6 rounded-xl transition-shadow duration-300 relative group"
+                style={{ 
+                  backgroundColor: theme?.colors?.background || '#f9fafb',
+                  boxShadow: theme?.shadows?.sm
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = theme?.shadows?.lg || '0 10px 15px -3px rgb(0 0 0 / 0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = theme?.shadows?.sm || '0 1px 2px 0 rgb(0 0 0 / 0.05)';
+                }}
               >
                 {isEditing && (
                   <button
                     onClick={() => removeFeature(index)}
-                    className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute top-2 right-2 w-6 h-6 text-white rounded-full flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ backgroundColor: theme?.colors?.error }}
                   >
                     ×
                   </button>
                 )}
                 
-                <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <div 
+                  className="w-16 h-16 mx-auto mb-6 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform"
+                  style={{ background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})` }}
+                >
                   <Icon className="w-8 h-8 text-white" />
                 </div>
                 
@@ -132,29 +191,56 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
                       type="text"
                       value={feature.icon}
                       onChange={(e) => handleFeatureChange(index, 'icon', e.target.value)}
-                      className="text-sm border border-gray-300 rounded px-2 py-1 mb-2 w-full"
+                      className="text-sm border rounded px-2 py-1 mb-2 w-full"
+                      style={{ 
+                        borderColor: theme?.colors?.border,
+                        color: theme?.colors?.text,
+                        backgroundColor: theme?.colors?.surface
+                      }}
                       placeholder="Icon name (e.g., Star)"
                     />
                     <input
                       type="text"
                       value={feature.title}
                       onChange={(e) => handleFeatureChange(index, 'title', e.target.value)}
-                      className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 w-full"
+                      className="text-lg sm:text-xl font-semibold mb-4 bg-transparent border-2 border-dashed rounded-lg p-2 w-full"
+                      style={{ 
+                        color: theme?.colors?.text,
+                        borderColor: `${theme?.colors?.primary}50`,
+                        fontFamily: theme?.fonts?.primary
+                      }}
                       placeholder="Feature title"
                     />
                     <textarea
                       value={feature.description}
                       onChange={(e) => handleFeatureChange(index, 'description', e.target.value)}
-                      className="text-gray-600 leading-relaxed bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 w-full h-24 resize-none text-sm"
+                      className="leading-relaxed bg-transparent border-2 border-dashed rounded-lg p-2 w-full h-24 resize-none text-sm"
+                      style={{ 
+                        color: theme?.colors?.textSecondary,
+                        borderColor: `${theme?.colors?.primary}50`,
+                        fontFamily: theme?.fonts?.secondary
+                      }}
                       placeholder="Feature description"
                     />
                   </>
                 ) : (
                   <>
-                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
+                    <h3 
+                      className="text-lg sm:text-xl font-semibold mb-4"
+                      style={{ 
+                        color: theme?.colors?.text,
+                        fontFamily: theme?.fonts?.primary
+                      }}
+                    >
                       {feature.title}
                     </h3>
-                    <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
+                    <p 
+                      className="leading-relaxed text-sm sm:text-base"
+                      style={{ 
+                        color: theme?.colors?.textSecondary,
+                        fontFamily: theme?.fonts?.secondary
+                      }}
+                    >
                       {feature.description}
                     </p>
                   </>
@@ -166,13 +252,25 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
           {isEditing && (
             <motion.button
               onClick={addFeature}
-              className="border-2 border-dashed border-gray-300 rounded-xl p-6 hover:border-blue-400 hover:bg-blue-50 transition-all duration-200 flex items-center justify-center"
+              className="border-2 border-dashed rounded-xl p-6 transition-all duration-200 flex items-center justify-center"
+              style={{ 
+                borderColor: theme?.colors?.border,
+                backgroundColor: 'transparent'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = theme?.colors?.primary || '#3b82f6';
+                e.currentTarget.style.backgroundColor = `${theme?.colors?.primary}10` || '#dbeafe';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = theme?.colors?.border || '#d1d5db';
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
               <div className="text-center">
-                <LucideIcons.Plus className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                <span className="text-gray-600 text-sm">Add Feature</span>
+                <LucideIcons.Plus className="w-8 h-8 mx-auto mb-2" style={{ color: theme?.colors?.textSecondary }} />
+                <span className="text-sm" style={{ color: theme?.colors?.textSecondary }}>Add Feature</span>
               </div>
             </motion.button>
           )}
@@ -182,7 +280,13 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
   );
 
   const renderComparisonFeatures = () => (
-    <section className="py-12 sm:py-20 bg-gray-50" style={{ fontFamily: theme?.fonts?.primary }}>
+    <section 
+      className="py-12 sm:py-20" 
+      style={{ 
+        backgroundColor: theme?.colors?.background || '#f9fafb',
+        fontFamily: theme?.fonts?.primary
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-16">
           {isEditing ? (
@@ -190,69 +294,162 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
               type="text"
               value={content.title}
               onChange={(e) => handleChange('title', e.target.value)}
-              className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 text-center w-full max-w-2xl mx-auto"
+              className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 bg-transparent border-2 border-dashed rounded-lg p-2 text-center w-full max-w-2xl mx-auto"
+              style={{ 
+                color: theme?.colors?.primary,
+                borderColor: `${theme?.colors?.primary}50`,
+                fontFamily: theme?.fonts?.primary
+              }}
               placeholder="Enter section title"
             />
           ) : (
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.colors?.primary }}>
+            <h2 
+              className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4" 
+              style={{ 
+                color: theme?.colors?.primary,
+                fontFamily: theme?.fonts?.primary
+              }}
+            >
               {content.title}
             </h2>
           )}
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div 
+          className="rounded-2xl overflow-hidden"
+          style={{ 
+            backgroundColor: theme?.colors?.surface,
+            boxShadow: theme?.shadows?.xl
+          }}
+        >
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead 
+                style={{ backgroundColor: theme?.colors?.background }}
+              >
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Feature</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Basic</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Pro</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Enterprise</th>
+                  <th 
+                    className="px-6 py-4 text-left text-sm font-semibold"
+                    style={{ 
+                      color: theme?.colors?.text,
+                      fontFamily: theme?.fonts?.primary
+                    }}
+                  >
+                    Feature
+                  </th>
+                  <th 
+                    className="px-6 py-4 text-center text-sm font-semibold"
+                    style={{ 
+                      color: theme?.colors?.text,
+                      fontFamily: theme?.fonts?.primary
+                    }}
+                  >
+                    Basic
+                  </th>
+                  <th 
+                    className="px-6 py-4 text-center text-sm font-semibold"
+                    style={{ 
+                      color: theme?.colors?.text,
+                      fontFamily: theme?.fonts?.primary
+                    }}
+                  >
+                    Pro
+                  </th>
+                  <th 
+                    className="px-6 py-4 text-center text-sm font-semibold"
+                    style={{ 
+                      color: theme?.colors?.text,
+                      fontFamily: theme?.fonts?.primary
+                    }}
+                  >
+                    Enterprise
+                  </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody 
+                className="divide-y"
+                style={{ borderColor: theme?.colors?.border }}
+              >
                 {content.features.map((feature, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
+                  <tr 
+                    key={index} 
+                    className="transition-colors"
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = `${theme?.colors?.primary}05` || '#f9fafb';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
+                  >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <div 
+                          className="w-8 h-8 rounded-lg flex items-center justify-center"
+                          style={{ background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})` }}
+                        >
                           {React.createElement(getIcon(feature.icon), { className: "w-4 h-4 text-white" })}
                         </div>
                         <div>
                           {isEditing ? (
-                            <input
-                              type="text"
-                              value={feature.title}
-                              onChange={(e) => handleFeatureChange(index, 'title', e.target.value)}
-                              className="font-semibold text-gray-900 bg-transparent border border-gray-300 rounded px-2 py-1"
-                              placeholder="Feature title"
-                            />
+                            <>
+                              <input
+                                type="text"
+                                value={feature.title}
+                                onChange={(e) => handleFeatureChange(index, 'title', e.target.value)}
+                                className="font-semibold bg-transparent border border-gray-300 rounded px-2 py-1"
+                                style={{ 
+                                  color: theme?.colors?.text,
+                                  borderColor: theme?.colors?.border,
+                                  fontFamily: theme?.fonts?.primary
+                                }}
+                                placeholder="Feature title"
+                              />
+                              <input
+                                type="text"
+                                value={feature.description}
+                                onChange={(e) => handleFeatureChange(index, 'description', e.target.value)}
+                                className="text-sm bg-transparent border border-gray-300 rounded px-2 py-1 mt-1"
+                                style={{ 
+                                  color: theme?.colors?.textSecondary,
+                                  borderColor: theme?.colors?.border,
+                                  fontFamily: theme?.fonts?.secondary
+                                }}
+                                placeholder="Feature description"
+                              />
+                            </>
                           ) : (
-                            <div className="font-semibold text-gray-900">{feature.title}</div>
-                          )}
-                          {isEditing ? (
-                            <input
-                              type="text"
-                              value={feature.description}
-                              onChange={(e) => handleFeatureChange(index, 'description', e.target.value)}
-                              className="text-sm text-gray-600 bg-transparent border border-gray-300 rounded px-2 py-1 mt-1"
-                              placeholder="Feature description"
-                            />
-                          ) : (
-                            <div className="text-sm text-gray-600">{feature.description}</div>
+                            <>
+                              <div 
+                                className="font-semibold"
+                                style={{ 
+                                  color: theme?.colors?.text,
+                                  fontFamily: theme?.fonts?.primary
+                                }}
+                              >
+                                {feature.title}
+                              </div>
+                              <div 
+                                className="text-sm"
+                                style={{ 
+                                  color: theme?.colors?.textSecondary,
+                                  fontFamily: theme?.fonts?.secondary
+                                }}
+                              >
+                                {feature.description}
+                              </div>
+                            </>
                           )}
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <LucideIcons.Check className="w-5 h-5 text-green-500 mx-auto" />
+                      <LucideIcons.Check className="w-5 h-5 mx-auto" style={{ color: theme?.colors?.success }} />
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <LucideIcons.Check className="w-5 h-5 text-green-500 mx-auto" />
+                      <LucideIcons.Check className="w-5 h-5 mx-auto" style={{ color: theme?.colors?.success }} />
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <LucideIcons.Check className="w-5 h-5 text-green-500 mx-auto" />
+                      <LucideIcons.Check className="w-5 h-5 mx-auto" style={{ color: theme?.colors?.success }} />
                     </td>
                   </tr>
                 ))}
@@ -265,7 +462,17 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
           <div className="text-center mt-8">
             <button
               onClick={addFeature}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors mx-auto"
+              className="flex items-center gap-2 px-6 py-3 rounded-lg transition-colors mx-auto"
+              style={{ 
+                backgroundColor: theme?.colors?.primary,
+                color: '#ffffff'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = theme?.colors?.secondary || '#06b6d4';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = theme?.colors?.primary || '#3b82f6';
+              }}
             >
               <LucideIcons.Plus className="w-5 h-5" />
               Add Feature

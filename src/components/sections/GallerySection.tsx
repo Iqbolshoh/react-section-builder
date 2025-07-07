@@ -9,6 +9,33 @@ interface GalleryItem {
   category: string;
 }
 
+interface ThemeConfig {
+  fonts: {
+    primary: string;
+    secondary: string;
+    accent: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    surface: string;
+    text: string;
+    textSecondary: string;
+    border: string;
+    success: string;
+    warning: string;
+    error: string;
+  };
+  shadows: {
+    sm: string;
+    md: string;
+    lg: string;
+    xl: string;
+  };
+}
+
 interface GallerySectionProps {
   content: {
     title: string;
@@ -18,7 +45,7 @@ interface GallerySectionProps {
   };
   isEditing: boolean;
   onChange: (content: any) => void;
-  theme?: any;
+  theme?: ThemeConfig;
   variant?: string;
 }
 
@@ -63,7 +90,13 @@ const GallerySection: React.FC<GallerySectionProps> = ({
   const allCategories = ['All', ...content.categories];
 
   return (
-    <section className="py-12 sm:py-20 bg-white" style={{ fontFamily: theme?.fontFamily }}>
+    <section 
+      className="py-12 sm:py-20" 
+      style={{ 
+        backgroundColor: theme?.colors?.surface || '#ffffff',
+        fontFamily: theme?.fonts?.primary
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-16">
           {isEditing ? (
@@ -72,24 +105,46 @@ const GallerySection: React.FC<GallerySectionProps> = ({
                 type="text"
                 value={content.title}
                 onChange={(e) => handleChange('title', e.target.value)}
-                className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 text-center w-full max-w-2xl mx-auto"
+                className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 bg-transparent border-2 border-dashed rounded-lg p-2 text-center w-full max-w-2xl mx-auto"
+                style={{ 
+                  color: theme?.colors?.primary,
+                  borderColor: `${theme?.colors?.primary}50`,
+                  fontFamily: theme?.fonts?.primary
+                }}
                 placeholder="Enter section title"
               />
               <input
                 type="text"
                 value={content.subtitle || ''}
                 onChange={(e) => handleChange('subtitle', e.target.value)}
-                className="text-lg sm:text-xl text-gray-600 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 text-center w-full max-w-3xl mx-auto"
+                className="text-lg sm:text-xl bg-transparent border-2 border-dashed rounded-lg p-2 text-center w-full max-w-3xl mx-auto"
+                style={{ 
+                  color: theme?.colors?.textSecondary,
+                  borderColor: `${theme?.colors?.primary}50`,
+                  fontFamily: theme?.fonts?.secondary
+                }}
                 placeholder="Enter subtitle (optional)"
               />
             </>
           ) : (
             <>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4" style={{ color: theme?.primaryColor }}>
+              <h2 
+                className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4" 
+                style={{ 
+                  color: theme?.colors?.primary,
+                  fontFamily: theme?.fonts?.primary
+                }}
+              >
                 {content.title}
               </h2>
               {content.subtitle && (
-                <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
+                <p 
+                  className="text-lg sm:text-xl max-w-3xl mx-auto"
+                  style={{ 
+                    color: theme?.colors?.textSecondary,
+                    fontFamily: theme?.fonts?.secondary
+                  }}
+                >
                   {content.subtitle}
                 </p>
               )}
@@ -104,11 +159,22 @@ const GallerySection: React.FC<GallerySectionProps> = ({
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 sm:px-6 py-2 rounded-full text-sm sm:text-base font-medium transition-colors ${
-                  selectedCategory === category
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                className={`px-4 sm:px-6 py-2 rounded-full text-sm sm:text-base font-medium transition-colors`}
+                style={{
+                  backgroundColor: selectedCategory === category ? theme?.colors?.primary : theme?.colors?.background,
+                  color: selectedCategory === category ? '#ffffff' : theme?.colors?.text,
+                  fontFamily: theme?.fonts?.secondary
+                }}
+                onMouseEnter={(e) => {
+                  if (selectedCategory !== category) {
+                    e.currentTarget.style.backgroundColor = `${theme?.colors?.primary}20` || '#e5e7eb';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (selectedCategory !== category) {
+                    e.currentTarget.style.backgroundColor = theme?.colors?.background || '#f9fafb';
+                  }
+                }}
               >
                 {category}
               </button>
@@ -130,13 +196,17 @@ const GallerySection: React.FC<GallerySectionProps> = ({
               {isEditing && (
                 <button
                   onClick={() => removeItem(index)}
-                  className="absolute top-2 right-2 z-10 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute top-2 right-2 z-10 w-6 h-6 text-white rounded-full flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{ backgroundColor: theme?.colors?.error }}
                 >
                   ×
                 </button>
               )}
 
-              <div className="relative overflow-hidden rounded-xl aspect-square">
+              <div 
+                className="relative overflow-hidden rounded-xl aspect-square"
+                style={{ boxShadow: theme?.shadows?.md }}
+              >
                 {isEditing ? (
                   <ImageUpload
                     value={item.image}
@@ -167,23 +237,45 @@ const GallerySection: React.FC<GallerySectionProps> = ({
                       type="text"
                       value={item.title}
                       onChange={(e) => handleItemChange(index, 'title', e.target.value)}
-                      className="text-lg font-semibold text-gray-900 mb-1 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-1 w-full"
+                      className="text-lg font-semibold mb-1 bg-transparent border-2 border-dashed rounded-lg p-1 w-full"
+                      style={{ 
+                        color: theme?.colors?.text,
+                        borderColor: `${theme?.colors?.primary}50`,
+                        fontFamily: theme?.fonts?.primary
+                      }}
                       placeholder="Image title"
                     />
                     <input
                       type="text"
                       value={item.category}
                       onChange={(e) => handleItemChange(index, 'category', e.target.value)}
-                      className="text-sm text-gray-600 bg-transparent border border-gray-300 rounded px-2 py-1 w-full"
+                      className="text-sm bg-transparent border border-gray-300 rounded px-2 py-1 w-full"
+                      style={{ 
+                        color: theme?.colors?.textSecondary,
+                        borderColor: theme?.colors?.border,
+                        fontFamily: theme?.fonts?.secondary
+                      }}
                       placeholder="Category"
                     />
                   </>
                 ) : (
                   <>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                    <h3 
+                      className="text-lg font-semibold mb-1"
+                      style={{ 
+                        color: theme?.colors?.text,
+                        fontFamily: theme?.fonts?.primary
+                      }}
+                    >
                       {item.title}
                     </h3>
-                    <p className="text-sm text-gray-600">
+                    <p 
+                      className="text-sm"
+                      style={{ 
+                        color: theme?.colors?.textSecondary,
+                        fontFamily: theme?.fonts?.secondary
+                      }}
+                    >
                       {item.category}
                     </p>
                   </>
@@ -195,13 +287,25 @@ const GallerySection: React.FC<GallerySectionProps> = ({
           {isEditing && (
             <motion.button
               onClick={addItem}
-              className="aspect-square border-2 border-dashed border-gray-300 rounded-xl hover:border-blue-400 hover:bg-blue-50 transition-all duration-200 flex items-center justify-center"
+              className="aspect-square border-2 border-dashed rounded-xl transition-all duration-200 flex items-center justify-center"
+              style={{ 
+                borderColor: theme?.colors?.border,
+                backgroundColor: 'transparent'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = theme?.colors?.primary || '#3b82f6';
+                e.currentTarget.style.backgroundColor = `${theme?.colors?.primary}10` || '#dbeafe';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = theme?.colors?.border || '#d1d5db';
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
               <div className="text-center">
-                <Plus className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                <span className="text-gray-600 text-sm">Add Image</span>
+                <Plus className="w-8 h-8 mx-auto mb-2" style={{ color: theme?.colors?.textSecondary }} />
+                <span className="text-sm" style={{ color: theme?.colors?.textSecondary }}>Add Image</span>
               </div>
             </motion.button>
           )}

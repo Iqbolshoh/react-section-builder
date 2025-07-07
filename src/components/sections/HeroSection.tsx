@@ -5,10 +5,34 @@ import ImageUpload from '../ImageUpload';
 interface ThemeConfig {
   fonts: {
     primary: string;
+    secondary: string;
+    accent: string;
   };
   colors: {
     primary: string;
     secondary: string;
+    accent: string;
+    background: string;
+    surface: string;
+    text: string;
+    textSecondary: string;
+    border: string;
+    success: string;
+    warning: string;
+    error: string;
+    primary100: string;
+    primary200: string;
+    primary300: string;
+    secondary100: string;
+    secondary200: string;
+    accent100: string;
+    accent200: string;
+  };
+  shadows: {
+    sm: string;
+    md: string;
+    lg: string;
+    xl: string;
   };
 }
 
@@ -42,8 +66,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({
     <section 
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
       style={{ 
-        fontFamily: `var(--font-primary, ${theme?.fonts?.primary || 'Inter'})`,
-        background: `linear-gradient(135deg, ${theme?.colors?.primary}10, ${theme?.colors?.secondary}10)`,
+        fontFamily: theme?.fonts?.primary || 'Inter',
+        background: `linear-gradient(135deg, ${theme?.colors?.primary}15, ${theme?.colors?.secondary}15)`,
         backgroundColor: theme?.colors?.background || '#f8fafc'
       }}
     >
@@ -89,12 +113,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 type="text"
                 value={content.title}
                 onChange={(e) => handleChange('title', e.target.value)}
-                className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 lg:mb-6 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 w-full leading-tight"
-                placeholder="Enter hero title"
+                className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 lg:mb-6 bg-transparent border-2 border-dashed rounded-lg p-2 w-full leading-tight"
                 style={{ 
-                  color: `var(--color-primary, ${theme?.colors?.primary || '#0ea5e9'})`,
-                  fontFamily: `var(--font-primary, ${theme?.fonts?.primary || 'Inter'})`
+                  color: theme?.colors?.primary,
+                  borderColor: `${theme?.colors?.primary}50`,
+                  fontFamily: theme?.fonts?.primary
                 }}
+                placeholder="Enter hero title"
               />
             ) : (
               <motion.h1 
@@ -103,8 +128,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 lg:mb-6 leading-tight"
                 style={{ 
-                  color: `var(--color-primary, ${theme?.colors?.primary || '#0ea5e9'})`,
-                  fontFamily: `var(--font-primary, ${theme?.fonts?.primary || 'Inter'})`
+                  color: theme?.colors?.primary,
+                  fontFamily: theme?.fonts?.primary
                 }}
               >
                 {content.title}
@@ -115,12 +140,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               <textarea
                 value={content.subtitle}
                 onChange={(e) => handleChange('subtitle', e.target.value)}
-                className="text-lg sm:text-xl text-gray-600 mb-6 lg:mb-8 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 w-full h-20 sm:h-24 resize-none leading-relaxed"
-                placeholder="Enter subtitle"
+                className="text-lg sm:text-xl mb-6 lg:mb-8 bg-transparent border-2 border-dashed rounded-lg p-2 w-full h-20 sm:h-24 resize-none leading-relaxed"
                 style={{ 
-                  color: 'var(--color-text-secondary, #64748b)',
-                  fontFamily: `var(--font-secondary, ${theme?.fonts?.primary || 'Inter'})`
+                  color: theme?.colors?.textSecondary,
+                  borderColor: `${theme?.colors?.primary}50`,
+                  fontFamily: theme?.fonts?.secondary
                 }}
+                placeholder="Enter subtitle"
               />
             ) : (
               <motion.p 
@@ -129,8 +155,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 transition={{ duration: 0.6, delay: 0.4 }}
                 className="text-lg sm:text-xl mb-6 lg:mb-8 leading-relaxed max-w-2xl"
                 style={{ 
-                  color: 'var(--color-text-secondary, #64748b)',
-                  fontFamily: `var(--font-secondary, ${theme?.fonts?.primary || 'Inter'})`
+                  color: theme?.colors?.textSecondary,
+                  fontFamily: theme?.fonts?.secondary
                 }}
               >
                 {content.subtitle}
@@ -143,18 +169,24 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                   type="text"
                   value={content.buttonText}
                   onChange={(e) => handleChange('buttonText', e.target.value)}
-                  className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold text-base sm:text-lg border-2 border-dashed border-blue-300 text-white"
-                  placeholder="Button text"
+                  className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold text-base sm:text-lg border-2 border-dashed text-white"
                   style={{ 
-                    background: `linear-gradient(135deg, var(--color-primary, ${theme?.colors?.primary || '#0ea5e9'}), var(--color-secondary, ${theme?.colors?.secondary || '#06b6d4'}))`,
-                    fontFamily: `var(--font-accent, ${theme?.fonts?.primary || 'Inter'})`
+                    background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`,
+                    borderColor: `${theme?.colors?.primary}50`,
+                    fontFamily: theme?.fonts?.accent
                   }}
+                  placeholder="Button text"
                 />
                 <input
                   type="text"
                   value={content.buttonLink}
                   onChange={(e) => handleChange('buttonLink', e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-sm"
+                  className="px-4 py-2 border rounded-lg text-sm"
+                  style={{ 
+                    borderColor: theme?.colors?.border,
+                    color: theme?.colors?.text,
+                    backgroundColor: theme?.colors?.surface
+                  }}
                   placeholder="Button link"
                 />
               </div>
@@ -168,10 +200,11 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                   href={content.buttonLink}
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
-                  className="inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold text-base sm:text-lg text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold text-base sm:text-lg text-white transition-all duration-300"
                   style={{ 
-                    background: `linear-gradient(135deg, var(--color-primary, ${theme?.colors?.primary || '#0ea5e9'}), var(--color-secondary, ${theme?.colors?.secondary || '#06b6d4'}))`,
-                    fontFamily: `var(--font-accent, ${theme?.fonts?.primary || 'Inter'})`
+                    background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`,
+                    boxShadow: theme?.shadows?.lg,
+                    fontFamily: theme?.fonts?.accent
                   }}
                 >
                   {content.buttonText}
@@ -202,30 +235,27 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                   transition={{ duration: 1, delay: 0.4 }}
                   src={content.image}
                   alt="Hero"
-                  className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-2xl shadow-2xl"
+                  className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-2xl"
+                  style={{ boxShadow: theme?.shadows?.xl }}
                 />
                 
                 {/* Floating Elements */}
-                {!isEditing && (
-                  <>
-                    <motion.div
-                      animate={{ y: [0, -10, 0] }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                      className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 w-16 h-16 sm:w-24 sm:h-24 rounded-full opacity-20"
-                      style={{ 
-                        background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`
-                      }}
-                    />
-                    <motion.div
-                      animate={{ y: [0, 10, 0] }}
-                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                      className="absolute -bottom-2 -left-2 sm:-bottom-4 sm:-left-4 w-12 h-12 sm:w-16 sm:h-16 rounded-full opacity-30"
-                      style={{ 
-                        background: `linear-gradient(135deg, ${theme?.colors?.secondary}, ${theme?.colors?.accent})`
-                      }}
-                    />
-                  </>
-                )}
+                <motion.div
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 w-16 h-16 sm:w-24 sm:h-24 rounded-full opacity-20"
+                  style={{ 
+                    background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`
+                  }}
+                />
+                <motion.div
+                  animate={{ y: [0, 10, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -bottom-2 -left-2 sm:-bottom-4 sm:-left-4 w-12 h-12 sm:w-16 sm:h-16 rounded-full opacity-30"
+                  style={{ 
+                    background: `linear-gradient(135deg, ${theme?.colors?.secondary}, ${theme?.colors?.accent})`
+                  }}
+                />
               </div>
             )}
           </motion.div>
@@ -239,7 +269,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       className="relative min-h-screen flex items-center justify-center text-center bg-cover bg-center bg-no-repeat"
       style={{ 
         backgroundImage: content.image ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${content.image})` : `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`,
-        fontFamily: `var(--font-primary, ${theme?.fonts?.primary || 'Inter'})`
+        fontFamily: theme?.fonts?.primary
       }}
     >
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
@@ -262,12 +292,14 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 value={content.title}
                 onChange={(e) => handleChange('title', e.target.value)}
                 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-6 bg-transparent border-2 border-dashed border-white/50 rounded-lg p-2 w-full text-white placeholder-white/70"
+                style={{ fontFamily: theme?.fonts?.primary }}
                 placeholder="Enter hero title"
               />
               <textarea
                 value={content.subtitle}
                 onChange={(e) => handleChange('subtitle', e.target.value)}
                 className="text-lg sm:text-xl mb-8 bg-transparent border-2 border-dashed border-white/50 rounded-lg p-2 w-full h-24 resize-none text-white placeholder-white/70"
+                style={{ fontFamily: theme?.fonts?.secondary }}
                 placeholder="Enter subtitle"
               />
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -276,6 +308,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                   value={content.buttonText}
                   onChange={(e) => handleChange('buttonText', e.target.value)}
                   className="px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold text-lg border-2 border-dashed border-white/50"
+                  style={{ fontFamily: theme?.fonts?.accent }}
                   placeholder="Button text"
                 />
                 <input
@@ -294,6 +327,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-6 leading-tight"
+                style={{ fontFamily: theme?.fonts?.primary }}
               >
                 {content.title}
               </motion.h1>
@@ -302,6 +336,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
                 className="text-lg sm:text-xl mb-8 leading-relaxed max-w-2xl mx-auto"
+                style={{ fontFamily: theme?.fonts?.secondary }}
               >
                 {content.subtitle}
               </motion.p>
@@ -312,7 +347,11 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 href={content.buttonLink}
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-block px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="inline-block px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-200"
+                style={{ 
+                  boxShadow: theme?.shadows?.lg,
+                  fontFamily: theme?.fonts?.accent
+                }}
               >
                 {content.buttonText}
               </motion.a>
@@ -324,11 +363,17 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   );
 
   const renderVideoHero = () => (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ fontFamily: `var(--font-primary, ${theme?.fonts?.primary || 'Inter'})` }}>
+    <section 
+      className="relative min-h-screen flex items-center justify-center overflow-hidden" 
+      style={{ fontFamily: theme?.fonts?.primary }}
+    >
       {/* Video Background */}
       <div className="absolute inset-0">
         {isEditing ? (
-          <div className="w-full h-full bg-gray-900 flex items-center justify-center">
+          <div 
+            className="w-full h-full flex items-center justify-center"
+            style={{ backgroundColor: theme?.colors?.text }}
+          >
             <div className="text-center text-white">
               <input
                 type="url"
@@ -372,12 +417,14 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 value={content.title}
                 onChange={(e) => handleChange('title', e.target.value)}
                 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-6 bg-transparent border-2 border-dashed border-white/50 rounded-lg p-2 w-full text-white placeholder-white/70"
+                style={{ fontFamily: theme?.fonts?.primary }}
                 placeholder="Enter hero title"
               />
               <textarea
                 value={content.subtitle}
                 onChange={(e) => handleChange('subtitle', e.target.value)}
                 className="text-lg sm:text-xl mb-8 bg-transparent border-2 border-dashed border-white/50 rounded-lg p-2 w-full h-24 resize-none text-white placeholder-white/70"
+                style={{ fontFamily: theme?.fonts?.secondary }}
                 placeholder="Enter subtitle"
               />
               <input
@@ -385,6 +432,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 value={content.buttonText}
                 onChange={(e) => handleChange('buttonText', e.target.value)}
                 className="px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold text-lg border-2 border-dashed border-white/50"
+                style={{ fontFamily: theme?.fonts?.accent }}
                 placeholder="Button text"
               />
             </>
@@ -395,6 +443,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-6 leading-tight"
+                style={{ fontFamily: theme?.fonts?.primary }}
               >
                 {content.title}
               </motion.h1>
@@ -403,6 +452,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
                 className="text-lg sm:text-xl mb-8 leading-relaxed max-w-2xl mx-auto"
+                style={{ fontFamily: theme?.fonts?.secondary }}
               >
                 {content.subtitle}
               </motion.p>
@@ -413,7 +463,11 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 href={content.buttonLink}
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-block px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="inline-block px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-200"
+                style={{ 
+                  boxShadow: theme?.shadows?.lg,
+                  fontFamily: theme?.fonts?.accent
+                }}
               >
                 {content.buttonText}
               </motion.a>
@@ -429,7 +483,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
       style={{ 
         background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`,
-        fontFamily: `var(--font-primary, ${theme?.fonts?.primary || 'Inter'})`
+        fontFamily: theme?.fonts?.primary
       }}
     >
       {/* Animated Gradient Orbs */}
@@ -465,12 +519,14 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 value={content.title}
                 onChange={(e) => handleChange('title', e.target.value)}
                 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-6 bg-transparent border-2 border-dashed border-white/50 rounded-lg p-2 w-full text-white placeholder-white/70"
+                style={{ fontFamily: theme?.fonts?.primary }}
                 placeholder="Enter hero title"
               />
               <textarea
                 value={content.subtitle}
                 onChange={(e) => handleChange('subtitle', e.target.value)}
                 className="text-lg sm:text-xl mb-8 bg-transparent border-2 border-dashed border-white/50 rounded-lg p-2 w-full h-24 resize-none text-white placeholder-white/70"
+                style={{ fontFamily: theme?.fonts?.secondary }}
                 placeholder="Enter subtitle"
               />
               <input
@@ -478,6 +534,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 value={content.buttonText}
                 onChange={(e) => handleChange('buttonText', e.target.value)}
                 className="px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold text-lg border-2 border-dashed border-white/50"
+                style={{ fontFamily: theme?.fonts?.accent }}
                 placeholder="Button text"
               />
             </>
@@ -488,6 +545,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-6 leading-tight"
+                style={{ fontFamily: theme?.fonts?.primary }}
               >
                 {content.title}
               </motion.h1>
@@ -496,6 +554,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
                 className="text-lg sm:text-xl mb-8 leading-relaxed max-w-2xl mx-auto opacity-90"
+                style={{ fontFamily: theme?.fonts?.secondary }}
               >
                 {content.subtitle}
               </motion.p>
@@ -506,7 +565,11 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 href={content.buttonLink}
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-block px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="inline-block px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-200"
+                style={{ 
+                  boxShadow: theme?.shadows?.lg,
+                  fontFamily: theme?.fonts?.accent
+                }}
               >
                 {content.buttonText}
               </motion.a>

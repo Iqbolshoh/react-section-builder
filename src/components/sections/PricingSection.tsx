@@ -8,6 +8,33 @@ interface Plan {
   features: string[];
 }
 
+interface ThemeConfig {
+  fonts: {
+    primary: string;
+    secondary: string;
+    accent: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    surface: string;
+    text: string;
+    textSecondary: string;
+    border: string;
+    success: string;
+    warning: string;
+    error: string;
+  };
+  shadows: {
+    sm: string;
+    md: string;
+    lg: string;
+    xl: string;
+  };
+}
+
 interface PricingSectionProps {
   content: {
     title: string;
@@ -15,9 +42,10 @@ interface PricingSectionProps {
   };
   isEditing: boolean;
   onChange: (content: any) => void;
+  theme?: ThemeConfig;
 }
 
-const PricingSection: React.FC<PricingSectionProps> = ({ content, isEditing, onChange }) => {
+const PricingSection: React.FC<PricingSectionProps> = ({ content, isEditing, onChange, theme }) => {
   const handleChange = (field: string, value: any) => {
     onChange({ ...content, [field]: value });
   };
@@ -61,7 +89,13 @@ const PricingSection: React.FC<PricingSectionProps> = ({ content, isEditing, onC
   };
 
   return (
-    <section className="py-20 bg-white">
+    <section 
+      className="py-20" 
+      style={{ 
+        backgroundColor: theme?.colors?.surface || '#ffffff',
+        fontFamily: theme?.fonts?.primary
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <motion.div
@@ -75,11 +109,22 @@ const PricingSection: React.FC<PricingSectionProps> = ({ content, isEditing, onC
                 type="text"
                 value={content.title}
                 onChange={(e) => handleChange('title', e.target.value)}
-                className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 text-center"
+                className="text-3xl sm:text-4xl font-bold mb-4 bg-transparent border-2 border-dashed rounded-lg p-2 text-center"
+                style={{ 
+                  color: theme?.colors?.primary,
+                  borderColor: `${theme?.colors?.primary}50`,
+                  fontFamily: theme?.fonts?.primary
+                }}
                 placeholder="Enter section title"
               />
             ) : (
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              <h2 
+                className="text-3xl sm:text-4xl font-bold mb-4"
+                style={{ 
+                  color: theme?.colors?.primary,
+                  fontFamily: theme?.fonts?.primary
+                }}
+              >
                 {content.title}
               </h2>
             )}
@@ -94,12 +139,20 @@ const PricingSection: React.FC<PricingSectionProps> = ({ content, isEditing, onC
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className={`bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 relative group border-2 ${
-                index === 1 ? 'border-blue-500 scale-105' : 'border-gray-200'
+              className={`rounded-xl p-8 transition-shadow duration-300 relative group border-2 ${
+                index === 1 ? 'scale-105' : ''
               }`}
+              style={{
+                backgroundColor: theme?.colors?.surface,
+                borderColor: index === 1 ? theme?.colors?.primary : theme?.colors?.border,
+                boxShadow: theme?.shadows?.lg
+              }}
             >
               {index === 1 && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                <div 
+                  className="absolute -top-4 left-1/2 transform -translate-x-1/2 text-white px-4 py-1 rounded-full text-sm font-semibold"
+                  style={{ backgroundColor: theme?.colors?.primary }}
+                >
                   Popular
                 </div>
               )}
@@ -107,7 +160,8 @@ const PricingSection: React.FC<PricingSectionProps> = ({ content, isEditing, onC
               {isEditing && (
                 <button
                   onClick={() => removePlan(index)}
-                  className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute top-2 right-2 w-6 h-6 text-white rounded-full flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{ backgroundColor: theme?.colors?.error }}
                 >
                   ×
                 </button>
@@ -120,22 +174,55 @@ const PricingSection: React.FC<PricingSectionProps> = ({ content, isEditing, onC
                       type="text"
                       value={plan.name}
                       onChange={(e) => handlePlanChange(index, 'name', e.target.value)}
-                      className="text-2xl font-bold text-gray-900 mb-4 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 w-full text-center"
+                      className="text-2xl font-bold mb-4 bg-transparent border-2 border-dashed rounded-lg p-2 w-full text-center"
+                      style={{ 
+                        color: theme?.colors?.text,
+                        borderColor: `${theme?.colors?.primary}50`,
+                        fontFamily: theme?.fonts?.primary
+                      }}
                       placeholder="Plan name"
                     />
                     <input
                       type="text"
                       value={plan.price}
                       onChange={(e) => handlePlanChange(index, 'price', e.target.value)}
-                      className="text-4xl font-bold text-blue-600 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-2 w-full text-center"
+                      className="text-4xl font-bold bg-transparent border-2 border-dashed rounded-lg p-2 w-full text-center"
+                      style={{ 
+                        color: theme?.colors?.primary,
+                        borderColor: `${theme?.colors?.primary}50`,
+                        fontFamily: theme?.fonts?.accent
+                      }}
                       placeholder="$19"
                     />
                   </>
                 ) : (
                   <>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">{plan.name}</h3>
-                    <div className="text-4xl font-bold text-blue-600 mb-2">{plan.price}</div>
-                    <p className="text-gray-600">per month</p>
+                    <h3 
+                      className="text-2xl font-bold mb-4"
+                      style={{ 
+                        color: theme?.colors?.text,
+                        fontFamily: theme?.fonts?.primary
+                      }}
+                    >
+                      {plan.name}
+                    </h3>
+                    <div 
+                      className="text-4xl font-bold mb-2"
+                      style={{ 
+                        color: theme?.colors?.primary,
+                        fontFamily: theme?.fonts?.accent
+                      }}
+                    >
+                      {plan.price}
+                    </div>
+                    <p 
+                      style={{ 
+                        color: theme?.colors?.textSecondary,
+                        fontFamily: theme?.fonts?.secondary
+                      }}
+                    >
+                      per month
+                    </p>
                   </>
                 )}
               </div>
@@ -143,8 +230,11 @@ const PricingSection: React.FC<PricingSectionProps> = ({ content, isEditing, onC
               <div className="space-y-4 mb-8">
                 {plan.features.map((feature, featureIndex) => (
                   <div key={featureIndex} className="flex items-center gap-3">
-                    <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
-                      <Check className="w-3 h-3 text-green-600" />
+                    <div 
+                      className="w-5 h-5 rounded-full flex items-center justify-center"
+                      style={{ backgroundColor: `${theme?.colors?.success}20` }}
+                    >
+                      <Check className="w-3 h-3" style={{ color: theme?.colors?.success }} />
                     </div>
                     {isEditing ? (
                       <div className="flex-1 flex items-center gap-2">
@@ -152,18 +242,31 @@ const PricingSection: React.FC<PricingSectionProps> = ({ content, isEditing, onC
                           type="text"
                           value={feature}
                           onChange={(e) => handleFeatureChange(index, featureIndex, e.target.value)}
-                          className="flex-1 bg-transparent border-2 border-dashed border-blue-300 rounded-lg p-1 text-sm"
+                          className="flex-1 bg-transparent border-2 border-dashed rounded-lg p-1 text-sm"
+                          style={{ 
+                            color: theme?.colors?.text,
+                            borderColor: `${theme?.colors?.primary}50`,
+                            fontFamily: theme?.fonts?.secondary
+                          }}
                           placeholder="Feature"
                         />
                         <button
                           onClick={() => removeFeature(index, featureIndex)}
-                          className="w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center text-xs"
+                          className="w-4 h-4 text-white rounded-full flex items-center justify-center text-xs"
+                          style={{ backgroundColor: theme?.colors?.error }}
                         >
                           <X className="w-2 h-2" />
                         </button>
                       </div>
                     ) : (
-                      <span className="text-gray-700">{feature}</span>
+                      <span 
+                        style={{ 
+                          color: theme?.colors?.text,
+                          fontFamily: theme?.fonts?.secondary
+                        }}
+                      >
+                        {feature}
+                      </span>
                     )}
                   </div>
                 ))}
@@ -171,7 +274,8 @@ const PricingSection: React.FC<PricingSectionProps> = ({ content, isEditing, onC
                 {isEditing && (
                   <button
                     onClick={() => addFeature(index)}
-                    className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm"
+                    className="flex items-center gap-2 text-sm"
+                    style={{ color: theme?.colors?.primary }}
                   >
                     <Plus className="w-4 h-4" />
                     Add Feature
@@ -180,11 +284,28 @@ const PricingSection: React.FC<PricingSectionProps> = ({ content, isEditing, onC
               </div>
               
               <button
-                className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${
-                  index === 1
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                    : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                }`}
+                className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors`}
+                style={{
+                  backgroundColor: index === 1 ? theme?.colors?.primary : `${theme?.colors?.primary}15`,
+                  color: index === 1 ? '#ffffff' : theme?.colors?.primary,
+                  fontFamily: theme?.fonts?.accent
+                }}
+                onMouseEnter={(e) => {
+                  if (index !== 1) {
+                    e.currentTarget.style.backgroundColor = theme?.colors?.primary || '#3b82f6';
+                    e.currentTarget.style.color = '#ffffff';
+                  } else {
+                    e.currentTarget.style.backgroundColor = theme?.colors?.secondary || '#06b6d4';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (index !== 1) {
+                    e.currentTarget.style.backgroundColor = `${theme?.colors?.primary}15` || '#dbeafe';
+                    e.currentTarget.style.color = theme?.colors?.primary || '#3b82f6';
+                  } else {
+                    e.currentTarget.style.backgroundColor = theme?.colors?.primary || '#3b82f6';
+                  }
+                }}
               >
                 Get Started
               </button>
@@ -194,13 +315,25 @@ const PricingSection: React.FC<PricingSectionProps> = ({ content, isEditing, onC
           {isEditing && (
             <motion.button
               onClick={addPlan}
-              className="border-2 border-dashed border-gray-300 rounded-xl p-8 hover:border-blue-400 hover:bg-blue-50 transition-all duration-200 flex items-center justify-center"
+              className="border-2 border-dashed rounded-xl p-8 transition-all duration-200 flex items-center justify-center"
+              style={{ 
+                borderColor: theme?.colors?.border,
+                backgroundColor: 'transparent'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = theme?.colors?.primary || '#3b82f6';
+                e.currentTarget.style.backgroundColor = `${theme?.colors?.primary}10` || '#dbeafe';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = theme?.colors?.border || '#d1d5db';
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
               <div className="text-center">
-                <Plus className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                <span className="text-gray-600">Add Plan</span>
+                <Plus className="w-8 h-8 mx-auto mb-2" style={{ color: theme?.colors?.textSecondary }} />
+                <span style={{ color: theme?.colors?.textSecondary }}>Add Plan</span>
               </div>
             </motion.button>
           )}
