@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Play, ChevronDown, Star, Sparkles } from 'lucide-react';
+import { ArrowRight, Play, ChevronDown, Star, Sparkles, Check } from 'lucide-react';
 import ImageUpload from '../ImageUpload';
 
 interface ThemeConfig {
@@ -47,6 +47,9 @@ interface HeroSectionProps {
     videoUrl?: string;
     features?: string[];
     stats?: { value: string; label: string }[];
+    secondaryButtonText?: string;
+    secondaryButtonLink?: string;
+    backgroundImage?: string;
   };
   isEditing: boolean;
   onChange: (content: any) => void;
@@ -63,6 +66,23 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 }) => {
   const handleChange = (field: string, value: any) => {
     onChange({ ...content, [field]: value });
+  };
+
+  const handleFeatureChange = (index: number, value: string) => {
+    const updatedFeatures = [...(content.features || [])];
+    updatedFeatures[index] = value;
+    handleChange('features', updatedFeatures);
+  };
+
+  const addFeature = () => {
+    const newFeatures = [...(content.features || []), 'New Feature'];
+    handleChange('features', newFeatures);
+  };
+
+  const removeFeature = (index: number) => {
+    const updatedFeatures = [...(content.features || [])];
+    updatedFeatures.splice(index, 1);
+    handleChange('features', updatedFeatures);
   };
 
   // Hero Split Layout
@@ -151,30 +171,58 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 {isEditing ? (
                   <>
-                    <input
-                      type="text"
-                      value={content.buttonText}
-                      onChange={(e) => handleChange('buttonText', e.target.value)}
-                      className="px-8 py-4 rounded-2xl font-semibold border-2 border-dashed"
-                      style={{ 
-                        backgroundColor: theme?.colors?.primary,
-                        color: '#ffffff',
-                        borderColor: `${theme?.colors?.primary}50`,
-                        fontFamily: theme?.fonts?.accent
-                      }}
-                      placeholder="Button text"
-                    />
-                    <input
-                      type="text"
-                      value={content.buttonLink}
-                      onChange={(e) => handleChange('buttonLink', e.target.value)}
-                      className="px-4 py-2 border rounded-lg"
-                      style={{ 
-                        borderColor: theme?.colors?.border,
-                        fontFamily: theme?.fonts?.secondary
-                      }}
-                      placeholder="Button link"
-                    />
+                    <div className="space-y-2">
+                      <input
+                        type="text"
+                        value={content.buttonText}
+                        onChange={(e) => handleChange('buttonText', e.target.value)}
+                        className="px-8 py-4 rounded-2xl font-semibold border-2 border-dashed"
+                        style={{ 
+                          backgroundColor: theme?.colors?.primary,
+                          color: '#ffffff',
+                          borderColor: `${theme?.colors?.primary}50`,
+                          fontFamily: theme?.fonts?.accent
+                        }}
+                        placeholder="Button text"
+                      />
+                      <input
+                        type="text"
+                        value={content.buttonLink}
+                        onChange={(e) => handleChange('buttonLink', e.target.value)}
+                        className="px-4 py-2 border rounded-lg w-full"
+                        style={{ 
+                          borderColor: theme?.colors?.border,
+                          fontFamily: theme?.fonts?.secondary
+                        }}
+                        placeholder="Button link"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <input
+                        type="text"
+                        value={content.secondaryButtonText || 'Watch Demo'}
+                        onChange={(e) => handleChange('secondaryButtonText', e.target.value)}
+                        className="px-8 py-4 rounded-2xl font-semibold border-2"
+                        style={{ 
+                          color: theme?.colors?.primary,
+                          borderColor: theme?.colors?.primary,
+                          backgroundColor: 'transparent',
+                          fontFamily: theme?.fonts?.accent
+                        }}
+                        placeholder="Secondary button text"
+                      />
+                      <input
+                        type="text"
+                        value={content.secondaryButtonLink || '#video'}
+                        onChange={(e) => handleChange('secondaryButtonLink', e.target.value)}
+                        className="px-4 py-2 border rounded-lg w-full"
+                        style={{ 
+                          borderColor: theme?.colors?.border,
+                          fontFamily: theme?.fonts?.secondary
+                        }}
+                        placeholder="Secondary button link"
+                      />
+                    </div>
                   </>
                 ) : (
                   <>
@@ -193,7 +241,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                       <ArrowRight className="w-5 h-5" />
                     </motion.a>
                     
-                    <motion.button
+                    <motion.a
+                      href={content.secondaryButtonLink || '#video'}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl font-semibold text-lg border-2 transition-all duration-300"
@@ -213,32 +262,81 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                       }}
                     >
                       <Play className="w-5 h-5" />
-                      Watch Demo
-                    </motion.button>
+                      {content.secondaryButtonText || 'Watch Demo'}
+                    </motion.a>
                   </>
                 )}
               </div>
 
               {/* Features List */}
               {content.features && content.features.length > 0 && (
-                <div className="mt-8 flex flex-wrap gap-4 justify-center lg:justify-start">
-                  {content.features.map((feature, index) => (
-                    <div 
-                      key={index}
-                      className="flex items-center gap-2 px-4 py-2 rounded-full"
-                      style={{ 
-                        backgroundColor: `${theme?.colors?.primary}15`,
-                        color: theme?.colors?.text,
-                        fontFamily: theme?.fonts?.secondary
-                      }}
-                    >
-                      <div 
-                        className="w-2 h-2 rounded-full"
-                        style={{ backgroundColor: theme?.colors?.primary }}
-                      ></div>
-                      <span className="text-sm font-medium">{feature}</span>
+                <div className="mt-8">
+                  {isEditing ? (
+                    <div className="space-y-2">
+                      {content.features.map((feature, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <div 
+                            className="w-5 h-5 rounded-full flex items-center justify-center"
+                            style={{ 
+                              backgroundColor: `${theme?.colors?.success}20`,
+                              color: theme?.colors?.success
+                            }}
+                          >
+                            <Check className="w-3 h-3" />
+                          </div>
+                          <input
+                            type="text"
+                            value={feature}
+                            onChange={(e) => handleFeatureChange(index, e.target.value)}
+                            className="flex-1 px-2 py-1 text-sm bg-transparent border rounded-lg"
+                            style={{ 
+                              borderColor: theme?.colors?.border,
+                              color: theme?.colors?.text
+                            }}
+                            placeholder="Feature"
+                          />
+                          <button
+                            onClick={() => removeFeature(index)}
+                            className="p-1 text-red-500 hover:text-red-700 transition-colors"
+                          >
+                            <motion.div whileHover={{ rotate: 90 }} transition={{ duration: 0.2 }}>
+                              <ArrowRight className="w-4 h-4" />
+                            </motion.div>
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        onClick={addFeature}
+                        className="px-3 py-1 text-sm rounded-lg transition-colors"
+                        style={{ 
+                          backgroundColor: `${theme?.colors?.primary}15`,
+                          color: theme?.colors?.primary
+                        }}
+                      >
+                        + Add Feature
+                      </button>
                     </div>
-                  ))}
+                  ) : (
+                    <div className="flex flex-wrap gap-4 justify-center lg:justify-start mt-8">
+                      {content.features.map((feature, index) => (
+                        <div 
+                          key={index}
+                          className="flex items-center gap-2 px-4 py-2 rounded-full"
+                          style={{ 
+                            backgroundColor: `${theme?.colors?.primary}15`,
+                            color: theme?.colors?.text,
+                            fontFamily: theme?.fonts?.secondary
+                          }}
+                        >
+                          <div 
+                            className="w-2 h-2 rounded-full"
+                            style={{ backgroundColor: theme?.colors?.primary }}
+                          ></div>
+                          <span className="text-sm font-medium">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </motion.div>
@@ -319,7 +417,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
     <section 
       className="relative min-h-screen flex items-center justify-center text-center bg-cover bg-center bg-no-repeat"
       style={{ 
-        backgroundImage: content.image ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${content.image})` : `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`,
+        backgroundImage: content.backgroundImage ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${content.backgroundImage})` : `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`,
         fontFamily: theme?.fonts?.primary
       }}
     >
@@ -337,6 +435,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             <>
               <input
                 type="text"
+                value={content.backgroundImage || ''}
+                onChange={(e) => handleChange('backgroundImage', e.target.value)}
+                className="w-full mb-4 px-4 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-white placeholder-white/70"
+                placeholder="Background Image URL"
+              />
+              <input
+                type="text"
                 value={content.title}
                 onChange={(e) => handleChange('title', e.target.value)}
                 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-6 bg-transparent border-2 border-dashed border-white/50 rounded-xl p-3 w-full text-white placeholder-white/70"
@@ -350,6 +455,23 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 style={{ fontFamily: theme?.fonts?.secondary }}
                 placeholder="Enter subtitle"
               />
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  value={content.buttonText}
+                  onChange={(e) => handleChange('buttonText', e.target.value)}
+                  className="px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold border-2 border-dashed border-white/50"
+                  style={{ fontFamily: theme?.fonts?.accent }}
+                  placeholder="Button text"
+                />
+                <input
+                  type="text"
+                  value={content.buttonLink}
+                  onChange={(e) => handleChange('buttonLink', e.target.value)}
+                  className="px-4 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-white placeholder-white/70 w-full"
+                  placeholder="Button link"
+                />
+              </div>
             </>
           ) : (
             <>
@@ -365,100 +487,21 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               >
                 {content.subtitle}
               </p>
+              <motion.a
+                href={content.buttonLink}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center gap-3 px-8 py-4 bg-white text-gray-900 rounded-2xl font-semibold text-lg transition-all duration-300"
+                style={{ 
+                  boxShadow: theme?.shadows?.xl,
+                  fontFamily: theme?.fonts?.accent
+                }}
+              >
+                {content.buttonText}
+                <ArrowRight className="w-5 h-5" />
+              </motion.a>
             </>
           )}
-
-          <motion.a
-            href={content.buttonLink}
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-3 px-8 py-4 bg-white text-gray-900 rounded-2xl font-semibold text-lg transition-all duration-300"
-            style={{ 
-              boxShadow: theme?.shadows?.xl,
-              fontFamily: theme?.fonts?.accent
-            }}
-          >
-            {content.buttonText}
-            <ArrowRight className="w-5 h-5" />
-          </motion.a>
-        </motion.div>
-      </div>
-    </section>
-  );
-
-  // Hero Video Background
-  const renderVideoHero = () => (
-    <section 
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      style={{ fontFamily: theme?.fonts?.primary }}
-    >
-      <div className="absolute inset-0">
-        {content.videoUrl ? (
-          <iframe 
-            src={content.videoUrl.includes('youtube.com') 
-              ? content.videoUrl.replace('watch?v=', 'embed/') + '?autoplay=1&mute=1&loop=1&controls=0'
-              : content.videoUrl
-            }
-            className="w-full h-full object-cover"
-            allow="autoplay; encrypted-media"
-          />
-        ) : (
-          <img 
-            src={content.image} 
-            alt="Video Background" 
-            className="w-full h-full object-cover"
-          />
-        )}
-        <div className="absolute inset-0 bg-black/40"></div>
-      </div>
-
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          {isEditing ? (
-            <>
-              <input
-                type="text"
-                value={content.title}
-                onChange={(e) => handleChange('title', e.target.value)}
-                className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-6 bg-transparent border-2 border-dashed border-white/50 rounded-xl p-3 w-full text-white placeholder-white/70"
-                style={{ fontFamily: theme?.fonts?.primary }}
-                placeholder="Enter hero title"
-              />
-              <input
-                type="url"
-                value={content.videoUrl || ''}
-                onChange={(e) => handleChange('videoUrl', e.target.value)}
-                className="w-full mb-4 px-4 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-white placeholder-white/70"
-                placeholder="Video URL (YouTube or direct link)"
-              />
-            </>
-          ) : (
-            <h1 
-              className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-6 leading-tight"
-              style={{ fontFamily: theme?.fonts?.primary }}
-            >
-              {content.title}
-            </h1>
-          )}
-
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className="w-20 h-20 bg-white bg-opacity-20 backdrop-blur-sm rounded-full flex items-center justify-center mb-8 mx-auto border-2 border-white border-opacity-30"
-          >
-            <Play className="w-8 h-8 text-white ml-1" />
-          </motion.button>
-
-          <p 
-            className="text-lg sm:text-xl mb-8 leading-relaxed max-w-2xl mx-auto"
-            style={{ fontFamily: theme?.fonts?.secondary }}
-          >
-            {content.subtitle}
-          </p>
         </motion.div>
       </div>
     </section>
@@ -495,22 +538,42 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         ></motion.div>
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          {isEditing ? (
-            <>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+          >
+            {isEditing ? (
               <input
                 type="text"
                 value={content.title}
                 onChange={(e) => handleChange('title', e.target.value)}
-                className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-6 bg-transparent border-2 border-dashed border-white/50 rounded-xl p-3 w-full text-white placeholder-white/70"
+                className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-6 bg-transparent border-2 border-dashed border-white/50 rounded-xl p-3 w-full text-center text-white placeholder-white/70"
                 style={{ fontFamily: theme?.fonts?.primary }}
                 placeholder="Enter hero title"
               />
+            ) : (
+              <h1 
+                className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-6 leading-tight text-white"
+                style={{ fontFamily: theme?.fonts?.primary }}
+              >
+                {content.title.split(' ').map((word, index) => (
+                  <motion.span
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="inline-block mr-3"
+                  >
+                    {word}
+                  </motion.span>
+                ))}
+              </h1>
+            )}
+
+            {isEditing ? (
               <textarea
                 value={content.subtitle}
                 onChange={(e) => handleChange('subtitle', e.target.value)}
@@ -518,49 +581,76 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 style={{ fontFamily: theme?.fonts?.secondary }}
                 placeholder="Enter subtitle"
               />
-            </>
-          ) : (
-            <>
-              <h1 
-                className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-6 leading-tight"
-                style={{ fontFamily: theme?.fonts?.primary }}
-              >
-                {content.title}
-              </h1>
-              <p 
-                className="text-lg sm:text-xl lg:text-2xl mb-8 leading-relaxed max-w-2xl mx-auto opacity-90"
+            ) : (
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+                className="text-lg sm:text-xl lg:text-2xl mb-8 leading-relaxed max-w-3xl mx-auto text-white/90"
                 style={{ fontFamily: theme?.fonts?.secondary }}
               >
                 {content.subtitle}
-              </p>
-            </>
-          )}
+              </motion.p>
+            )}
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <motion.a
-              href={content.buttonLink}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-3 px-8 py-4 bg-white text-gray-900 rounded-2xl font-semibold text-lg transition-all duration-300"
-              style={{ 
-                boxShadow: theme?.shadows?.xl,
-                fontFamily: theme?.fonts?.accent
-              }}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center"
             >
-              {content.buttonText}
-              <ArrowRight className="w-5 h-5" />
-            </motion.a>
-            
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-3 px-8 py-4 bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl font-semibold text-lg text-white transition-all duration-300"
-              style={{ fontFamily: theme?.fonts?.accent }}
-            >
-              <Play className="w-5 h-5" />
-              Learn More
-            </motion.button>
-          </div>
+              {isEditing ? (
+                <div className="space-y-2">
+                  <input
+                    type="text"
+                    value={content.buttonText}
+                    onChange={(e) => handleChange('buttonText', e.target.value)}
+                    className="px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold border-2 border-dashed border-white/50"
+                    style={{ fontFamily: theme?.fonts?.accent }}
+                    placeholder="Button text"
+                  />
+                  <input
+                    type="text"
+                    value={content.buttonLink}
+                    onChange={(e) => handleChange('buttonLink', e.target.value)}
+                    className="px-4 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-white placeholder-white/70 w-full"
+                    placeholder="Button link"
+                  />
+                </div>
+              ) : (
+                <>
+                  <motion.a
+                    href={content.buttonLink}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-white text-gray-900 rounded-2xl font-semibold text-lg transition-all duration-300"
+                    style={{ 
+                      boxShadow: theme?.shadows?.xl,
+                      fontFamily: theme?.fonts?.accent
+                    }}
+                  >
+                    {content.buttonText}
+                    <motion.div
+                      animate={{ x: [0, 5, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      <ArrowRight className="w-5 h-5" />
+                    </motion.div>
+                  </motion.a>
+                  
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl font-semibold text-lg text-white transition-all duration-300"
+                    style={{ fontFamily: theme?.fonts?.accent }}
+                  >
+                    <Play className="w-5 h-5" />
+                    Learn More
+                  </motion.button>
+                </>
+              )}
+            </motion.div>
+          </motion.div>
 
           {/* Stats */}
           {content.stats && content.stats.length > 0 && (
@@ -574,13 +664,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                   className="text-center"
                 >
                   <div 
-                    className="text-3xl sm:text-4xl font-bold mb-2"
+                    className="text-3xl sm:text-4xl font-bold mb-2 text-white"
                     style={{ fontFamily: theme?.fonts?.accent }}
                   >
                     {stat.value}
                   </div>
                   <div 
-                    className="text-sm opacity-80"
+                    className="text-sm text-white/80"
                     style={{ fontFamily: theme?.fonts?.secondary }}
                   >
                     {stat.label}
@@ -589,7 +679,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               ))}
             </div>
           )}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
@@ -673,18 +763,32 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               </h1>
             )}
 
-            <motion.p 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="text-lg sm:text-xl lg:text-2xl mb-8 leading-relaxed max-w-3xl mx-auto"
-              style={{ 
-                color: theme?.colors?.textSecondary,
-                fontFamily: theme?.fonts?.secondary
-              }}
-            >
-              {content.subtitle}
-            </motion.p>
+            {isEditing ? (
+              <textarea
+                value={content.subtitle}
+                onChange={(e) => handleChange('subtitle', e.target.value)}
+                className="text-lg sm:text-xl lg:text-2xl mb-8 bg-transparent border-2 border-dashed rounded-xl p-4 w-full h-32 resize-none"
+                style={{ 
+                  color: theme?.colors?.textSecondary,
+                  borderColor: `${theme?.colors?.primary}50`,
+                  fontFamily: theme?.fonts?.secondary
+                }}
+                placeholder="Enter subtitle"
+              />
+            ) : (
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+                className="text-lg sm:text-xl lg:text-2xl mb-8 leading-relaxed max-w-3xl mx-auto"
+                style={{ 
+                  color: theme?.colors?.textSecondary,
+                  fontFamily: theme?.fonts?.secondary
+                }}
+              >
+                {content.subtitle}
+              </motion.p>
+            )}
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -692,25 +796,54 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               transition={{ duration: 0.8, delay: 0.8 }}
               className="flex flex-col sm:flex-row gap-4 justify-center"
             >
-              <motion.a
-                href={content.buttonLink}
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-white font-semibold text-lg transition-all duration-300"
-                style={{ 
-                  background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`,
-                  boxShadow: theme?.shadows?.lg,
-                  fontFamily: theme?.fonts?.accent
-                }}
-              >
-                {content.buttonText}
-                <motion.div
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
+              {isEditing ? (
+                <div className="space-y-2">
+                  <input
+                    type="text"
+                    value={content.buttonText}
+                    onChange={(e) => handleChange('buttonText', e.target.value)}
+                    className="px-8 py-4 rounded-2xl font-semibold border-2 border-dashed"
+                    style={{ 
+                      backgroundColor: theme?.colors?.primary,
+                      color: '#ffffff',
+                      borderColor: `${theme?.colors?.primary}50`,
+                      fontFamily: theme?.fonts?.accent
+                    }}
+                    placeholder="Button text"
+                  />
+                  <input
+                    type="text"
+                    value={content.buttonLink}
+                    onChange={(e) => handleChange('buttonLink', e.target.value)}
+                    className="px-4 py-2 border rounded-lg w-full"
+                    style={{ 
+                      borderColor: theme?.colors?.border,
+                      fontFamily: theme?.fonts?.secondary
+                    }}
+                    placeholder="Button link"
+                  />
+                </div>
+              ) : (
+                <motion.a
+                  href={content.buttonLink}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-white font-semibold text-lg transition-all duration-300"
+                  style={{ 
+                    background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`,
+                    boxShadow: theme?.shadows?.lg,
+                    fontFamily: theme?.fonts?.accent
+                  }}
                 >
-                  <ArrowRight className="w-5 h-5" />
-                </motion.div>
-              </motion.a>
+                  {content.buttonText}
+                  <motion.div
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  >
+                    <ArrowRight className="w-5 h-5" />
+                  </motion.div>
+                </motion.a>
+              )}
             </motion.div>
           </motion.div>
 
@@ -753,13 +886,17 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         '24/7 Support'
       ]);
     }
+    
+    // Add secondary button if not present
+    if (!content.secondaryButtonText) {
+      handleChange('secondaryButtonText', 'Watch Demo');
+      handleChange('secondaryButtonLink', '#video');
+    }
   }, [variant]);
 
   switch (variant) {
     case 'hero-centered':
       return renderCenteredHero();
-    case 'hero-video':
-      return renderVideoHero();
     case 'hero-gradient':
       return renderGradientHero();
     case 'hero-animated':

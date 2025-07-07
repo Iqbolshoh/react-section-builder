@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import * as LucideIcons from 'lucide-react';
+import { Plus, X, Check } from 'lucide-react';
 
 interface Feature {
   icon: string;
@@ -26,6 +27,13 @@ interface ThemeConfig {
     success: string;
     warning: string;
     error: string;
+    primary100: string;
+    primary200: string;
+    primary300: string;
+    secondary100: string;
+    secondary200: string;
+    accent100: string;
+    accent200: string;
   };
   shadows: {
     sm: string;
@@ -83,6 +91,7 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
     return Icon;
   };
 
+  // Grid Layout
   const renderGridFeatures = () => (
     <section 
       className="py-12 sm:py-20" 
@@ -171,10 +180,13 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
                 {isEditing && (
                   <button
                     onClick={() => removeFeature(index)}
-                    className="absolute top-2 right-2 w-6 h-6 text-white rounded-full flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{ backgroundColor: theme?.colors?.error }}
+                    className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ 
+                      backgroundColor: theme?.colors?.error,
+                      color: '#ffffff'
+                    }}
                   >
-                    ×
+                    <X className="w-4 h-4" />
                   </button>
                 )}
                 
@@ -269,7 +281,7 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
               whileTap={{ scale: 0.98 }}
             >
               <div className="text-center">
-                <LucideIcons.Plus className="w-8 h-8 mx-auto mb-2" style={{ color: theme?.colors?.textSecondary }} />
+                <Plus className="w-8 h-8 mx-auto mb-2" style={{ color: theme?.colors?.textSecondary }} />
                 <span className="text-sm" style={{ color: theme?.colors?.textSecondary }}>Add Feature</span>
               </div>
             </motion.button>
@@ -279,6 +291,7 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
     </section>
   );
 
+  // Comparison Layout
   const renderComparisonFeatures = () => (
     <section 
       className="py-12 sm:py-20" 
@@ -370,89 +383,92 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
                 className="divide-y"
                 style={{ borderColor: theme?.colors?.border }}
               >
-                {content.features.map((feature, index) => (
-                  <tr 
-                    key={index} 
-                    className="transition-colors"
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = `${theme?.colors?.primary}05` || '#f9fafb';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'transparent';
-                    }}
-                  >
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div 
-                          className="w-8 h-8 rounded-lg flex items-center justify-center"
-                          style={{ background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})` }}
-                        >
-                          {React.createElement(getIcon(feature.icon), { className: "w-4 h-4 text-white" })}
+                {content.features.map((feature, index) => {
+                  const Icon = getIcon(feature.icon);
+                  return (
+                    <tr 
+                      key={index} 
+                      className="transition-colors"
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = `${theme?.colors?.primary}05` || '#f9fafb';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }}
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div 
+                            className="w-8 h-8 rounded-lg flex items-center justify-center"
+                            style={{ background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})` }}
+                          >
+                            {React.createElement(Icon, { className: "w-4 h-4 text-white" })}
+                          </div>
+                          <div>
+                            {isEditing ? (
+                              <>
+                                <input
+                                  type="text"
+                                  value={feature.title}
+                                  onChange={(e) => handleFeatureChange(index, 'title', e.target.value)}
+                                  className="font-semibold bg-transparent border border-gray-300 rounded px-2 py-1"
+                                  style={{ 
+                                    color: theme?.colors?.text,
+                                    borderColor: theme?.colors?.border,
+                                    fontFamily: theme?.fonts?.primary
+                                  }}
+                                  placeholder="Feature title"
+                                />
+                                <input
+                                  type="text"
+                                  value={feature.description}
+                                  onChange={(e) => handleFeatureChange(index, 'description', e.target.value)}
+                                  className="text-sm bg-transparent border border-gray-300 rounded px-2 py-1 mt-1"
+                                  style={{ 
+                                    color: theme?.colors?.textSecondary,
+                                    borderColor: theme?.colors?.border,
+                                    fontFamily: theme?.fonts?.secondary
+                                  }}
+                                  placeholder="Feature description"
+                                />
+                              </>
+                            ) : (
+                              <>
+                                <div 
+                                  className="font-semibold"
+                                  style={{ 
+                                    color: theme?.colors?.text,
+                                    fontFamily: theme?.fonts?.primary
+                                  }}
+                                >
+                                  {feature.title}
+                                </div>
+                                <div 
+                                  className="text-sm"
+                                  style={{ 
+                                    color: theme?.colors?.textSecondary,
+                                    fontFamily: theme?.fonts?.secondary
+                                  }}
+                                >
+                                  {feature.description}
+                                </div>
+                              </>
+                            )}
+                          </div>
                         </div>
-                        <div>
-                          {isEditing ? (
-                            <>
-                              <input
-                                type="text"
-                                value={feature.title}
-                                onChange={(e) => handleFeatureChange(index, 'title', e.target.value)}
-                                className="font-semibold bg-transparent border border-gray-300 rounded px-2 py-1"
-                                style={{ 
-                                  color: theme?.colors?.text,
-                                  borderColor: theme?.colors?.border,
-                                  fontFamily: theme?.fonts?.primary
-                                }}
-                                placeholder="Feature title"
-                              />
-                              <input
-                                type="text"
-                                value={feature.description}
-                                onChange={(e) => handleFeatureChange(index, 'description', e.target.value)}
-                                className="text-sm bg-transparent border border-gray-300 rounded px-2 py-1 mt-1"
-                                style={{ 
-                                  color: theme?.colors?.textSecondary,
-                                  borderColor: theme?.colors?.border,
-                                  fontFamily: theme?.fonts?.secondary
-                                }}
-                                placeholder="Feature description"
-                              />
-                            </>
-                          ) : (
-                            <>
-                              <div 
-                                className="font-semibold"
-                                style={{ 
-                                  color: theme?.colors?.text,
-                                  fontFamily: theme?.fonts?.primary
-                                }}
-                              >
-                                {feature.title}
-                              </div>
-                              <div 
-                                className="text-sm"
-                                style={{ 
-                                  color: theme?.colors?.textSecondary,
-                                  fontFamily: theme?.fonts?.secondary
-                                }}
-                              >
-                                {feature.description}
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <LucideIcons.Check className="w-5 h-5 mx-auto" style={{ color: theme?.colors?.success }} />
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <LucideIcons.Check className="w-5 h-5 mx-auto" style={{ color: theme?.colors?.success }} />
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <LucideIcons.Check className="w-5 h-5 mx-auto" style={{ color: theme?.colors?.success }} />
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        <Check className="w-5 h-5 mx-auto" style={{ color: theme?.colors?.success }} />
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        <Check className="w-5 h-5 mx-auto" style={{ color: theme?.colors?.success }} />
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        <Check className="w-5 h-5 mx-auto" style={{ color: theme?.colors?.success }} />
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -474,7 +490,7 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
                 e.currentTarget.style.backgroundColor = theme?.colors?.primary || '#3b82f6';
               }}
             >
-              <LucideIcons.Plus className="w-5 h-5" />
+              <Plus className="w-5 h-5" />
               Add Feature
             </button>
           </div>
@@ -482,6 +498,13 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({
       </div>
     </section>
   );
+
+  // Initialize default content if needed
+  React.useEffect(() => {
+    if (!content.subtitle) {
+      handleChange('subtitle', 'Discover the powerful features that make our platform stand out');
+    }
+  }, []);
 
   switch (variant) {
     case 'features-comparison':

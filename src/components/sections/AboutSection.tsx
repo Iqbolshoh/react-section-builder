@@ -229,7 +229,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({
                           type="text"
                           value={stat.value}
                           onChange={(e) => {
-                            const updatedStats = [...content.stats];
+                            const updatedStats = [...content.stats!];
                             updatedStats[index] = { ...updatedStats[index], value: e.target.value };
                             handleChange('stats', updatedStats);
                           }}
@@ -245,7 +245,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({
                           type="text"
                           value={stat.label}
                           onChange={(e) => {
-                            const updatedStats = [...content.stats];
+                            const updatedStats = [...content.stats!];
                             updatedStats[index] = { ...updatedStats[index], label: e.target.value };
                             handleChange('stats', updatedStats);
                           }}
@@ -370,20 +370,16 @@ const AboutSection: React.FC<AboutSectionProps> = ({
             >
               {isEditing ? (
                 <>
-                  <input
-                    type="url"
+                  <ImageUpload
                     value={member.image}
-                    onChange={(e) => {
+                    onChange={(url) => {
                       const updatedTeam = [...(content.team || [])];
-                      updatedTeam[index] = { ...updatedTeam[index], image: e.target.value };
+                      updatedTeam[index] = { ...updatedTeam[index], image: url };
                       handleChange('team', updatedTeam);
                     }}
-                    className="w-full mb-4 px-2 py-1 border rounded-lg text-sm"
-                    style={{ 
-                      borderColor: theme?.colors?.border,
-                      fontFamily: theme?.fonts?.secondary
-                    }}
-                    placeholder="Image URL"
+                    placeholder="Add team member photo"
+                    className="w-24 h-24 sm:w-28 sm:h-28 mx-auto mb-6"
+                    theme={theme}
                   />
                   <input
                     type="text"
@@ -393,10 +389,10 @@ const AboutSection: React.FC<AboutSectionProps> = ({
                       updatedTeam[index] = { ...updatedTeam[index], name: e.target.value };
                       handleChange('team', updatedTeam);
                     }}
-                    className="text-lg font-semibold mb-2 bg-transparent border rounded-lg px-2 py-1 w-full text-center"
+                    className="text-lg font-semibold mb-2 bg-transparent border-2 border-dashed rounded-lg p-2 w-full text-center"
                     style={{ 
                       color: theme?.colors?.text,
-                      borderColor: theme?.colors?.border,
+                      borderColor: `${theme?.colors?.primary}50`,
                       fontFamily: theme?.fonts?.primary
                     }}
                     placeholder="Name"
@@ -409,10 +405,10 @@ const AboutSection: React.FC<AboutSectionProps> = ({
                       updatedTeam[index] = { ...updatedTeam[index], role: e.target.value };
                       handleChange('team', updatedTeam);
                     }}
-                    className="bg-transparent border rounded-lg px-2 py-1 w-full text-center text-sm"
+                    className="bg-transparent border-2 border-dashed rounded-lg p-2 w-full text-center text-sm"
                     style={{ 
                       color: theme?.colors?.textSecondary,
-                      borderColor: theme?.colors?.border,
+                      borderColor: `${theme?.colors?.primary}50`,
                       fontFamily: theme?.fonts?.secondary
                     }}
                     placeholder="Role"
@@ -646,10 +642,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({
       handleChange('stats', [
         { value: '10+', label: 'Years Experience' },
         { value: '500+', label: 'Happy Clients' },
-        { value: '1000+', label: 'Projects Completed' },
-        { value: '50+', label: 'Team Members' },
-        { value: '25+', label: 'Countries Served' },
-        { value: '99%', label: 'Client Satisfaction' }
+        { value: '1000+', label: 'Projects Completed' }
       ]);
     }
   }, [variant]);
