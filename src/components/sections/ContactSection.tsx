@@ -513,7 +513,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
               {isEditing ? (
                 <input
                   type="text"
-                  value={content.formSubtitle || 'Fill out the form below and we'll get back to you as soon as possible.'}
+                  value={content.formSubtitle || 'Fill out the form below and we\'ll get back to you as soon as possible.'}
                   onChange={(e) => handleChange('formSubtitle', e.target.value)}
                   className="text-sm mb-6 bg-transparent border-2 border-dashed rounded-lg p-2 w-full"
                   style={{ 

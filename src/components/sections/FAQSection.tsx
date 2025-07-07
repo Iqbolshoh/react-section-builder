@@ -864,7 +864,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
         },
         {
           question: 'How long does it take to complete a project?',
-          answer: 'Project timelines depend on the scope and complexity of the work. A simple website might take 2-4 weeks, while more complex projects can take several months. We'll provide you with a detailed timeline during our initial consultation.'
+          answer: 'Project timelines depend on the scope and complexity of the work. A simple website might take 2-4 weeks, while more complex projects can take several months. We\'ll provide you with a detailed timeline during our initial consultation.'
         },
         {
           question: 'Do you offer ongoing support after the project is completed?',
