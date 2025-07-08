@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
+import { DndContext, DragEndEvent } from '@dnd-kit/core';
 import {
   ArrowLeft,
   Plus,
-  Settings,
   Eye,
   Download,
   Save,
@@ -94,32 +93,31 @@ const Editor: React.FC = () => {
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      
+
       // Show success message
       alert('Website exported successfully! The HTML file has been downloaded.');
-      
+
       setTimeout(() => {
         URL.revokeObjectURL(url);
       }, 100);
     }
   };
 
-  const generateHTMLExport = (project: any, theme: any) => {
-    return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${project.name}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
-    <h1>Website: ${project.name}</h1>
-    <p>Sections: ${project.sections.length}</p>
-    <!-- Website content would be rendered here -->
-</body>
-</html>`;
-  };
+  //   const generateHTMLExport = (project: any, theme: any) => {
+  //     return `<!DOCTYPE html>
+  // <html lang="en">
+  // <head>
+  //     <meta charset="UTF-8">
+  //     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  //     <title>${project.name}</title>
+  //     <script src="https://cdn.tailwindcss.com"></script>
+  // </head>
+  // <body>
+  //     <h1>Website: ${project.name}</h1>
+  //     <p>Sections: ${project.sections.length}</p>
+  // </body>
+  // </html>`;
+  //   };
 
   if (!currentProject) {
     return (
@@ -139,7 +137,7 @@ const Editor: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate('/')}
               className="p-2 hover:platform-bg-tertiary rounded-xl transition-colors"
             >
               <ArrowLeft className="w-5 h-5 platform-text-secondary" />
@@ -232,7 +230,7 @@ const Editor: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <button
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate('/')}
               className="p-3 hover:platform-bg-tertiary rounded-xl transition-colors"
             >
               <ArrowLeft className="w-5 h-5 platform-text-secondary" />
@@ -347,7 +345,7 @@ const Editor: React.FC = () => {
                     .map((section, index) => (
                       <React.Fragment key={section.id}>
                         {index === 0 && (
-                          <AddSectionButton 
+                          <AddSectionButton
                             onAdd={() => {
                               setShowSectionSelector(true);
                               setSelectedSection(null);
@@ -370,7 +368,7 @@ const Editor: React.FC = () => {
                             }
                           }}
                         />
-                        <AddSectionButton 
+                        <AddSectionButton
                           onAdd={() => {
                             setShowSectionSelector(true);
                             setSelectedSection(null);

@@ -5,13 +5,8 @@ import {
   ArrowLeft, 
   Edit3, 
   Share2, 
-  ExternalLink, 
   Globe, 
-  Smartphone, 
-  Monitor,
   Eye,
-  Settings,
-  Download,
   Sparkles
 } from 'lucide-react';
 import { useProject } from '../contexts/ProjectContext';
