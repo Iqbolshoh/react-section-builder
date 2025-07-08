@@ -54,7 +54,9 @@ const AddSectionButton: React.FC<AddSectionButtonProps> = ({
           '--hover-border': `${theme?.colors?.primary}50`
         } as React.CSSProperties}
         onMouseEnter={(e) => {
+          // eslint-disable-next-line no-constant-binary-expression
           e.currentTarget.style.backgroundColor = `${theme?.colors?.primary}10` || '#dcfce7';
+          // eslint-disable-next-line no-constant-binary-expression
           e.currentTarget.style.borderColor = `${theme?.colors?.primary}50` || '#86efac';
         }}
         onMouseLeave={(e) => {

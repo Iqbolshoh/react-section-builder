@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface Section {
   id: string;
-  type: string; // Now supports all section types like 'hero-split', 'header-classic', etc.
+  type: string;
   content: any;
   order: number;
 }
@@ -47,7 +47,7 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   const updateProject = (id: string, updates: Partial<Project>) => {
-    setProjects(prev => prev.map(project => 
+    setProjects(prev => prev.map(project =>
       project.id === id ? { ...project, ...updates, updatedAt: new Date().toISOString() } : project
     ));
     if (currentProject?.id === id) {
@@ -64,7 +64,7 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const addSection = (type: Section['type']) => {
     if (!currentProject) return;
-    
+
     const newSection: Section = {
       id: Date.now().toString(),
       type,
@@ -76,9 +76,9 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
     updateProject(currentProject.id, { sections: updatedSections });
   };
 
-  const updateSection = (id: string, content: any) => {
+  const updateSection = (id: string, content: Record<string, unknown>) => {
     if (!currentProject) return;
-    
+
     const updatedSections = currentProject.sections.map(section =>
       section.id === id ? { ...section, content } : section
     );
@@ -87,7 +87,7 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const deleteSection = (id: string) => {
     if (!currentProject) return;
-    
+
     const updatedSections = currentProject.sections.filter(section => section.id !== id);
     updateProject(currentProject.id, { sections: updatedSections });
   };
@@ -99,7 +99,7 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const getDefaultContent = (type: Section['type']) => {
     const baseType = type.split('-')[0];
-    
+
     switch (baseType) {
       case 'header':
         return {
@@ -216,20 +216,20 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
         return {
           title: 'Simple, Transparent Pricing',
           plans: [
-            { 
-              name: 'Starter', 
-              price: '$9', 
-              features: ['5 Pages', 'Basic Templates', 'Mobile Responsive', 'SSL Certificate', 'Email Support'] 
+            {
+              name: 'Starter',
+              price: '$9',
+              features: ['5 Pages', 'Basic Templates', 'Mobile Responsive', 'SSL Certificate', 'Email Support']
             },
-            { 
-              name: 'Professional', 
-              price: '$29', 
-              features: ['Unlimited Pages', 'Premium Templates', 'Custom Domain', 'Advanced Analytics', 'Priority Support', 'E-commerce Ready'] 
+            {
+              name: 'Professional',
+              price: '$29',
+              features: ['Unlimited Pages', 'Premium Templates', 'Custom Domain', 'Advanced Analytics', 'Priority Support', 'E-commerce Ready']
             },
-            { 
-              name: 'Enterprise', 
-              price: '$99', 
-              features: ['Everything in Pro', 'White Label', 'API Access', 'Custom Integrations', '24/7 Phone Support', 'Dedicated Account Manager'] 
+            {
+              name: 'Enterprise',
+              price: '$99',
+              features: ['Everything in Pro', 'White Label', 'API Access', 'Custom Integrations', '24/7 Phone Support', 'Dedicated Account Manager']
             }
           ]
         };
@@ -237,20 +237,20 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
         return {
           title: 'What Our Customers Say',
           testimonials: [
-            { 
-              name: 'Alex Thompson', 
-              role: 'Small Business Owner', 
-              content: 'This platform helped me create a professional website for my business in just a few hours. The results exceeded my expectations!' 
+            {
+              name: 'Alex Thompson',
+              role: 'Small Business Owner',
+              content: 'This platform helped me create a professional website for my business in just a few hours. The results exceeded my expectations!'
             },
-            { 
-              name: 'Maria Garcia', 
-              role: 'Freelance Designer', 
-              content: 'As a designer, I appreciate the attention to detail and the beautiful templates. My clients love their new websites.' 
+            {
+              name: 'Maria Garcia',
+              role: 'Freelance Designer',
+              content: 'As a designer, I appreciate the attention to detail and the beautiful templates. My clients love their new websites.'
             },
-            { 
-              name: 'David Kim', 
-              role: 'Startup Founder', 
-              content: 'We launched our startup website in record time. The drag-and-drop builder made it so easy to iterate and improve.' 
+            {
+              name: 'David Kim',
+              role: 'Startup Founder',
+              content: 'We launched our startup website in record time. The drag-and-drop builder made it so easy to iterate and improve.'
             }
           ]
         };

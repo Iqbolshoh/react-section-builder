@@ -8,9 +8,9 @@ interface ImageUploadProps {
   className?: string;
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({ 
-  value, 
-  onChange, 
+const ImageUpload: React.FC<ImageUploadProps> = ({
+  value,
+  onChange,
   placeholder = "Add image",
   className = ""
 }) => {
@@ -26,12 +26,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     }
 
     setIsUploading(true);
-    
+
     try {
       // Create a preview URL for immediate display
       const previewUrl = URL.createObjectURL(file);
       onChange(previewUrl);
-      
+
       // In a real app, you would upload to your server here
       // For now, we'll simulate the upload
       setTimeout(() => {
@@ -47,7 +47,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
-    
+
     const files = Array.from(e.dataTransfer.files);
     if (files.length > 0) {
       handleFileUpload(files[0]);
@@ -64,9 +64,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   if (value && !uploadMethod) {
     return (
       <div className={`relative group ${className}`}>
-        <img 
-          src={value} 
-          alt="Uploaded" 
+        <img
+          src={value}
+          alt="Uploaded"
           className="w-full h-48 object-cover rounded-lg"
         />
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 rounded-lg flex items-center justify-center">
@@ -127,16 +127,15 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           <Upload className="w-5 h-5 text-green-600" />
           <span className="font-medium text-gray-900">Upload Image File</span>
         </div>
-        
+
         <div
           onDrop={handleDrop}
           onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
           onDragLeave={() => setDragOver(false)}
-          className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-            dragOver 
-              ? 'border-blue-500 bg-blue-50' 
+          className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${dragOver
+              ? 'border-blue-500 bg-blue-50'
               : 'border-gray-300 hover:border-gray-400'
-          }`}
+            }`}
         >
           {isUploading ? (
             <div className="space-y-3">
