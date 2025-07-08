@@ -85,7 +85,7 @@ const Editor: React.FC = () => {
 
   const handleExport = () => {
     if (currentProject && currentTheme) {
-      const htmlContent = generateHTMLExport(currentProject, currentTheme);
+      const htmlContent = generateCompleteHTML(currentProject, currentTheme);
       const blob = new Blob([htmlContent], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -296,7 +296,7 @@ const Editor: React.FC = () => {
 
             <button
               onClick={handleExport}
-              className=" اسلام items-center gap-2 px-6 py-3 bg-orange-600 text-white rounded-xl hover:bg-orange-700 transition-all font-semibold platform-shadow-lg"
+              className="flex items-center gap-2 px-6 py-3 bg-orange-600 text-white rounded-xl hover:bg-orange-700 transition-all font-semibold platform-shadow-lg"
             >
               <Code className="w-4 h-4" />
               Export

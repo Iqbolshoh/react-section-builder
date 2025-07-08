@@ -70,12 +70,6 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
     <link href="https://fonts.googleapis.com/css2?${fontImports}&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
-    <meta name="description" content="Professional website built with templates.uz">
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?${fontImports}&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
     
     <!-- Font Awesome Icons -->
@@ -489,7 +483,7 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
                 observer.observe(section);
             });
             hasInitializedObserver = true;
-        });
+        }
         
         // Counter animation
         function animateCounters() {
@@ -601,37 +595,8 @@ const generateSectionHTML = (section: Section, theme: ThemeConfig): string => {
 
     case 'hero-centered':
       return `
-        <section class="relative min-h-screen flex items-center justify-center text-center bg-cover bg-center bg-no-repeat" style="background-image: ${content.image ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${content.image})` : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}; font-family: var(--font-primary);">
+        <section class="relative min-h-screen flex items-center justify-center text-center bg-cover bg-center bg-no-repeat" style="background-image: ${content.backgroundImage ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${content.backgroundImage})` : 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))'}; font-family: var(--font-primary);">
             <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
-                <div class="animate-fade-in-up">
-                    <h1 class="text-responsive-xl font-bold mb-6 leading-tight">
-                        ${content.title}
-                    </h1>
-                    <p class="text-responsive-lg mb-8 leading-relaxed max-w-2xl mx-auto">
-                        ${content.subtitle}
-                    </p>
-                    <a href="${content.buttonLink}" class="inline-block px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl">
-                        ${content.buttonText}
-                    </a>
-                </div>
-            </div>
-        </section>`;
-
-    case 'hero-video':
-      return `
-        <section class="relative min-h-screen flex items-center justify-center overflow-hidden" style="font-family: var(--font-primary);">
-            <div class="absolute inset-0">
-                ${content.videoUrl ? `
-                    <iframe src="${content.videoUrl.includes('youtube.com') 
-                      ? content.videoUrl.replace('watch?v=', 'embed/') + '?autoplay=1&mute=1&loop=1&controls=0'
-                      : content.videoUrl
-                    }" class="w-full h-full object-cover" allow="autoplay; encrypted-media"></iframe>
-                ` : `
-                    <img src="${content.image}" alt="Video Background" class="w-full h-full object-cover">
-                `}
-                <div class="absolute inset-0 bg-black/40"></div>
-            </div>
-            <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
                 <div class="animate-fade-in-up">
                     <h1 class="text-responsive-xl font-bold mb-6 leading-tight">
                         ${content.title}
