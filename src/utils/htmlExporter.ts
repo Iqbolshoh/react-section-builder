@@ -1,5 +1,4 @@
 import { renderToStaticMarkup } from 'react-dom/server';
-import React from 'react';
 
 interface Project {
   id: string;
@@ -32,6 +31,19 @@ interface ThemeConfig {
     success: string;
     warning: string;
     error: string;
+    primary100: string;
+    primary200: string;
+    primary300: string;
+    secondary100: string;
+    secondary200: string;
+    accent100: string;
+    accent200: string;
+  };
+  shadows: {
+    sm: string;
+    md: string;
+    lg: string;
+    xl: string;
   };
 }
 
@@ -58,7 +70,16 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
     <link href="https://fonts.googleapis.com/css2?${fontImports}&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="description" content="Professional website built with templates.uz">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?${fontImports}&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom Styles -->
     <style>
@@ -73,8 +94,15 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
             --color-text-secondary: ${theme.colors.textSecondary};
             --color-border: ${theme.colors.border};
             --color-success: ${theme.colors.success};
-            --color-warning: ${theme.colors.warning};
-            --color-error: ${theme.colors.error};
+            --color-warning: ${theme.colors.warning || '#f59e0b'};
+            --color-error: ${theme.colors.error || '#ef4444'};
+            --color-primary-100: ${theme.colors.primary100 || '#e0f2fe'};
+            --color-primary-200: ${theme.colors.primary200 || '#bae6fd'};
+            --color-primary-300: ${theme.colors.primary300 || '#7dd3fc'};
+            --color-secondary-100: ${theme.colors.secondary100 || '#cffafe'};
+            --color-secondary-200: ${theme.colors.secondary200 || '#a5f3fc'};
+            --color-accent-100: ${theme.colors.accent100 || '#fef3c7'};
+            --color-accent-200: ${theme.colors.accent200 || '#fde68a'};
             
             /* Theme Fonts */
             --font-primary: '${theme.fonts.primary}', sans-serif;
@@ -82,7 +110,7 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
             --font-accent: '${theme.fonts.accent}', serif;
             
             /* Shadows */
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-sm: ${theme.shadows?.sm || '0 1px 2px 0 rgb(0 0 0 / 0.05)'};
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
             --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
@@ -91,7 +119,7 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            box-sizing: border-box !important;
         }
         
         body { 
@@ -99,6 +127,7 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
             line-height: 1.6;
             color: var(--color-text);
             background-color: var(--color-background);
+            overflow-x: hidden;
         }
         
         /* Utility Classes */
@@ -106,6 +135,7 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
         .theme-secondary { color: var(--color-secondary); }
         .theme-accent { color: var(--color-accent); }
         .theme-text { color: var(--color-text); }
+        .theme-text-primary { color: var(--color-primary); }
         .theme-text-secondary { color: var(--color-text-secondary); }
         
         .theme-bg-primary { background-color: var(--color-primary); }
@@ -121,6 +151,10 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
             background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
         }
         
+        .theme-border-primary {
+            border-color: var(--color-primary);
+        }
+        
         /* Button Styles */
         .btn-primary {
             background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
@@ -134,6 +168,7 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
             border: none;
             cursor: pointer;
             font-family: var(--font-accent);
+            box-shadow: var(--shadow-md);
         }
         
         .btn-primary:hover {
@@ -152,6 +187,7 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
             font-weight: 600;
             transition: all 0.3s ease;
             font-family: var(--font-accent);
+            cursor: pointer;
         }
         
         .btn-secondary:hover {
@@ -159,11 +195,32 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
             color: white;
         }
         
+        /* Card Styles */
+        .theme-card {
+            background-color: var(--color-surface);
+            border-radius: 1rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .theme-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+        
+        /* Container */
+        .container { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
         /* Responsive Design */
         @media (max-width: 640px) {
             .container { 
                 padding-left: 1rem; 
                 padding-right: 1rem; 
+            }
+            
+            .grid-cols-2 {
+                grid-template-columns: 1fr;
+                gap: 1rem;
             }
             
             .text-responsive-xl {
@@ -178,6 +235,11 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
         }
         
         @media (min-width: 641px) and (max-width: 1024px) {
+            .grid-cols-3, .grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            
             .text-responsive-xl {
                 font-size: 3rem;
                 line-height: 3.5rem;
@@ -190,6 +252,11 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
         }
         
         @media (min-width: 1025px) {
+            .grid-cols-4 {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 2rem;
+            }
+            
             .text-responsive-xl {
                 font-size: 4rem;
                 line-height: 4.5rem;
@@ -200,6 +267,11 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
                 line-height: 2.5rem;
             }
         }
+
+        /* Grid */
+        .grid { display: grid; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
         
         /* Smooth Scrolling */
         html { 
@@ -252,6 +324,11 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
             animation: fadeInRight 0.8s ease-out;
         }
         
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        
         /* Loading States */
         .loading {
             background: linear-gradient(90deg, var(--color-border) 25%, transparent 50%, var(--color-border) 75%);
@@ -262,6 +339,13 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
         @keyframes loading {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% { transform: translateY(-10px); }
         }
         
         /* Custom Scrollbar */
@@ -287,6 +371,11 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
             .no-print { display: none !important; }
             body { background: white !important; }
         }
+
+        /* Fix for mobile overflow issues */
+        section {
+            overflow-x: hidden;
+        }
     </style>
 </head>
 <body>
@@ -294,13 +383,21 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
     
     <!-- JavaScript for Interactivity -->
     <script>
-        // Mobile menu toggle
+        // Mobile menu toggle for header sections
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
             if (menu) {
                 menu.classList.toggle('hidden');
             }
         }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize any sliders
+            initializeSliders();
+            // Initialize any counters
+            initializeCounters();
+        });
         
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -315,6 +412,16 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
                 }
             });
         });
+        
+        // Initialize sliders if any
+        function initializeSliders() {
+            const sliders = document.querySelectorAll('.slider-container');
+            sliders.forEach(slider => {
+                // Simple slider functionality
+                // In a real implementation, this would be more sophisticated
+                console.log('Slider initialized');
+            });
+        }
         
         // Form submission handlers
         function handleFormSubmit(event) {
@@ -361,6 +468,7 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
         }
         
         // Intersection Observer for animations
+        let hasInitializedObserver = false;
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -375,10 +483,12 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
         }, observerOptions);
         
         // Observe all sections for animation
-        document.addEventListener('DOMContentLoaded', () => {
+        function initializeAnimations() {
+            if (hasInitializedObserver) return;
             document.querySelectorAll('section').forEach(section => {
                 observer.observe(section);
             });
+            hasInitializedObserver = true;
         });
         
         // Counter animation
@@ -404,7 +514,7 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
         // Initialize counter animation when visible
         const counterObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
+                if (entry.isIntersecting && entry.target.classList.contains('stats-section')) {
                     animateCounters();
                     counterObserver.unobserve(entry.target);
                 }
@@ -412,10 +522,12 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
         });
         
         document.addEventListener('DOMContentLoaded', () => {
+            initializeAnimations();
             const statsSection = document.querySelector('.stats-section');
             if (statsSection) {
                 counterObserver.observe(statsSection);
             }
+            
         });
         
         // Back to top functionality
@@ -440,6 +552,7 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
     </script>
     
     <!-- Back to Top Button -->
+    <div class="no-print">
     <button 
         id="back-to-top" 
         onclick="scrollToTop()" 
@@ -447,6 +560,7 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
         class="btn-primary rounded-full w-12 h-12 flex items-center justify-center shadow-lg"
     >
         ↑
+    </div>
     </button>
 </body>
 </html>`;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { DndContext, DragEndEvent } from '@dnd-kit/core';
+import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
 import {
   ArrowLeft,
   Plus,
@@ -23,6 +23,8 @@ import { useTheme } from '../contexts/ThemeContext';
 import SectionSelector from '../components/SectionSelector';
 import SectionRenderer from '../components/SectionRenderer';
 import ThemeCustomizer from '../components/ThemeCustomizer';
+import { generateCompleteHTML } from '../utils/htmlExporter';
+import AddSectionButton from '../components/AddSectionButton';
 
 const Editor: React.FC = () => {
   const { id } = useParams();
@@ -84,7 +86,6 @@ const Editor: React.FC = () => {
   const handleExport = () => {
     if (currentProject && currentTheme) {
       const htmlContent = generateHTMLExport(currentProject, currentTheme);
-
       const blob = new Blob([htmlContent], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -93,7 +94,13 @@ const Editor: React.FC = () => {
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      
+      // Show success message
+      alert('Website exported successfully! The HTML file has been downloaded.');
+      
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+      }, 100);
     }
   };
 
@@ -337,22 +344,41 @@ const Editor: React.FC = () => {
                 ) : (
                   currentProject.sections
                     .sort((a, b) => a.order - b.order)
-                    .map((section) => (
-                      <SectionRenderer
-                        key={section.id}
-                        section={section}
-                        isSelected={selectedSection === section.id}
-                        onSelect={() => setSelectedSection(section.id)}
-                        theme={currentTheme}
-                        isEditing={editingSection === section.id}
-                        onEdit={(editing) => {
-                          if (editing) {
-                            setEditingSection(section.id);
-                          } else {
-                            setEditingSection(null);
-                          }
-                        }}
-                      />
+                    .map((section, index) => (
+                      <React.Fragment key={section.id}>
+                        {index === 0 && (
+                          <AddSectionButton 
+                            onAdd={() => {
+                              setShowSectionSelector(true);
+                              setSelectedSection(null);
+                            }}
+                            position="above"
+                            theme={currentTheme}
+                          />
+                        )}
+                        <SectionRenderer
+                          section={section}
+                          isSelected={selectedSection === section.id}
+                          onSelect={() => setSelectedSection(section.id)}
+                          theme={currentTheme}
+                          isEditing={editingSection === section.id}
+                          onEdit={(editing) => {
+                            if (editing) {
+                              setEditingSection(section.id);
+                            } else {
+                              setEditingSection(null);
+                            }
+                          }}
+                        />
+                        <AddSectionButton 
+                          onAdd={() => {
+                            setShowSectionSelector(true);
+                            setSelectedSection(null);
+                          }}
+                          position="below"
+                          theme={currentTheme}
+                        />
+                      </React.Fragment>
                     ))
                 )}
               </div>
