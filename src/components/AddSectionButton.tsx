@@ -17,9 +17,9 @@ interface AddSectionButtonProps {
   theme?: ThemeConfig;
 }
 
-const AddSectionButton: React.FC<AddSectionButtonProps> = ({ 
-  onAdd, 
-  position, 
+const AddSectionButton: React.FC<AddSectionButtonProps> = ({
+  onAdd,
+  position,
   className = "",
   theme
 }) => {
@@ -31,7 +31,7 @@ const AddSectionButton: React.FC<AddSectionButtonProps> = ({
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           className="flex items-center gap-2 px-4 py-2 text-white rounded-lg shadow-lg transition-colors font-medium"
-          style={{ 
+          style={{
             backgroundColor: theme?.colors?.primary || '#10b981'
           }}
           onMouseEnter={(e) => {
@@ -45,9 +45,9 @@ const AddSectionButton: React.FC<AddSectionButtonProps> = ({
           Add Section {position === 'above' ? 'Above' : 'Below'}
         </motion.button>
       </div>
-      
+
       {/* Hover area */}
-      <div 
+      <div
         className="h-8 w-full bg-transparent group-hover:border-2 group-hover:border-dashed rounded-lg transition-all duration-200"
         style={{
           '--hover-bg': `${theme?.colors?.primary}10`,
