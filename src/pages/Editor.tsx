@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { DndContext, DragEndEvent } from '@dnd-kit/core';
+import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
 import {
   ArrowLeft,
   Plus,
+  Settings,
   Eye,
   Download,
   Save,
@@ -16,10 +17,6 @@ import {
   Palette,
   Layers,
   Code,
-  FileText,
-  Home,
-  Edit2,
-  Trash,
 } from 'lucide-react';
 import { useProject } from '../contexts/ProjectContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -29,68 +26,10 @@ import ThemeCustomizer from '../components/ThemeCustomizer';
 import { generateCompleteHTML } from '../utils/htmlExporter';
 import AddSectionButton from '../components/AddSectionButton';
 
-interface PageTabProps {
-  page: {
-    id: string;
-    name: string;
-    isHome: boolean;
-  };
-  isActive: boolean;
-  onClick: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
-}
-
-const PageTab: React.FC<PageTabProps> = ({ page, isActive, onClick, onEdit, onDelete }) => {
-  return (
-    <div 
-      className={`flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer transition-colors ${
-        isActive ? 'bg-indigo-100 text-indigo-700' : 'hover:bg-gray-100'
-      }`}
-      onClick={onClick}
-    >
-      {page.isHome ? (
-        <Home className="w-4 h-4" />
-      ) : (
-        <FileText className="w-4 h-4" />
-      )}
-      <span className="font-medium">{page.name}</span>
-      {isActive && (
-        <div className="flex items-center ml-2">
-          <button
-            onClick={(e) => { e.stopPropagation(); onEdit(); }}
-            className="p-1 text-gray-500 hover:text-indigo-600 transition-colors"
-          >
-            <Edit2 className="w-3 h-3" />
-          </button>
-          {!page.isHome && (
-            <button
-              onClick={(e) => { e.stopPropagation(); onDelete(); }}
-              className="p-1 text-gray-500 hover:text-red-600 transition-colors"
-            >
-              <Trash className="w-3 h-3" />
-            </button>
-          )}
-        </div>
-      )}
-    </div>
-  );
-};
-
 const Editor: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { 
-    projects, 
-    currentProject, 
-    currentPage,
-    setCurrentProject, 
-    setCurrentPage,
-    createPage,
-    updatePage,
-    deletePage,
-    reorderSections 
-  } = useProject();
+  const { projects, currentProject, setCurrentProject, reorderSections } = useProject();
   const { currentTheme } = useTheme();
   const [showSectionSelector, setShowSectionSelector] = useState(false);
   const [showThemeCustomizer, setShowThemeCustomizer] = useState(false);
@@ -98,22 +37,12 @@ const Editor: React.FC = () => {
   const [editingSection, setEditingSection] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [showPageModal, setShowPageModal] = useState(false);
-  const [pageFormData, setPageFormData] = useState({ name: '', isHome: false });
-  const [editingPageId, setEditingPageId] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
       const project = projects.find(p => p.id === id);
       if (project) {
         setCurrentProject(project);
-        // Set the home page as the current page by default
-        const homePage = project.pages.find(page => page.isHome);
-        if (homePage) {
-          setCurrentPage(homePage.id);
-        } else if (project.pages.length > 0) {
-          setCurrentPage(project.pages[0].id);
-        }
       }
     }
   }, [id, projects, setCurrentProject]);
@@ -152,42 +81,6 @@ const Editor: React.FC = () => {
       setIsSaving(false);
       setEditingSection(null);
     }, 1000);
-  };
-  
-  const handleCreatePage = () => {
-    setPageFormData({ name: '', isHome: false });
-    setEditingPageId(null);
-    setShowPageModal(true);
-  };
-  
-  const handleEditPage = (pageId: string) => {
-    const page = currentProject?.pages.find(p => p.id === pageId);
-    if (page) {
-      setPageFormData({ name: page.name, isHome: page.isHome });
-      setEditingPageId(pageId);
-      setShowPageModal(true);
-    }
-  };
-  
-  const handleSavePage = () => {
-    if (!pageFormData.name.trim()) {
-      alert('Page name cannot be empty');
-      return;
-    }
-    
-    if (editingPageId) {
-      // Update existing page
-      updatePage(editingPageId, {
-        name: pageFormData.name,
-        isHome: pageFormData.isHome,
-        slug: pageFormData.name.toLowerCase().replace(/\s+/g, '-')
-      });
-    } else {
-      // Create new page
-      createPage(pageFormData.name, pageFormData.isHome);
-    }
-    
-    setShowPageModal(false);
   };
 
   const handleExport = () => {
@@ -416,34 +309,13 @@ const Editor: React.FC = () => {
       <div className="flex-1 flex">
         {/* Canvas */}
         <div className="flex-1 overflow-auto">
-          {/* Page Tabs */}
-          <div className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-2 flex items-center gap-2 overflow-x-auto">
-            {currentProject?.pages.map(page => (
-              <PageTab
-                key={page.id}
-                page={page}
-                isActive={currentPage?.id === page.id}
-                onClick={() => setCurrentPage(page.id)}
-                onEdit={() => handleEditPage(page.id)}
-                onDelete={() => deletePage(page.id)}
-              />
-            ))}
-            <button
-              onClick={handleCreatePage}
-              className="flex items-center gap-1 px-3 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-              <span className="text-sm font-medium">New Page</span>
-            </button>
-          </div>
-          
           <DndContext onDragEnd={handleDragEnd}>
             <SortableContext
-              items={currentPage?.sections.map(s => s.id) || []}
+              items={currentProject.sections.map(s => s.id)}
               strategy={verticalListSortingStrategy}
             >
               <div className="min-h-full" style={{ fontFamily: currentTheme?.fonts?.primary }}>
-                {!currentPage?.sections.length ? (
+                {currentProject.sections.length === 0 ? (
                   <div className="h-full flex items-center justify-center p-8">
                     <div className="text-center max-w-lg">
                       <div className="relative mb-8">
@@ -460,7 +332,6 @@ const Editor: React.FC = () => {
                       <p className="platform-text-secondary mb-8 text-lg platform-font-secondary leading-relaxed">
                         Start by adding your first section. Choose from headers, heroes, content blocks, and more to create your perfect website.
                       </p>
-                      {currentPage && (
                       <button
                         onClick={() => setShowSectionSelector(true)}
                         className="btn-primary text-lg px-8 py-4"
@@ -468,11 +339,10 @@ const Editor: React.FC = () => {
                         <Plus className="w-5 h-5" />
                         Add Your First Section
                       </button>
-                      )}
                     </div>
                   </div>
                 ) : (
-                  currentPage.sections
+                  currentProject.sections
                     .sort((a, b) => a.order - b.order)
                     .map((section, index) => (
                       <React.Fragment key={section.id}>
@@ -523,62 +393,6 @@ const Editor: React.FC = () => {
           onClose={() => setShowSectionSelector(false)}
           onSelect={() => setShowSectionSelector(false)}
         />
-      )}
-
-      {/* Page Modal */}
-      {showPageModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <h3 className="text-xl font-bold mb-4 platform-text-primary">
-              {editingPageId ? 'Edit Page' : 'Create New Page'}
-            </h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1 platform-text-primary">
-                  Page Name
-                </label>
-                <input
-                  type="text"
-                  value={pageFormData.name}
-                  onChange={(e) => setPageFormData(prev => ({ ...prev, name: e.target.value }))}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  placeholder="e.g., About Us, Services, Contact"
-                />
-              </div>
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="isHome"
-                  checked={pageFormData.isHome}
-                  onChange={(e) => setPageFormData(prev => ({ ...prev, isHome: e.target.checked }))}
-                  className="mr-2 h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                />
-                <label htmlFor="isHome" className="platform-text-primary">
-                  Set as Home Page
-                </label>
-              </div>
-              {pageFormData.isHome && currentProject?.pages.some(p => p.isHome && p.id !== editingPageId) && (
-                <div className="text-sm text-amber-600 bg-amber-50 p-3 rounded-lg">
-                  Note: This will replace the current home page.
-                </div>
-              )}
-            </div>
-            <div className="flex justify-end gap-3 mt-6">
-              <button
-                onClick={() => setShowPageModal(false)}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSavePage}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-              >
-                {editingPageId ? 'Update Page' : 'Create Page'}
-              </button>
-            </div>
-          </div>
-        </div>
       )}
 
       {showThemeCustomizer && (
