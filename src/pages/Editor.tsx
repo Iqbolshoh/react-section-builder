@@ -9,9 +9,6 @@ import {
   Settings,
   Eye,
   Download,
-  Smartphone,
-  Tablet,
-  Monitor,
   Save,
   Menu,
   X,
@@ -19,17 +16,13 @@ import {
   Sparkles,
   Palette,
   Layers,
-  Zap,
-  Globe,
   Code,
-  Share2
 } from 'lucide-react';
 import { useProject } from '../contexts/ProjectContext';
 import { useTheme } from '../contexts/ThemeContext';
 import SectionSelector from '../components/SectionSelector';
 import SectionRenderer from '../components/SectionRenderer';
 import ThemeCustomizer from '../components/ThemeCustomizer';
-import DevicePreview from '../components/DevicePreview';
 
 const Editor: React.FC = () => {
   const { id } = useParams();
@@ -40,7 +33,6 @@ const Editor: React.FC = () => {
   const [showThemeCustomizer, setShowThemeCustomizer] = useState(false);
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
   const [editingSection, setEditingSection] = useState<string | null>(null);
-  const [devicePreview, setDevicePreview] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
   const [isSaving, setIsSaving] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
@@ -168,40 +160,6 @@ const Editor: React.FC = () => {
               exit={{ opacity: 0, height: 0 }}
               className="mt-4 space-y-4"
             >
-              {/* Device Preview Toggle */}
-              <div className="flex items-center gap-1 platform-bg-tertiary rounded-xl p-1">
-                <button
-                  onClick={() => setDevicePreview('mobile')}
-                  className={`flex-1 p-3 rounded-lg transition-colors text-xs ${
-                    devicePreview === 'mobile' 
-                      ? 'platform-bg-primary brand-primary platform-shadow-sm' 
-                      : 'platform-text-secondary'
-                  }`}
-                >
-                  <Smartphone className="w-4 h-4 mx-auto" />
-                </button>
-                <button
-                  onClick={() => setDevicePreview('tablet')}
-                  className={`flex-1 p-3 rounded-lg transition-colors text-xs ${
-                    devicePreview === 'tablet' 
-                      ? 'platform-bg-primary brand-primary platform-shadow-sm' 
-                      : 'platform-text-secondary'
-                  }`}
-                >
-                  <Tablet className="w-4 h-4 mx-auto" />
-                </button>
-                <button
-                  onClick={() => setDevicePreview('desktop')}
-                  className={`flex-1 p-3 rounded-lg transition-colors text-xs ${
-                    devicePreview === 'desktop' 
-                      ? 'platform-bg-primary brand-primary platform-shadow-sm' 
-                      : 'platform-text-secondary'
-                  }`}
-                >
-                  <Monitor className="w-4 h-4 mx-auto" />
-                </button>
-              </div>
-
               {/* Action Buttons */}
               <div className="grid grid-cols-2 gap-3">
                 <button
@@ -290,41 +248,6 @@ const Editor: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            {/* Device Preview Toggle */}
-            <div className="flex items-center gap-1 platform-bg-tertiary rounded-xl p-1">
-              <button
-                onClick={() => setDevicePreview('mobile')}
-                className={`p-3 rounded-lg transition-all ${
-                  devicePreview === 'mobile' 
-                    ? 'platform-bg-primary brand-primary platform-shadow-sm' 
-                    : 'platform-text-secondary hover:platform-text-primary'
-                }`}
-              >
-                <Smartphone className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setDevicePreview('tablet')}
-                className={`p-3 rounded-lg transition-all ${
-                  devicePreview === 'tablet' 
-                    ? 'platform-bg-primary brand-primary platform-shadow-sm' 
-                    : 'platform-text-secondary hover:platform-text-primary'
-                }`}
-              >
-                <Tablet className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setDevicePreview('desktop')}
-                className={`p-3 rounded-lg transition-all ${
-                  devicePreview === 'desktop' 
-                    ? 'platform-bg-primary brand-primary platform-shadow-sm' 
-                    : 'platform-text-secondary hover:platform-text-primary'
-                }`}
-              >
-                <Monitor className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Action Buttons */}
             <button
               onClick={() => setShowSectionSelector(true)}
               className="btn-primary"
@@ -366,7 +289,7 @@ const Editor: React.FC = () => {
 
             <button
               onClick={handleExport}
-              className="flex items-center gap-2 px-6 py-3 bg-orange-600 text-white rounded-xl hover:bg-orange-700 transition-all font-semibold platform-shadow-lg"
+              className=" اسلام items-center gap-2 px-6 py-3 bg-orange-600 text-white rounded-xl hover:bg-orange-700 transition-all font-semibold platform-shadow-lg"
             >
               <Code className="w-4 h-4" />
               Export
@@ -379,64 +302,62 @@ const Editor: React.FC = () => {
       <div className="flex-1 flex">
         {/* Canvas */}
         <div className="flex-1 overflow-auto">
-          <DevicePreview device={devicePreview}>
-            <DndContext onDragEnd={handleDragEnd}>
-              <SortableContext
-                items={currentProject.sections.map(s => s.id)}
-                strategy={verticalListSortingStrategy}
-              >
-                <div className="min-h-full" style={{ fontFamily: currentTheme?.fonts?.primary }}>
-                  {currentProject.sections.length === 0 ? (
-                    <div className="h-full flex items-center justify-center p-8">
-                      <div className="text-center max-w-lg">
-                        <div className="relative mb-8">
-                          <div className="w-24 h-24 platform-gradient-primary rounded-3xl flex items-center justify-center mx-auto platform-shadow-xl">
-                            <Layers className="w-12 h-12 text-white" />
-                          </div>
-                          <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center animate-bounce">
-                            <Sparkles className="w-4 h-4 text-white" />
-                          </div>
+          <DndContext onDragEnd={handleDragEnd}>
+            <SortableContext
+              items={currentProject.sections.map(s => s.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="min-h-full" style={{ fontFamily: currentTheme?.fonts?.primary }}>
+                {currentProject.sections.length === 0 ? (
+                  <div className="h-full flex items-center justify-center p-8">
+                    <div className="text-center max-w-lg">
+                      <div className="relative mb-8">
+                        <div className="w-24 h-24 platform-gradient-primary rounded-3xl flex items-center justify-center mx-auto platform-shadow-xl">
+                          <Layers className="w-12 h-12 text-white" />
                         </div>
-                        <h3 className="text-3xl font-bold platform-text-primary mb-4 platform-font-primary">
-                          Ready to Build Something Amazing?
-                        </h3>
-                        <p className="platform-text-secondary mb-8 text-lg platform-font-secondary leading-relaxed">
-                          Start by adding your first section. Choose from headers, heroes, content blocks, and more to create your perfect website.
-                        </p>
-                        <button
-                          onClick={() => setShowSectionSelector(true)}
-                          className="btn-primary text-lg px-8 py-4"
-                        >
-                          <Plus className="w-5 h-5" />
-                          Add Your First Section
-                        </button>
+                        <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center animate-bounce">
+                          <Sparkles className="w-4 h-4 text-white" />
+                        </div>
                       </div>
+                      <h3 className="text-3xl font-bold platform-text-primary mb-4 platform-font-primary">
+                        Ready to Build Something Amazing?
+                      </h3>
+                      <p className="platform-text-secondary mb-8 text-lg platform-font-secondary leading-relaxed">
+                        Start by adding your first section. Choose from headers, heroes, content blocks, and more to create your perfect website.
+                      </p>
+                      <button
+                        onClick={() => setShowSectionSelector(true)}
+                        className="btn-primary text-lg px-8 py-4"
+                      >
+                        <Plus className="w-5 h-5" />
+                        Add Your First Section
+                      </button>
                     </div>
-                  ) : (
-                    currentProject.sections
-                      .sort((a, b) => a.order - b.order)
-                      .map((section) => (
-                        <SectionRenderer
-                          key={section.id}
-                          section={section}
-                          isSelected={selectedSection === section.id}
-                          onSelect={() => setSelectedSection(section.id)}
-                          theme={currentTheme}
-                          isEditing={editingSection === section.id}
-                          onEdit={(editing) => {
-                            if (editing) {
-                              setEditingSection(section.id);
-                            } else {
-                              setEditingSection(null);
-                            }
-                          }}
-                        />
-                      ))
-                  )}
-                </div>
-              </SortableContext>
-            </DndContext>
-          </DevicePreview>
+                  </div>
+                ) : (
+                  currentProject.sections
+                    .sort((a, b) => a.order - b.order)
+                    .map((section) => (
+                      <SectionRenderer
+                        key={section.id}
+                        section={section}
+                        isSelected={selectedSection === section.id}
+                        onSelect={() => setSelectedSection(section.id)}
+                        theme={currentTheme}
+                        isEditing={editingSection === section.id}
+                        onEdit={(editing) => {
+                          if (editing) {
+                            setEditingSection(section.id);
+                          } else {
+                            setEditingSection(null);
+                          }
+                        }}
+                      />
+                    ))
+                )}
+              </div>
+            </SortableContext>
+          </DndContext>
         </div>
       </div>
 
