@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   ArrowLeft, 
@@ -12,7 +12,9 @@ import {
   Eye,
   Settings,
   Download,
-  Sparkles
+  Sparkles,
+  FileText,
+  Home
 } from 'lucide-react';
 import { useProject } from '../contexts/ProjectContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -20,8 +22,9 @@ import SectionRenderer from '../components/SectionRenderer';
 
 const Preview: React.FC = () => {
   const { id } = useParams();
+  const { pageId } = useParams<{ pageId?: string }>();
   const navigate = useNavigate();
-  const { projects, currentProject, setCurrentProject } = useProject();
+  const { projects, currentProject, currentPage, setCurrentProject, setCurrentPage } = useProject();
   const { currentTheme } = useTheme();
   const [showHeader, setShowHeader] = useState(true);
 
@@ -30,9 +33,25 @@ const Preview: React.FC = () => {
       const project = projects.find(p => p.id === id);
       if (project) {
         setCurrentProject(project);
+        
+        // If pageId is provided, set that page as current
+        if (pageId) {
+          const page = project.pages.find(p => p.id === pageId);
+          if (page) {
+            setCurrentPage(page.id);
+          }
+        } else {
+          // Otherwise, set the home page as current
+          const homePage = project.pages.find(p => p.isHome);
+          if (homePage) {
+            setCurrentPage(homePage.id);
+          } else if (project.pages.length > 0) {
+            setCurrentPage(project.pages[0].id);
+          }
+        }
       }
     }
-  }, [id, projects, setCurrentProject]);
+  }, [id, pageId, projects, setCurrentProject, setCurrentPage]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -101,6 +120,24 @@ const Preview: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Page Selector */}
+            <div className="hidden sm:flex items-center gap-2 mr-2">
+              {currentProject?.pages.map(page => (
+                <Link
+                  key={page.id}
+                  to={`/preview/${currentProject.id}/${page.id}`}
+                  className={`flex items-center gap-1 px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                    currentPage?.id === page.id 
+                      ? 'bg-blue-100 text-blue-700' 
+                      : 'bg-white/80 text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  {page.isHome ? <Home className="w-3 h-3" /> : <FileText className="w-3 h-3" />}
+                  {page.name}
+                </Link>
+              ))}
+            </div>
+            
             <button
               onClick={() => navigate(`/editor/${currentProject.id}`)}
               className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
@@ -130,7 +167,7 @@ const Preview: React.FC = () => {
 
       {/* Website Content */}
       <div className="pt-20">
-        {currentProject.sections.length === 0 ? (
+        {!currentPage?.sections.length ? (
           <div className="min-h-screen flex items-center justify-center platform-bg-secondary">
             <div className="text-center max-w-lg">
               <div className="relative mb-8">
@@ -156,7 +193,7 @@ const Preview: React.FC = () => {
             </div>
           </div>
         ) : (
-          currentProject.sections
+          currentPage.sections
             .sort((a, b) => a.order - b.order)
             .map((section) => (
               <SectionRenderer

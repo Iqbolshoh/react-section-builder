@@ -1,5 +1,13 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
+interface Page {
+  id: string;
+  name: string;
+  slug: string;
+  sections: Section[];
+  isHome: boolean;
+}
+
 interface Section {
   id: string;
   type: string; // Now supports all section types like 'hero-split', 'header-classic', etc.
@@ -10,7 +18,7 @@ interface Section {
 interface Project {
   id: string;
   name: string;
-  sections: Section[];
+  pages: Page[];
   createdAt: string;
   updatedAt: string;
 }
@@ -18,10 +26,15 @@ interface Project {
 interface ProjectContextType {
   projects: Project[];
   currentProject: Project | null;
+  currentPage: Page | null;
   createProject: (name: string) => Project;
   updateProject: (id: string, updates: Partial<Project>) => void;
   deleteProject: (id: string) => void;
   setCurrentProject: (project: Project | null) => void;
+  createPage: (name: string, isHome?: boolean) => void;
+  updatePage: (id: string, updates: Partial<Page>) => void;
+  deletePage: (id: string) => void;
+  setCurrentPage: (pageId: string | null) => void;
   addSection: (type: Section['type']) => void;
   updateSection: (id: string, content: any) => void;
   deleteSection: (id: string) => void;
@@ -33,16 +46,26 @@ const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
+  const [currentPage, setCurrentPage] = useState<Page | null>(null);
 
   const createProject = (name: string): Project => {
+    const homePage: Page = {
+      id: Date.now().toString() + '-home',
+      name: 'Home',
+      slug: 'home',
+      sections: [],
+      isHome: true
+    };
+
     const newProject: Project = {
       id: Date.now().toString(),
       name,
-      sections: [],
+      pages: [homePage],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
     setProjects(prev => [...prev, newProject]);
+    setCurrentPage(homePage);
     return newProject;
   };
 
@@ -58,43 +81,154 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
   const deleteProject = (id: string) => {
     setProjects(prev => prev.filter(project => project.id !== id));
     if (currentProject?.id === id) {
+      setCurrentPage(null);
       setCurrentProject(null);
     }
   };
 
-  const addSection = (type: Section['type']) => {
+  const createPage = (name: string, isHome: boolean = false) => {
     if (!currentProject) return;
+    
+    // If creating a home page, ensure no other page is set as home
+    let updatedPages = [...currentProject.pages];
+    if (isHome) {
+      updatedPages = updatedPages.map(page => ({
+        ...page,
+        isHome: false
+      }));
+    }
+    
+    const slug = name.toLowerCase().replace(/\s+/g, '-');
+    
+    const newPage: Page = {
+      id: Date.now().toString(),
+      name,
+      slug,
+      sections: [],
+      isHome
+    };
+    
+    updatedPages.push(newPage);
+    updateProject(currentProject.id, { pages: updatedPages });
+    setCurrentPage(newPage);
+  };
+
+  const updatePage = (id: string, updates: Partial<Page>) => {
+    if (!currentProject) return;
+    
+    // If updating isHome to true, ensure no other page is set as home
+    let updatedPages = [...currentProject.pages];
+    if (updates.isHome) {
+      updatedPages = updatedPages.map(page => ({
+        ...page,
+        isHome: page.id === id ? updates.isHome : false
+      }));
+    } else {
+      updatedPages = updatedPages.map(page => 
+        page.id === id ? { ...page, ...updates } : page
+      );
+    }
+    
+    updateProject(currentProject.id, { pages: updatedPages });
+    
+    // Update currentPage if it's the one being updated
+    if (currentPage?.id === id) {
+      setCurrentPage(prev => prev ? { ...prev, ...updates } : null);
+    }
+  };
+
+  const deletePage = (id: string) => {
+    if (!currentProject) return;
+    
+    // Prevent deleting the last page
+    if (currentProject.pages.length <= 1) {
+      alert('You cannot delete the last page.');
+      return;
+    }
+    
+    // Prevent deleting the home page
+    const pageToDelete = currentProject.pages.find(page => page.id === id);
+    if (pageToDelete?.isHome) {
+      alert('You cannot delete the home page. Please set another page as home first.');
+      return;
+    }
+    
+    const updatedPages = currentProject.pages.filter(page => page.id !== id);
+    updateProject(currentProject.id, { pages: updatedPages });
+    
+    // If the deleted page was the current page, set the first available page as current
+    if (currentPage?.id === id) {
+      setCurrentPage(updatedPages[0]);
+    }
+  };
+
+  const setCurrentPageById = (pageId: string | null) => {
+    if (!currentProject || !pageId) {
+      setCurrentPage(null);
+      return;
+    }
+    
+    const page = currentProject.pages.find(p => p.id === pageId);
+    setCurrentPage(page || null);
+  };
+
+  const addSection = (type: Section['type']) => {
+    if (!currentProject || !currentPage) return;
     
     const newSection: Section = {
       id: Date.now().toString(),
       type,
       content: getDefaultContent(type),
-      order: currentProject.sections.length
+      order: currentPage.sections.length
     };
 
-    const updatedSections = [...currentProject.sections, newSection];
-    updateProject(currentProject.id, { sections: updatedSections });
+    const updatedSections = [...currentPage.sections, newSection];
+    
+    const updatedPages = currentProject.pages.map(page => 
+      page.id === currentPage.id ? { ...page, sections: updatedSections } : page
+    );
+    
+    updateProject(currentProject.id, { pages: updatedPages });
+    setCurrentPage(prev => prev ? { ...prev, sections: updatedSections } : null);
   };
 
   const updateSection = (id: string, content: any) => {
-    if (!currentProject) return;
+    if (!currentProject || !currentPage) return;
     
-    const updatedSections = currentProject.sections.map(section =>
+    const updatedSections = currentPage.sections.map(section =>
       section.id === id ? { ...section, content } : section
     );
-    updateProject(currentProject.id, { sections: updatedSections });
+    
+    const updatedPages = currentProject.pages.map(page => 
+      page.id === currentPage.id ? { ...page, sections: updatedSections } : page
+    );
+    
+    updateProject(currentProject.id, { pages: updatedPages });
+    setCurrentPage(prev => prev ? { ...prev, sections: updatedSections } : null);
   };
 
   const deleteSection = (id: string) => {
-    if (!currentProject) return;
+    if (!currentProject || !currentPage) return;
     
-    const updatedSections = currentProject.sections.filter(section => section.id !== id);
-    updateProject(currentProject.id, { sections: updatedSections });
+    const updatedSections = currentPage.sections.filter(section => section.id !== id);
+    
+    const updatedPages = currentProject.pages.map(page => 
+      page.id === currentPage.id ? { ...page, sections: updatedSections } : page
+    );
+    
+    updateProject(currentProject.id, { pages: updatedPages });
+    setCurrentPage(prev => prev ? { ...prev, sections: updatedSections } : null);
   };
 
   const reorderSections = (sections: Section[]) => {
-    if (!currentProject) return;
-    updateProject(currentProject.id, { sections });
+    if (!currentProject || !currentPage) return;
+    
+    const updatedPages = currentProject.pages.map(page => 
+      page.id === currentPage.id ? { ...page, sections } : page
+    );
+    
+    updateProject(currentProject.id, { pages: updatedPages });
+    setCurrentPage(prev => prev ? { ...prev, sections } : null);
   };
 
   const getDefaultContent = (type: Section['type']) => {
@@ -428,10 +562,15 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
     <ProjectContext.Provider value={{
       projects,
       currentProject,
+      currentPage,
       createProject,
       updateProject,
       deleteProject,
       setCurrentProject,
+      createPage,
+      updatePage,
+      deletePage,
+      setCurrentPage: setCurrentPageById,
       addSection,
       updateSection,
       deleteSection,
