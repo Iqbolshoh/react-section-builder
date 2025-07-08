@@ -59,7 +59,7 @@ const Dashboard: React.FC = () => {
   const stats = [
     { label: 'Total Websites', value: projects.length, icon: Globe, color: 'text-blue-600', bg: 'bg-blue-50' },
     { label: 'Active Projects', value: projects.length, icon: Zap, color: 'text-green-600', bg: 'bg-green-50' },
-    { label: 'Total Sections', value: projects.reduce((acc, p) => acc + p.sections.length, 0), icon: BarChart3, color: 'text-purple-600', bg: 'bg-purple-50' },
+    { label: 'Total Pages', value: projects.reduce((acc, p) => acc + p.pages.length, 0), icon: BarChart3, color: 'text-purple-600', bg: 'bg-purple-50' },
     { label: 'This Month', value: projects.filter(p => new Date(p.createdAt).getMonth() === new Date().getMonth()).length, icon: TrendingUp, color: 'text-orange-600', bg: 'bg-orange-50' }
   ];
 
@@ -280,7 +280,7 @@ const Dashboard: React.FC = () => {
                         <div className="flex items-center gap-4 text-sm platform-text-secondary platform-font-secondary">
                           <div className="flex items-center gap-1">
                             <Folder className="w-4 h-4" />
-                            {project.sections.length} sections
+                            {project.pages.length} pages
                           </div>
                           <div className="flex items-center gap-1">
                             <Clock className="w-4 h-4" />

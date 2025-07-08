@@ -17,6 +17,7 @@ function App() {
               <Route path="/" element={<Dashboard />} />
               <Route path="/editor/:id?" element={<Editor />} />
               <Route path="/preview/:id" element={<Preview />} />
+              <Route path="/preview/:id/:pageId" element={<Preview />} />
             </Routes>
           </DndProvider>
         </ProjectProvider>
