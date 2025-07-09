@@ -57,15 +57,15 @@ interface HeaderSectionProps {
   variant?: string;
 }
 
-const HeaderSection: React.FC<HeaderSectionProps> = ({
-  content,
-  isEditing,
-  onChange,
+const HeaderSection: React.FC<HeaderSectionProps> = ({ 
+  content, 
+  isEditing, 
+  onChange, 
   theme,
   variant = 'header-classic'
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  
   const handleChange = (field: string, value: any) => {
     onChange({ ...content, [field]: value });
   };
@@ -95,20 +95,20 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
       youtube: 'Youtube',
       github: 'Github',
       dribbble: 'Dribbble',
-      behance: 'Figma',
+      behance: 'Figma', // Using Figma as Behance isn't available
       pinterest: 'PinIcon',
       tiktok: 'Music'
     };
-
+    
     const IconComponent = LucideIcons[iconMap[platform.toLowerCase()] || 'Globe'];
     return <IconComponent className="w-5 h-5" />;
   };
 
   // Classic Header
   const renderClassicHeader = () => (
-    <header
+    <header 
       className="sticky top-0 z-50 w-full"
-      style={{
+      style={{ 
         backgroundColor: theme?.colors?.surface || '#ffffff',
         borderBottom: `1px solid ${theme?.colors?.border}`,
         fontFamily: theme?.fonts?.primary,
@@ -133,7 +133,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                   value={content.companyName}
                   onChange={(e) => handleChange('companyName', e.target.value)}
                   className="text-lg lg:text-xl font-bold bg-transparent border-2 border-dashed rounded-lg p-2"
-                  style={{
+                  style={{ 
                     color: theme?.colors?.primary,
                     borderColor: `${theme?.colors?.primary}50`
                   }}
@@ -143,13 +143,13 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
             ) : (
               <>
                 {content.logo && (
-                  <img
-                    src={content.logo}
-                    alt={content.companyName}
+                  <img 
+                    src={content.logo} 
+                    alt={content.companyName} 
                     className="w-10 h-10 lg:w-12 lg:h-12 object-contain"
                   />
                 )}
-                <span
+                <span 
                   className="text-lg lg:text-xl font-bold"
                   style={{ color: theme?.colors?.primary }}
                 >
@@ -170,7 +170,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                       value={item.title}
                       onChange={(e) => handleMenuItemChange(index, 'title', e.target.value)}
                       className="px-2 py-1 text-sm bg-transparent border rounded-lg"
-                      style={{
+                      style={{ 
                         borderColor: theme?.colors?.border,
                         color: theme?.colors?.text
                       }}
@@ -181,7 +181,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                       value={item.url}
                       onChange={(e) => handleMenuItemChange(index, 'url', e.target.value)}
                       className="px-2 py-1 text-sm bg-transparent border rounded-lg w-16"
-                      style={{
+                      style={{ 
                         borderColor: theme?.colors?.border,
                         color: theme?.colors?.textSecondary
                       }}
@@ -198,7 +198,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                 <button
                   onClick={addMenuItem}
                   className="px-3 py-1 text-sm rounded-lg transition-colors"
-                  style={{
+                  style={{ 
                     backgroundColor: `${theme?.colors?.primary}15`,
                     color: theme?.colors?.primary
                   }}
@@ -213,7 +213,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                     key={index}
                     href={item.url}
                     className="transition-colors font-medium"
-                    style={{
+                    style={{ 
                       color: theme?.colors?.text,
                       fontFamily: theme?.fonts?.secondary
                     }}
@@ -235,7 +235,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
           <div className="flex items-center gap-4">
             {/* Contact Info */}
             {content.contactInfo?.phone && (
-              <a
+              <a 
                 href={`tel:${content.contactInfo.phone}`}
                 className="hidden lg:flex items-center gap-2"
                 style={{ color: theme?.colors?.textSecondary }}
@@ -249,7 +249,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
             {content.language && (
               <div className="hidden sm:flex items-center gap-2">
                 <Globe className="w-4 h-4" style={{ color: theme?.colors?.primary }} />
-                <span
+                <span 
                   className="text-sm font-medium"
                   style={{ color: theme?.colors?.textSecondary }}
                 >
@@ -263,7 +263,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
               <a
                 href={content.ctaButton.url}
                 className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium transition-colors"
-                style={{
+                style={{ 
                   background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`,
                   fontFamily: theme?.fonts?.accent
                 }}
@@ -276,7 +276,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="lg:hidden p-2 rounded-lg transition-colors"
-              style={{
+              style={{ 
                 color: theme?.colors?.text,
                 backgroundColor: mobileMenuOpen ? `${theme?.colors?.primary}15` : 'transparent'
               }}
@@ -291,7 +291,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
         </div>
 
         {/* Mobile Menu */}
-        <div
+        <div 
           className={`lg:hidden overflow-hidden transition-all duration-300 ${mobileMenuOpen ? 'max-h-96 py-4' : 'max-h-0'}`}
           style={{ borderTop: mobileMenuOpen ? `1px solid ${theme?.colors?.border}` : 'none' }}
         >
@@ -301,7 +301,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                 key={index}
                 href={item.url}
                 className="py-2 transition-colors font-medium"
-                style={{
+                style={{ 
                   color: theme?.colors?.text,
                   fontFamily: theme?.fonts?.secondary
                 }}
@@ -313,7 +313,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
               <a
                 href={content.ctaButton.url}
                 className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-white font-medium transition-colors mt-4"
-                style={{
+                style={{ 
                   background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`,
                   fontFamily: theme?.fonts?.accent
                 }}
@@ -329,9 +329,9 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
 
   // Centered Header
   const renderCenteredHeader = () => (
-    <header
+    <header 
       className="sticky top-0 z-50 w-full"
-      style={{
+      style={{ 
         backgroundColor: theme?.colors?.surface || '#ffffff',
         borderBottom: `1px solid ${theme?.colors?.border}`,
         fontFamily: theme?.fonts?.primary,
@@ -340,14 +340,14 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Bar with Contact & Social */}
-        <div
+        <div 
           className="hidden lg:flex items-center justify-between py-2 text-sm"
           style={{ borderBottom: `1px solid ${theme?.colors?.border}` }}
         >
           {/* Contact Info */}
           <div className="flex items-center gap-6">
             {content.contactInfo?.phone && (
-              <a
+              <a 
                 href={`tel:${content.contactInfo.phone}`}
                 className="flex items-center gap-2"
                 style={{ color: theme?.colors?.textSecondary }}
@@ -357,7 +357,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
               </a>
             )}
             {content.contactInfo?.email && (
-              <a
+              <a 
                 href={`mailto:${content.contactInfo.email}`}
                 className="flex items-center gap-2"
                 style={{ color: theme?.colors?.textSecondary }}
@@ -409,7 +409,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                   value={content.companyName}
                   onChange={(e) => handleChange('companyName', e.target.value)}
                   className="text-xl lg:text-2xl font-bold bg-transparent border-2 border-dashed rounded-lg p-2"
-                  style={{
+                  style={{ 
                     color: theme?.colors?.primary,
                     borderColor: `${theme?.colors?.primary}50`
                   }}
@@ -419,13 +419,13 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
             ) : (
               <>
                 {content.logo && (
-                  <img
-                    src={content.logo}
-                    alt={content.companyName}
+                  <img 
+                    src={content.logo} 
+                    alt={content.companyName} 
                     className="w-12 h-12 lg:w-16 lg:h-16 object-contain"
                   />
                 )}
-                <span
+                <span 
                   className="text-xl lg:text-2xl font-bold"
                   style={{ color: theme?.colors?.primary }}
                 >
@@ -446,7 +446,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                       value={item.title}
                       onChange={(e) => handleMenuItemChange(index, 'title', e.target.value)}
                       className="px-2 py-1 text-sm bg-transparent border rounded-lg"
-                      style={{
+                      style={{ 
                         borderColor: theme?.colors?.border,
                         color: theme?.colors?.text
                       }}
@@ -457,7 +457,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                       value={item.url}
                       onChange={(e) => handleMenuItemChange(index, 'url', e.target.value)}
                       className="px-2 py-1 text-sm bg-transparent border rounded-lg w-16"
-                      style={{
+                      style={{ 
                         borderColor: theme?.colors?.border,
                         color: theme?.colors?.textSecondary
                       }}
@@ -474,7 +474,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                 <button
                   onClick={addMenuItem}
                   className="px-3 py-1 text-sm rounded-lg transition-colors"
-                  style={{
+                  style={{ 
                     backgroundColor: `${theme?.colors?.primary}15`,
                     color: theme?.colors?.primary
                   }}
@@ -489,7 +489,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                     key={index}
                     href={item.url}
                     className="transition-colors font-medium"
-                    style={{
+                    style={{ 
                       color: theme?.colors?.text,
                       fontFamily: theme?.fonts?.secondary
                     }}
@@ -512,7 +512,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg transition-colors"
-              style={{
+              style={{ 
                 color: theme?.colors?.text,
                 backgroundColor: mobileMenuOpen ? `${theme?.colors?.primary}15` : 'transparent'
               }}
@@ -527,7 +527,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
         </div>
 
         {/* Mobile Menu */}
-        <div
+        <div 
           className={`lg:hidden overflow-hidden transition-all duration-300 ${mobileMenuOpen ? 'max-h-96 py-4' : 'max-h-0'}`}
           style={{ borderTop: mobileMenuOpen ? `1px solid ${theme?.colors?.border}` : 'none' }}
         >
@@ -537,7 +537,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                 key={index}
                 href={item.url}
                 className="py-2 transition-colors font-medium text-center"
-                style={{
+                style={{ 
                   color: theme?.colors?.text,
                   fontFamily: theme?.fonts?.secondary
                 }}
@@ -549,7 +549,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
               <a
                 href={content.ctaButton.url}
                 className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-white font-medium transition-colors mt-4"
-                style={{
+                style={{ 
                   background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`,
                   fontFamily: theme?.fonts?.accent
                 }}
@@ -565,9 +565,9 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
 
   // Minimal Header
   const renderMinimalHeader = () => (
-    <header
+    <header 
       className="sticky top-0 z-50 w-full"
-      style={{
+      style={{ 
         backgroundColor: 'rgba(255, 255, 255, 0.8)',
         backdropFilter: 'blur(10px)',
         fontFamily: theme?.fonts?.primary,
@@ -592,7 +592,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                   value={content.companyName}
                   onChange={(e) => handleChange('companyName', e.target.value)}
                   className="text-base lg:text-lg font-bold bg-transparent border-2 border-dashed rounded-lg p-2"
-                  style={{
+                  style={{ 
                     color: theme?.colors?.primary,
                     borderColor: `${theme?.colors?.primary}50`
                   }}
@@ -602,13 +602,13 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
             ) : (
               <>
                 {content.logo && (
-                  <img
-                    src={content.logo}
-                    alt={content.companyName}
+                  <img 
+                    src={content.logo} 
+                    alt={content.companyName} 
                     className="w-8 h-8 lg:w-10 lg:h-10 object-contain"
                   />
                 )}
-                <span
+                <span 
                   className="text-base lg:text-lg font-bold"
                   style={{ color: theme?.colors?.primary }}
                 >
@@ -629,7 +629,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                       value={item.title}
                       onChange={(e) => handleMenuItemChange(index, 'title', e.target.value)}
                       className="px-2 py-1 text-sm bg-transparent border rounded-lg"
-                      style={{
+                      style={{ 
                         borderColor: theme?.colors?.border,
                         color: theme?.colors?.text
                       }}
@@ -640,7 +640,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                       value={item.url}
                       onChange={(e) => handleMenuItemChange(index, 'url', e.target.value)}
                       className="px-2 py-1 text-sm bg-transparent border rounded-lg w-16"
-                      style={{
+                      style={{ 
                         borderColor: theme?.colors?.border,
                         color: theme?.colors?.textSecondary
                       }}
@@ -657,7 +657,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                 <button
                   onClick={addMenuItem}
                   className="px-3 py-1 text-sm rounded-lg transition-colors"
-                  style={{
+                  style={{ 
                     backgroundColor: `${theme?.colors?.primary}15`,
                     color: theme?.colors?.primary
                   }}
@@ -672,7 +672,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                     key={index}
                     href={item.url}
                     className="transition-colors text-sm font-medium"
-                    style={{
+                    style={{ 
                       color: theme?.colors?.text,
                       fontFamily: theme?.fonts?.secondary
                     }}
@@ -696,7 +696,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
             {content.searchEnabled && (
               <button
                 className="p-2 rounded-full transition-colors"
-                style={{
+                style={{ 
                   backgroundColor: `${theme?.colors?.primary}10`,
                   color: theme?.colors?.primary
                 }}
@@ -709,7 +709,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
             {content.cartEnabled && (
               <button
                 className="p-2 rounded-full transition-colors"
-                style={{
+                style={{ 
                   backgroundColor: `${theme?.colors?.primary}10`,
                   color: theme?.colors?.primary
                 }}
@@ -722,7 +722,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
             {content.userEnabled && (
               <button
                 className="p-2 rounded-full transition-colors"
-                style={{
+                style={{ 
                   backgroundColor: `${theme?.colors?.primary}10`,
                   color: theme?.colors?.primary
                 }}
@@ -736,7 +736,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
               <a
                 href={content.ctaButton.url}
                 className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-lg text-white text-sm font-medium transition-colors"
-                style={{
+                style={{ 
                   background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`,
                   fontFamily: theme?.fonts?.accent
                 }}
@@ -749,7 +749,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="lg:hidden p-2 rounded-lg transition-colors"
-              style={{
+              style={{ 
                 color: theme?.colors?.text,
                 backgroundColor: mobileMenuOpen ? `${theme?.colors?.primary}15` : 'transparent'
               }}
@@ -764,7 +764,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
         </div>
 
         {/* Mobile Menu */}
-        <div
+        <div 
           className={`lg:hidden overflow-hidden transition-all duration-300 ${mobileMenuOpen ? 'max-h-96 py-4' : 'max-h-0'}`}
           style={{ borderTop: mobileMenuOpen ? `1px solid ${theme?.colors?.border}` : 'none' }}
         >
@@ -774,7 +774,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
                 key={index}
                 href={item.url}
                 className="py-2 transition-colors font-medium"
-                style={{
+                style={{ 
                   color: theme?.colors?.text,
                   fontFamily: theme?.fonts?.secondary
                 }}
@@ -786,7 +786,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
               <a
                 href={content.ctaButton.url}
                 className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-white font-medium transition-colors mt-2"
-                style={{
+                style={{ 
                   background: `linear-gradient(135deg, ${theme?.colors?.primary}, ${theme?.colors?.secondary})`,
                   fontFamily: theme?.fonts?.accent
                 }}
@@ -806,7 +806,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
     if (!content.ctaButton) {
       handleChange('ctaButton', { text: 'Get Started', url: '#contact' });
     }
-
+    
     // Add social links if not present and variant is centered
     if (variant === 'header-centered' && !content.socialLinks) {
       handleChange('socialLinks', [
@@ -815,7 +815,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
         { platform: 'Instagram', url: 'https://instagram.com' }
       ]);
     }
-
+    
     // Add search, cart, user features for minimal header
     if (variant === 'header-minimal') {
       if (content.searchEnabled === undefined) handleChange('searchEnabled', true);
