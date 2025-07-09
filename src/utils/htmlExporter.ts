@@ -863,7 +863,6 @@ const generateSectionHTML = (section: Section, theme: ThemeConfig): string => {
                 </div>
             </div>
         </footer>`;
-
     default:
       return `
         <section class="py-12 sm:py-20 text-center" style="background-color: var(--color-surface); font-family: var(--font-primary);">
