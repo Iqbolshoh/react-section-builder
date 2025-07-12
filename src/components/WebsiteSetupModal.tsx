@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  X,
-  Globe,
-  Image as ImageIcon,
-  Check,
+import { 
+  X, 
+  Globe, 
+  Image as ImageIcon, 
+  Check, 
   AlertCircle,
   Briefcase,
   Palette,
@@ -18,8 +18,7 @@ import {
   User,
   ArrowRight,
   Rocket,
-  ChevronLeft,
-  Loader2
+  Sparkles
 } from 'lucide-react';
 import { useProject } from '../contexts/ProjectContext';
 import { useNavigate } from 'react-router-dom';
@@ -59,29 +58,30 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
   });
 
   const categories = [
-    { id: 'business', name: 'Business & Corporate', icon: Briefcase, color: 'bg-blue-100 text-blue-600' },
-    { id: 'portfolio', name: 'Portfolio & Creative', icon: Palette, color: 'bg-purple-100 text-purple-600' },
-    { id: 'ecommerce', name: 'E-commerce & Shop', icon: ShoppingCart, color: 'bg-emerald-100 text-emerald-600' },
-    { id: 'blog', name: 'Blog & News', icon: BookOpen, color: 'bg-rose-100 text-rose-600' },
-    { id: 'restaurant', name: 'Restaurant & Food', icon: Utensils, color: 'bg-orange-100 text-orange-600' },
-    { id: 'health', name: 'Health & Medical', icon: HeartPulse, color: 'bg-red-100 text-red-600' },
-    { id: 'education', name: 'Education & Learning', icon: GraduationCap, color: 'bg-indigo-100 text-indigo-600' },
-    { id: 'nonprofit', name: 'Non-profit & Charity', icon: HandHeart, color: 'bg-teal-100 text-teal-600' },
-    { id: 'technology', name: 'Technology & SaaS', icon: Cpu, color: 'bg-cyan-100 text-cyan-600' },
-    { id: 'personal', name: 'Personal & Lifestyle', icon: User, color: 'bg-amber-100 text-amber-600' }
+    { id: 'business', name: 'Business & Corporate', icon: Briefcase },
+    { id: 'portfolio', name: 'Portfolio & Creative', icon: Palette },
+    { id: 'ecommerce', name: 'E-commerce & Shop', icon: ShoppingCart },
+    { id: 'blog', name: 'Blog & News', icon: BookOpen },
+    { id: 'restaurant', name: 'Restaurant & Food', icon: Utensils },
+    { id: 'health', name: 'Health & Medical', icon: HeartPulse },
+    { id: 'education', name: 'Education & Learning', icon: GraduationCap },
+    { id: 'nonprofit', name: 'Non-profit & Charity', icon: HandHeart },
+    { id: 'technology', name: 'Technology & SaaS', icon: Cpu },
+    { id: 'personal', name: 'Personal & Lifestyle', icon: User }
   ];
 
   const languages = [
-    { code: 'en', name: 'English', flag: '🇬🇧' },
-    { code: 'uz', name: 'O\'zbekcha', flag: '🇺🇿' },
-    { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-    { code: 'es', name: 'Español', flag: '🇪🇸' },
-    { code: 'fr', name: 'Français', flag: '🇫🇷' },
-    { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-    { code: 'it', name: 'Italiano', flag: '🇮🇹' },
-    { code: 'pt', name: 'Português', flag: '🇵🇹' }
+    { code: 'en', name: 'English' },
+    { code: 'uz', name: 'O\'zbekcha' },
+    { code: 'ru', name: 'Русский' },
+    { code: 'es', name: 'Español' },
+    { code: 'fr', name: 'Français' },
+    { code: 'de', name: 'Deutsch' },
+    { code: 'it', name: 'Italiano' },
+    { code: 'pt', name: 'Português' }
   ];
 
+  // Reserved subdomains that can't be used
   const reservedSubdomains = [
     'www', 'admin', 'api', 'test', 'demo', 'example',
     'mail', 'ftp', 'webmail', 'blog', 'shop', 'app'
@@ -89,6 +89,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
 
   useEffect(() => {
     if (!isOpen) {
+      // Reset form when modal is closed
       setStep(1);
       setWebsiteInfo({
         name: '',
@@ -136,6 +137,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
   const handleInputChange = (field: keyof WebsiteInfo, value: string) => {
     setWebsiteInfo(prev => ({ ...prev, [field]: value }));
 
+    // Auto-generate URL from name
     if (field === 'name' && !websiteInfo.url) {
       const urlSlug = value.toLowerCase()
         .replace(/[^a-z0-9\s-]/g, '')
@@ -151,9 +153,11 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
 
     setCheckingUrl(true);
 
+    // Simulate API call to check URL availability
     try {
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
+      // For demo purposes, make some URLs unavailable
       const unavailableUrls = ['test', 'demo', 'example', 'admin', 'api', 'www'];
       const isAvailable = !unavailableUrls.includes(url.toLowerCase()) &&
         !reservedSubdomains.includes(url.toLowerCase());
@@ -220,6 +224,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
     setIsCreating(true);
 
     try {
+      // Simulate website creation
       await new Promise(resolve => setTimeout(resolve, 2000));
       const newProject = createProject(websiteInfo.name);
       onClose();
@@ -241,7 +246,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className="fixed inset-0 flex items-center justify-center z-50 p-4"
-        style={{
+        style={{ 
           backgroundColor: 'rgba(0, 0, 0, 0.6)',
           backdropFilter: 'blur(10px)'
         }}
@@ -251,26 +256,26 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-2xl shadow-2xl"
-          style={{ backgroundColor: '#f8fafc' }}
+          className="w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-3xl platform-shadow-2xl"
+          style={{ backgroundColor: 'var(--bg-primary)' }}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="bg-gradient-to-r from-teal-500 to-teal-600 p-6 text-white">
+          <div className="platform-gradient-primary p-6 text-white">
             <div className="flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-3 mb-2">
                   <div className="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
                     <Rocket className="w-5 h-5" />
                   </div>
-                  <h2 className="text-2xl font-bold font-[Poppins]">Create Your Website</h2>
+                  <h2 className="text-2xl font-bold platform-font-primary">Create Your Website</h2>
                 </div>
-                <p className="text-white/90 text-sm">
+                <p className="text-white text-opacity-90 platform-font-secondary">
                   Step {step} of 4 • {
-                    step === 1 ? 'Basic Information' :
-                      step === 2 ? 'SEO Settings' :
-                        step === 3 ? 'Visual Identity' :
-                          'Review & Create'
+                    step === 1 ? 'Basic Information' : 
+                    step === 2 ? 'SEO Settings' : 
+                    step === 3 ? 'Visual Identity' : 
+                    'Review & Create'
                   }
                 </p>
               </div>
@@ -295,7 +300,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
           </div>
 
           {/* Content */}
-          <div className="p-6 overflow-auto max-h-[calc(90vh-200px)] bg-white">
+          <div className="p-6 overflow-auto max-h-[calc(90vh-200px)] platform-bg-secondary">
             {step === 1 && (
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
@@ -303,16 +308,16 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                 className="space-y-6"
               >
                 <div>
-                  <h3 className="text-xl font-bold mb-2 text-gray-800 font-[Poppins]">
+                  <h3 className="text-xl font-bold mb-2 platform-text-primary platform-font-primary">
                     Basic Information
                   </h3>
-                  <p className="text-gray-500 text-sm">
+                  <p className="platform-text-secondary platform-font-secondary">
                     Let's start with the basics of your website
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-700">
+                  <label className="block text-sm font-semibold mb-2 platform-text-primary platform-font-primary">
                     Website Name *
                   </label>
                   <input
@@ -320,7 +325,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                     value={websiteInfo.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
                     placeholder="My Awesome Website"
-                    className={`w-full px-4 py-3 rounded-lg border ${errors.name ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-teal-200'} focus:ring-2 focus:outline-none transition-all`}
+                    className={`input ${errors.name ? 'border-red-500' : ''}`}
                   />
                   {errors.name && (
                     <p className="mt-1 text-sm text-red-500">
@@ -330,11 +335,11 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-700">
+                  <label className="block text-sm font-semibold mb-2 platform-text-primary platform-font-primary">
                     Website URL *
                   </label>
                   <div className="flex items-center">
-                    <span className="px-4 py-3 rounded-l-lg border border-r-0 bg-gray-50 text-gray-500">
+                    <span className="px-4 py-3 rounded-l-xl border border-r-0 platform-border platform-bg-tertiary platform-text-secondary">
                       https://
                     </span>
                     <input
@@ -342,33 +347,35 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                       value={websiteInfo.url}
                       onChange={(e) => handleUrlChange(e.target.value)}
                       placeholder="subdomain"
-                      className={`flex-1 px-4 py-3 border ${errors.url ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-teal-200'} focus:ring-2 focus:outline-none transition-all`}
+                      className={`flex-1 px-4 py-3 border rounded-none ${errors.url ? 'border-red-500' : 'platform-border'}`}
                     />
-                    <span className="px-4 py-3 rounded-r-lg border border-l-0 bg-gray-50 text-gray-500">
+                    <span className="px-4 py-3 rounded-r-xl border border-l-0 platform-border platform-bg-tertiary platform-text-secondary">
                       .templates.uz
                     </span>
                   </div>
 
                   {checkingUrl && (
-                    <div className="mt-2 flex items-center gap-2 text-sm text-gray-500">
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Checking availability...</span>
+                    <div className="mt-2 flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                      <span className="text-sm platform-text-secondary">
+                        Checking availability...
+                      </span>
                     </div>
                   )}
 
                   {!checkingUrl && websiteInfo.url && (
-                    <div className="mt-2 flex items-center gap-2 text-sm">
+                    <div className="mt-2 flex items-center gap-2">
                       {urlAvailable === true ? (
                         <>
                           <Check className="w-4 h-4 text-green-500" />
-                          <span className="text-green-500">
+                          <span className="text-sm text-green-500">
                             {websiteInfo.url}.templates.uz is available!
                           </span>
                         </>
                       ) : urlAvailable === false ? (
                         <>
                           <AlertCircle className="w-4 h-4 text-red-500" />
-                          <span className="text-red-500">
+                          <span className="text-sm text-red-500">
                             This subdomain is not available
                           </span>
                         </>
@@ -382,14 +389,14 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                     </p>
                   )}
 
-                  <p className="text-xs mt-2 text-gray-500">
+                  <p className="text-xs mt-2 platform-text-secondary">
                     Subdomain must be 3-63 characters, lowercase letters, numbers, and hyphens only.
                     Cannot start or end with hyphen.
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-700">
+                  <label className="block text-sm font-semibold mb-2 platform-text-primary platform-font-primary">
                     Category
                   </label>
                   <div className="grid grid-cols-2 gap-3">
@@ -397,19 +404,25 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                       <button
                         key={category.id}
                         onClick={() => handleInputChange('category', category.id)}
-                        className={`p-3 rounded-lg border-2 transition-all text-left flex items-center gap-3 ${websiteInfo.category === category.id
-                            ? `border-teal-500 bg-teal-50 ${category.color.replace('text', 'text-teal-600')}`
-                            : 'border-gray-200 bg-white hover:border-teal-200'
-                          }`}
+                        className={`p-3 rounded-xl border-2 transition-all text-left flex items-center gap-3 ${
+                          websiteInfo.category === category.id 
+                            ? 'border-indigo-500 bg-indigo-50' 
+                            : 'platform-border platform-bg-primary'
+                        }`}
                         type="button"
                       >
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${category.color}`}>
-                          <category.icon className="w-4 h-4" />
-                        </div>
-                        <span className={`text-sm font-medium ${websiteInfo.category === category.id
-                            ? 'text-teal-700'
-                            : 'text-gray-700'
-                          }`}>
+                        <category.icon 
+                          className={`w-5 h-5 ${
+                            websiteInfo.category === category.id 
+                              ? 'text-indigo-500' 
+                              : 'platform-text-secondary'
+                          }`}
+                        />
+                        <span className={`text-sm font-medium ${
+                          websiteInfo.category === category.id 
+                            ? 'text-indigo-700' 
+                            : 'platform-text-primary'
+                        }`}>
                           {category.name}
                         </span>
                       </button>
@@ -426,16 +439,16 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                 className="space-y-6"
               >
                 <div>
-                  <h3 className="text-xl font-bold mb-2 text-gray-800 font-[Poppins]">
+                  <h3 className="text-xl font-bold mb-2 platform-text-primary platform-font-primary">
                     SEO Settings
                   </h3>
-                  <p className="text-gray-500 text-sm">
+                  <p className="platform-text-secondary platform-font-secondary">
                     Add SEO keywords for your website
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-700">
+                  <label className="block text-sm font-semibold mb-2 platform-text-primary platform-font-primary">
                     SEO Keywords *
                   </label>
                   <input
@@ -443,20 +456,20 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                     value={websiteInfo.seoKeywords}
                     onChange={(e) => handleInputChange('seoKeywords', e.target.value)}
                     placeholder="website, business, services, products"
-                    className={`w-full px-4 py-3 rounded-lg border ${errors.seoKeywords ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-teal-200'} focus:ring-2 focus:outline-none transition-all`}
+                    className={`input ${errors.seoKeywords ? 'border-red-500' : ''}`}
                   />
                   {errors.seoKeywords && (
                     <p className="mt-1 text-sm text-red-500">
                       {errors.seoKeywords}
                     </p>
                   )}
-                  <p className="text-sm mt-1 text-gray-500">
+                  <p className="text-sm mt-1 platform-text-secondary">
                     Enter comma-separated keywords for search engine optimization
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-700">
+                  <label className="block text-sm font-semibold mb-2 platform-text-primary platform-font-primary">
                     Language
                   </label>
                   <div className="grid grid-cols-2 gap-3">
@@ -464,17 +477,18 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                       <button
                         key={language.code}
                         onClick={() => handleInputChange('language', language.code)}
-                        className={`p-3 rounded-lg border-2 transition-all text-left flex items-center gap-3 ${websiteInfo.language === language.code
-                            ? 'border-teal-500 bg-teal-50'
-                            : 'border-gray-200 hover:border-teal-200'
-                          }`}
+                        className={`p-3 rounded-xl border-2 transition-all text-left ${
+                          websiteInfo.language === language.code 
+                            ? 'border-indigo-500 bg-indigo-50' 
+                            : 'platform-border platform-bg-primary'
+                        }`}
                         type="button"
                       >
-                        <span className="text-lg">{language.flag}</span>
-                        <span className={`text-sm font-medium ${websiteInfo.language === language.code
-                            ? 'text-teal-700'
-                            : 'text-gray-700'
-                          }`}>
+                        <span className={`text-sm font-medium ${
+                          websiteInfo.language === language.code 
+                            ? 'text-indigo-700' 
+                            : 'platform-text-primary'
+                        }`}>
                           {language.name}
                         </span>
                       </button>
@@ -491,22 +505,23 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                 className="space-y-6"
               >
                 <div>
-                  <h3 className="text-xl font-bold mb-2 text-gray-800 font-[Poppins]">
+                  <h3 className="text-xl font-bold mb-2 platform-text-primary platform-font-primary">
                     Visual Identity
                   </h3>
-                  <p className="text-gray-500 text-sm">
+                  <p className="platform-text-secondary platform-font-secondary">
                     Upload your logo and favicon (optional)
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-700">
+                    <label className="block text-sm font-semibold mb-2 platform-text-primary platform-font-primary">
                       Logo
                     </label>
-                    <div
-                      className={`border-2 rounded-lg p-6 text-center transition-colors ${errors.logo ? 'border-red-500' : 'border-dashed border-gray-300 hover:border-teal-300 hover:bg-teal-50/30'
-                        }`}
+                    <div 
+                      className={`border-2 rounded-xl p-6 text-center transition-colors ${
+                        errors.logo ? 'border-red-500' : 'border-dashed platform-border hover:border-indigo-300 hover:bg-indigo-50/30'
+                      }`}
                     >
                       {websiteInfo.logo ? (
                         <div className="space-y-3">
@@ -525,11 +540,11 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                         </div>
                       ) : (
                         <div className="space-y-3">
-                          <div className="w-12 h-12 mx-auto bg-gray-100 rounded-lg flex items-center justify-center">
-                            <ImageIcon className="w-5 h-5 text-gray-400" />
-                          </div>
+                          <ImageIcon 
+                            className="w-12 h-12 mx-auto platform-text-tertiary" 
+                          />
                           <div>
-                            <p className="mb-2 text-gray-500">
+                            <p className="mb-2 platform-text-secondary">
                               Upload your logo
                             </p>
                             <input
@@ -544,7 +559,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                             />
                             <label
                               htmlFor="logo-upload"
-                              className="px-4 py-2 bg-teal-600 text-white rounded-lg cursor-pointer inline-block hover:bg-teal-700 transition-colors text-sm"
+                              className="px-4 py-2 bg-indigo-600 text-white rounded-lg cursor-pointer inline-block hover:bg-indigo-700 transition-colors"
                             >
                               Choose File
                             </label>
@@ -557,18 +572,19 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                         </div>
                       )}
                     </div>
-                    <p className="text-xs mt-1 text-gray-500">
+                    <p className="text-xs mt-1 platform-text-secondary">
                       Recommended size: 200x50px, PNG format
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-700">
+                    <label className="block text-sm font-semibold mb-2 platform-text-primary platform-font-primary">
                       Favicon
                     </label>
-                    <div
-                      className={`border-2 rounded-lg p-6 text-center transition-colors ${errors.favicon ? 'border-red-500' : 'border-dashed border-gray-300 hover:border-teal-300 hover:bg-teal-50/30'
-                        }`}
+                    <div 
+                      className={`border-2 rounded-xl p-6 text-center transition-colors ${
+                        errors.favicon ? 'border-red-500' : 'border-dashed platform-border hover:border-indigo-300 hover:bg-indigo-50/30'
+                      }`}
                     >
                       {websiteInfo.favicon ? (
                         <div className="space-y-3">
@@ -587,11 +603,11 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                         </div>
                       ) : (
                         <div className="space-y-3">
-                          <div className="w-8 h-8 mx-auto bg-gray-100 rounded-lg flex items-center justify-center">
-                            <Globe className="w-4 h-4 text-gray-400" />
-                          </div>
+                          <Globe 
+                            className="w-8 h-8 mx-auto platform-text-tertiary" 
+                          />
                           <div>
-                            <p className="mb-2 text-sm text-gray-500">
+                            <p className="mb-2 text-sm platform-text-secondary">
                               Upload favicon (16x16)
                             </p>
                             <input
@@ -619,7 +635,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                         </div>
                       )}
                     </div>
-                    <p className="text-xs mt-1 text-gray-500">
+                    <p className="text-xs mt-1 platform-text-secondary">
                       Square image, 16x16 or 32x32px
                     </p>
                   </div>
@@ -634,62 +650,62 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                 className="space-y-6"
               >
                 <div>
-                  <h3 className="text-xl font-bold mb-2 text-gray-800 font-[Poppins]">
+                  <h3 className="text-xl font-bold mb-2 platform-text-primary platform-font-primary">
                     Review & Create
                   </h3>
-                  <p className="text-gray-500 text-sm">
+                  <p className="platform-text-secondary platform-font-secondary">
                     Review your website information before creating
                   </p>
                 </div>
 
-                <div className="rounded-lg p-6 space-y-4 bg-teal-50 border border-teal-100">
+                <div className="rounded-xl p-6 space-y-4 bg-indigo-50 border border-indigo-100">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <span className="text-xs font-medium text-teal-600 uppercase tracking-wider">
+                      <span className="text-sm font-medium text-indigo-500">
                         Website Name
                       </span>
-                      <p className="font-semibold text-gray-800">
+                      <p className="font-semibold platform-text-primary">
                         {websiteInfo.name || 'Not specified'}
                       </p>
                     </div>
                     <div>
-                      <span className="text-xs font-medium text-teal-600 uppercase tracking-wider">
+                      <span className="text-sm font-medium text-indigo-500">
                         URL
                       </span>
-                      <p className="font-semibold text-gray-800">
+                      <p className="font-semibold platform-text-primary">
                         {websiteInfo.url ? `${websiteInfo.url}.templates.uz` : 'Not specified'}
                       </p>
                     </div>
                     <div>
-                      <span className="text-xs font-medium text-teal-600 uppercase tracking-wider">
+                      <span className="text-sm font-medium text-indigo-500">
                         Category
                       </span>
-                      <p className="font-semibold text-gray-800">
+                      <p className="font-semibold platform-text-primary">
                         {categories.find(c => c.id === websiteInfo.category)?.name || 'Not specified'}
                       </p>
                     </div>
                     <div>
-                      <span className="text-xs font-medium text-teal-600 uppercase tracking-wider">
+                      <span className="text-sm font-medium text-indigo-500">
                         Language
                       </span>
-                      <p className="font-semibold text-gray-800">
+                      <p className="font-semibold platform-text-primary">
                         {languages.find(l => l.code === websiteInfo.language)?.name || 'Not specified'}
                       </p>
                     </div>
                   </div>
 
                   <div>
-                    <span className="text-xs font-medium text-teal-600 uppercase tracking-wider">
+                    <span className="text-sm font-medium text-indigo-500">
                       SEO Keywords
                     </span>
-                    <p className="font-semibold text-gray-800">
+                    <p className="font-semibold platform-text-primary">
                       {websiteInfo.seoKeywords || 'Not specified'}
                     </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <span className="text-xs font-medium text-teal-600 uppercase tracking-wider">
+                      <span className="text-sm font-medium text-indigo-500">
                         Logo
                       </span>
                       <div className="mt-1">
@@ -700,12 +716,12 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                             className="w-12 h-12 object-contain"
                           />
                         ) : (
-                          <span className="text-gray-500 text-sm">Not uploaded</span>
+                          <span className="platform-text-secondary">Not uploaded</span>
                         )}
                       </div>
                     </div>
                     <div>
-                      <span className="text-xs font-medium text-teal-600 uppercase tracking-wider">
+                      <span className="text-sm font-medium text-indigo-500">
                         Favicon
                       </span>
                       <div className="mt-1">
@@ -716,7 +732,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                             className="w-6 h-6 object-contain"
                           />
                         ) : (
-                          <span className="text-gray-500 text-sm">Not uploaded</span>
+                          <span className="platform-text-secondary">Not uploaded</span>
                         )}
                       </div>
                     </div>
@@ -724,7 +740,7 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                 </div>
 
                 {errors.form && (
-                  <div className="border-l-4 border-red-500 p-4 bg-red-50 rounded-lg">
+                  <div className="border-l-4 border-red-500 p-4 bg-red-50">
                     <div className="flex items-center">
                       <AlertCircle className="w-5 h-5 mr-2 text-red-500" />
                       <p className="text-red-500">{errors.form}</p>
@@ -734,11 +750,11 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
 
                 {isCreating && (
                   <div className="text-center py-8">
-                    <div className="w-16 h-16 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <h4 className="text-lg font-semibold mb-2 text-gray-800 font-[Poppins]">
+                    <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <h4 className="text-lg font-semibold mb-2 platform-text-primary platform-font-primary">
                       Creating Your Website...
                     </h4>
-                    <p className="text-gray-500 text-sm">
+                    <p className="platform-text-secondary platform-font-secondary">
                       Setting up your project and applying initial configuration
                     </p>
                   </div>
@@ -749,14 +765,13 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
 
           {/* Footer */}
           {!isCreating && (
-            <div className="border-t p-6 border-gray-200 bg-gray-50">
+            <div className="border-t p-6 platform-border platform-bg-primary">
               <div className="flex items-center justify-between">
                 <button
                   onClick={() => step > 1 ? setStep(step - 1) : onClose()}
-                  className="px-6 py-3 transition-colors font-medium text-gray-600 hover:text-gray-800 flex items-center gap-2"
+                  className="px-6 py-3 transition-colors font-medium platform-text-secondary hover:platform-text-primary"
                   type="button"
                 >
-                  <ChevronLeft className="w-5 h-5" />
                   {step > 1 ? 'Back' : 'Cancel'}
                 </button>
 
@@ -764,16 +779,16 @@ const WebsiteSetupModal: React.FC<WebsiteSetupModalProps> = ({ isOpen, onClose }
                   {step < 4 ? (
                     <button
                       onClick={handleNextStep}
-                      className="px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium flex items-center gap-2"
+                      className="btn-primary"
                       type="button"
                     >
                       Continue
-                      <ArrowRight className="w-5 h-5" />
+                      <ArrowRight className="w-4 h-4" />
                     </button>
                   ) : (
                     <button
                       onClick={handleCreateWebsite}
-                      className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-lg hover:from-teal-600 hover:to-teal-700 transition-all font-medium shadow-md"
+                      className="flex items-center gap-2 px-8 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all font-semibold platform-shadow-lg"
                       type="button"
                     >
                       <Rocket className="w-5 h-5" />

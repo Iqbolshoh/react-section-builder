@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { X, Navigation, Zap, User, Briefcase, Award, Star, Folder, CreditCard, Mail, Globe, HelpCircle, TrendingUp, Send, Megaphone, Layout, Layers} from 'lucide-react';
+import { X, Navigation, Zap, Image, User, Briefcase, Award, Star, Folder, CreditCard, Mail, Globe, HelpCircle, Clock, TrendingUp, Send, Megaphone, Camera, Layout, Users, Target, ShieldCheck, Smartphone, Palette, Layers, MessageSquare, Coffee, ShoppingBag, Truck, Heart, Book, Headphones, Gift, Smile } from 'lucide-react';
 import { useProject } from '../contexts/ProjectContext';
 
 interface SectionSelectorProps {
@@ -200,7 +200,7 @@ const SectionSelector: React.FC<SectionSelectorProps> = ({ onClose, onSelect }) 
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 flex items-center justify-center z-50 p-4"
-      style={{
+      style={{ 
         backgroundColor: 'rgba(0, 0, 0, 0.6)',
         backdropFilter: 'blur(10px)'
       }}
@@ -243,7 +243,7 @@ const SectionSelector: React.FC<SectionSelectorProps> = ({ onClose, onSelect }) 
             {sectionGroups.map((group) => (
               <div key={group.name}>
                 <div className="flex items-center gap-3 mb-6">
-                  <div
+                  <div 
                     className={`w-10 h-10 bg-gradient-to-r ${group.color} rounded-xl flex items-center justify-center`}
                   >
                     <div className="w-2 h-2 bg-white rounded-full"></div>
@@ -255,7 +255,7 @@ const SectionSelector: React.FC<SectionSelectorProps> = ({ onClose, onSelect }) 
                     </span>
                   </div>
                 </div>
-
+                
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {group.sections.map((section) => {
                     const Icon = section.icon;
@@ -269,8 +269,8 @@ const SectionSelector: React.FC<SectionSelectorProps> = ({ onClose, onSelect }) 
                       >
                         {/* Preview Image */}
                         <div className="h-32 relative overflow-hidden">
-                          <img
-                            src={section.preview}
+                          <img 
+                            src={section.preview} 
                             alt={section.name}
                             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                           />
@@ -283,7 +283,7 @@ const SectionSelector: React.FC<SectionSelectorProps> = ({ onClose, onSelect }) 
                             New
                           </div>
                         </div>
-
+                        
                         {/* Content */}
                         <div className="p-4">
                           <h4 className="text-lg font-bold mb-2 platform-text-primary platform-font-primary group-hover:brand-primary transition-colors">

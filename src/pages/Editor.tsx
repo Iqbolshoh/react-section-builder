@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { DndContext, DragEndEvent } from '@dnd-kit/core';
+import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
 import {
   ArrowLeft,
   Plus,
+  Settings,
   Eye,
   Download,
   Save,
@@ -84,7 +85,7 @@ const Editor: React.FC = () => {
 
   const handleExport = () => {
     if (currentProject && currentTheme) {
-      const htmlContent = generateCompleteHTML(currentProject, currentTheme);
+      const htmlContent = generateHTMLExport(currentProject, currentTheme);
       const blob = new Blob([htmlContent], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -103,21 +104,22 @@ const Editor: React.FC = () => {
     }
   };
 
-  //   const generateHTMLExport = (project: any, theme: any) => {
-  //     return `<!DOCTYPE html>
-  // <html lang="en">
-  // <head>
-  //     <meta charset="UTF-8">
-  //     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  //     <title>${project.name}</title>
-  //     <script src="https://cdn.tailwindcss.com"></script>
-  // </head>
-  // <body>
-  //     <h1>Website: ${project.name}</h1>
-  //     <p>Sections: ${project.sections.length}</p>
-  // </body>
-  // </html>`;
-  //   };
+  const generateHTMLExport = (project: any, theme: any) => {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${project.name}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <h1>Website: ${project.name}</h1>
+    <p>Sections: ${project.sections.length}</p>
+    <!-- Website content would be rendered here -->
+</body>
+</html>`;
+  };
 
   if (!currentProject) {
     return (
@@ -137,7 +139,7 @@ const Editor: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/dashboard')}
               className="p-2 hover:platform-bg-tertiary rounded-xl transition-colors"
             >
               <ArrowLeft className="w-5 h-5 platform-text-secondary" />
@@ -230,7 +232,7 @@ const Editor: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <button
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/dashboard')}
               className="p-3 hover:platform-bg-tertiary rounded-xl transition-colors"
             >
               <ArrowLeft className="w-5 h-5 platform-text-secondary" />
@@ -294,7 +296,7 @@ const Editor: React.FC = () => {
 
             <button
               onClick={handleExport}
-              className="flex items-center gap-2 px-6 py-3 bg-orange-600 text-white rounded-xl hover:bg-orange-700 transition-all font-semibold platform-shadow-lg"
+              className=" اسلام items-center gap-2 px-6 py-3 bg-orange-600 text-white rounded-xl hover:bg-orange-700 transition-all font-semibold platform-shadow-lg"
             >
               <Code className="w-4 h-4" />
               Export

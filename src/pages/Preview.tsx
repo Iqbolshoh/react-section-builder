@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  ArrowLeft, 
-  Edit3, 
-  Share2, 
-  Globe, 
+import {
+  ArrowLeft,
+  Edit3,
+  Share2,
+  ExternalLink,
+  Globe,
+  Smartphone,
+  Monitor,
   Eye,
+  Settings,
+  Download,
   Sparkles
 } from 'lucide-react';
 import { useProject } from '../contexts/ProjectContext';
@@ -158,11 +163,11 @@ const Preview: React.FC = () => {
                 key={section.id}
                 section={section}
                 isSelected={false}
-                onSelect={() => {}}
+                onSelect={() => { }}
                 isPreview={true}
                 theme={currentTheme}
                 isEditing={false}
-                onEdit={() => {}}
+                onEdit={() => { }}
               />
             ))
         )}

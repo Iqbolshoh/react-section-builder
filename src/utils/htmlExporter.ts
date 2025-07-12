@@ -1,69 +1,75 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 
 interface Project {
-  id: string;
-  name: string;
-  sections: Section[];
+    id: string;
+    name: string;
+    sections: Section[];
 }
 
 interface Section {
-  id: string;
-  type: string;
-  content: any;
-  order: number;
+    id: string;
+    type: string;
+    content: any;
+    order: number;
 }
 
 interface ThemeConfig {
-  fonts: {
-    primary: string;
-    secondary: string;
-    accent: string;
-  };
-  colors: {
-    primary: string;
-    secondary: string;
-    accent: string;
-    background: string;
-    surface: string;
-    text: string;
-    textSecondary: string;
-    border: string;
-    success: string;
-    warning: string;
-    error: string;
-    primary100: string;
-    primary200: string;
-    primary300: string;
-    secondary100: string;
-    secondary200: string;
-    accent100: string;
-    accent200: string;
-  };
-  shadows: {
-    sm: string;
-    md: string;
-    lg: string;
-    xl: string;
-  };
+    fonts: {
+        primary: string;
+        secondary: string;
+        accent: string;
+    };
+    colors: {
+        primary: string;
+        secondary: string;
+        accent: string;
+        background: string;
+        surface: string;
+        text: string;
+        textSecondary: string;
+        border: string;
+        success: string;
+        warning: string;
+        error: string;
+        primary100: string;
+        primary200: string;
+        primary300: string;
+        secondary100: string;
+        secondary200: string;
+        accent100: string;
+        accent200: string;
+    };
+    shadows: {
+        sm: string;
+        md: string;
+        lg: string;
+        xl: string;
+    };
 }
 
 export const generateCompleteHTML = (project: Project, theme: ThemeConfig): string => {
-  const sectionsHTML = project.sections
-    .sort((a, b) => a.order - b.order)
-    .map(section => generateSectionHTML(section, theme))
-    .join('\n');
+    const sectionsHTML = project.sections
+        .sort((a, b) => a.order - b.order)
+        .map(section => generateSectionHTML(section, theme))
+        .join('\n');
 
-  const fontFamilies = Object.values(theme.fonts);
-  const fontImports = fontFamilies.map(font => 
-    `family=${font.replace(' ', '+')}:wght@300;400;500;600;700;800;900`
-  ).join('&');
+    const fontFamilies = Object.values(theme.fonts);
+    const fontImports = fontFamilies.map(font =>
+        `family=${font.replace(' ', '+')}:wght@300;400;500;600;700;800;900`
+    ).join('&');
 
-  return `<!DOCTYPE html>
+    return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${project.name}</title>
+    <meta name="description" content="Professional website built with templates.uz">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?${fontImports}&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
     <meta name="description" content="Professional website built with templates.uz">
     
     <!-- Fonts -->
@@ -483,7 +489,7 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
                 observer.observe(section);
             });
             hasInitializedObserver = true;
-        }
+        });
         
         // Counter animation
         function animateCounters() {
@@ -561,11 +567,11 @@ export const generateCompleteHTML = (project: Project, theme: ThemeConfig): stri
 };
 
 const generateSectionHTML = (section: Section, theme: ThemeConfig): string => {
-  const { content, type } = section;
+    const { content, type } = section;
 
-  switch (type) {
-    case 'hero-split':
-      return `
+    switch (type) {
+        case 'hero-split':
+            return `
         <section class="relative min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center overflow-hidden" style="font-family: var(--font-primary); background-color: var(--color-background);">
             <div class="absolute inset-0 overflow-hidden">
                 <div class="absolute top-20 left-20 w-72 h-72 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl"></div>
@@ -593,9 +599,9 @@ const generateSectionHTML = (section: Section, theme: ThemeConfig): string => {
             </div>
         </section>`;
 
-    case 'hero-centered':
-      return `
-        <section class="relative min-h-screen flex items-center justify-center text-center bg-cover bg-center bg-no-repeat" style="background-image: ${content.backgroundImage ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${content.backgroundImage})` : 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))'}; font-family: var(--font-primary);">
+        case 'hero-centered':
+            return `
+        <section class="relative min-h-screen flex items-center justify-center text-center bg-cover bg-center bg-no-repeat" style="background-image: ${content.image ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${content.image})` : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}; font-family: var(--font-primary);">
             <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
                 <div class="animate-fade-in-up">
                     <h1 class="text-responsive-xl font-bold mb-6 leading-tight">
@@ -611,8 +617,37 @@ const generateSectionHTML = (section: Section, theme: ThemeConfig): string => {
             </div>
         </section>`;
 
-    case 'hero-gradient':
-      return `
+        case 'hero-video':
+            return `
+        <section class="relative min-h-screen flex items-center justify-center overflow-hidden" style="font-family: var(--font-primary);">
+            <div class="absolute inset-0">
+                ${content.videoUrl ? `
+                    <iframe src="${content.videoUrl.includes('youtube.com')
+                        ? content.videoUrl.replace('watch?v=', 'embed/') + '?autoplay=1&mute=1&loop=1&controls=0'
+                        : content.videoUrl
+                    }" class="w-full h-full object-cover" allow="autoplay; encrypted-media"></iframe>
+                ` : `
+                    <img src="${content.image}" alt="Video Background" class="w-full h-full object-cover">
+                `}
+                <div class="absolute inset-0 bg-black/40"></div>
+            </div>
+            <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+                <div class="animate-fade-in-up">
+                    <h1 class="text-responsive-xl font-bold mb-6 leading-tight">
+                        ${content.title}
+                    </h1>
+                    <p class="text-responsive-lg mb-8 leading-relaxed max-w-2xl mx-auto">
+                        ${content.subtitle}
+                    </p>
+                    <a href="${content.buttonLink}" class="inline-block px-8 py-4 bg-white text-gray-900 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl">
+                        ${content.buttonText}
+                    </a>
+                </div>
+            </div>
+        </section>`;
+
+        case 'hero-gradient':
+            return `
         <section class="relative min-h-screen flex items-center justify-center overflow-hidden theme-gradient-primary" style="font-family: var(--font-primary);">
             <div class="absolute inset-0 overflow-hidden">
                 <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
@@ -633,8 +668,8 @@ const generateSectionHTML = (section: Section, theme: ThemeConfig): string => {
             </div>
         </section>`;
 
-    case 'header-classic':
-      return `
+        case 'header-classic':
+            return `
         <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50" style="border-color: var(--color-border);">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16 lg:h-20">
@@ -668,8 +703,8 @@ const generateSectionHTML = (section: Section, theme: ThemeConfig): string => {
             </div>
         </header>`;
 
-    case 'contact-form':
-      return `
+        case 'contact-form':
+            return `
         <section class="py-12 sm:py-20 bg-white" style="background-color: var(--color-surface); font-family: var(--font-primary);">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-8 sm:mb-16 animate-fade-in-up">
@@ -744,8 +779,8 @@ const generateSectionHTML = (section: Section, theme: ThemeConfig): string => {
             </div>
         </section>`;
 
-    case 'faq-accordion':
-      return `
+        case 'faq-accordion':
+            return `
         <section class="py-12 sm:py-20 bg-white" style="background-color: var(--color-surface); font-family: var(--font-primary);">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-8 sm:mb-16 animate-fade-in-up">
@@ -770,8 +805,8 @@ const generateSectionHTML = (section: Section, theme: ThemeConfig): string => {
             </div>
         </section>`;
 
-    case 'stats-grid':
-      return `
+        case 'stats-grid':
+            return `
         <section class="py-12 sm:py-20 bg-gradient-to-br from-blue-50 to-purple-50 stats-section" style="background: linear-gradient(135deg, var(--color-primary)10, var(--color-secondary)10); font-family: var(--font-primary);">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-8 sm:mb-16 animate-fade-in-up">
@@ -796,8 +831,8 @@ const generateSectionHTML = (section: Section, theme: ThemeConfig): string => {
             </div>
         </section>`;
 
-    case 'newsletter-centered':
-      return `
+        case 'newsletter-centered':
+            return `
         <section class="py-12 sm:py-20 theme-gradient-primary" style="font-family: var(--font-primary);">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <div class="animate-fade-in-up">
@@ -824,8 +859,8 @@ const generateSectionHTML = (section: Section, theme: ThemeConfig): string => {
             </div>
         </section>`;
 
-    case 'footer-comprehensive':
-      return `
+        case 'footer-comprehensive':
+            return `
         <footer class="bg-gray-900 text-white py-12 lg:py-16" style="font-family: var(--font-primary);">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -863,13 +898,14 @@ const generateSectionHTML = (section: Section, theme: ThemeConfig): string => {
                 </div>
             </div>
         </footer>`;
-    default:
-      return `
+
+        default:
+            return `
         <section class="py-12 sm:py-20 text-center" style="background-color: var(--color-surface); font-family: var(--font-primary);">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="text-2xl sm:text-3xl font-bold theme-primary mb-4">${type.charAt(0).toUpperCase() + type.slice(1).replace('-', ' ')} Section</h2>
                 <p class="theme-text-secondary">Professional content for ${type} section will be rendered here.</p>
             </div>
         </section>`;
-  }
+    }
 };
